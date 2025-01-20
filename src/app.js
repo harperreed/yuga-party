@@ -28,6 +28,31 @@ const LETTERS_DATA = [
 let currentIndex = -1;
 let currentLanguage = 'en';
 let audioEnabled = true;
+let currentSubsetSize = 1;
+let completedRounds = 0;
+let currentProgress = 0;
+
+export function getCurrentSubsetSize() {
+    return currentSubsetSize;
+}
+
+function updateProgress() {
+    currentProgress = (currentIndex + 1) % currentSubsetSize;
+    const progressElement = document.getElementById('progress');
+    if (progressElement) {
+        progressElement.textContent = `Progress: ${currentProgress + 1} / ${currentSubsetSize}`;
+    }
+}
+
+function checkAndIncreaseSubset() {
+    if (currentIndex + 1 >= currentSubsetSize) {
+        completedRounds++;
+        if (completedRounds >= 2 && currentSubsetSize < LETTERS_DATA.length) {
+            currentSubsetSize = Math.min(currentSubsetSize + 1, LETTERS_DATA.length);
+            completedRounds = 0;
+        }
+    }
+}
 
 export function playAudio(audioFile) {
     if (audioEnabled) {
@@ -47,13 +72,15 @@ export function toggleAudio() {
 }
 
 export function nextLetter() {
-    currentIndex = (currentIndex + 1) % LETTERS_DATA.length;
+    currentIndex = (currentIndex + 1) % currentSubsetSize;
     const letterData = LETTERS_DATA[currentIndex];
     const letter = letterData[currentLanguage];
     renderLetter(letter);
     if (audioEnabled) {
         playAudio(letterData.audio);
     }
+    updateProgress();
+    checkAndIncreaseSubset();
     return letter;
 }
 
@@ -72,6 +99,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('DOMContentLoaded', () => {
         const game = new Game();
         renderLetter('A'); // Initialize with 'A'
+        updateProgress(); // Show initial progress
         
         const nextBtn = document.getElementById('nextBtn');
         if (nextBtn) {
