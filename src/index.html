@@ -56,11 +56,22 @@
                 maxlength="1"
                 autocomplete="off">
             <div class="text-center mt-6 text-gray-600 font-medium">Type the letter shown above</div>
-            <div class="flex justify-center gap-4 mt-6">
-                <button id="audioToggleBtn" class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transform transition-all duration-200 hover:scale-105 shadow-md">🔊 Audio On</button>
-            </div>
         </div>
     </div>
+
+    <!-- Bottom Navbar -->
+    <nav class="navbar-bottom">
+        <div class="navbar-content">
+            <div class="text-sm font-medium text-gray-600">
+                <span id="level">Level: 1</span>
+            </div>
+            <button id="audioToggleBtn" 
+                class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">
+                🔊 Audio On
+            </button>
+        </div>
+    </nav>
+
     <script type="module" src="./app.js"></script>
 </body>
 </html>
