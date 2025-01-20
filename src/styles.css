@@ -23,7 +23,7 @@
   }
   
   .card {
-    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000 w-full h-full text-7xl sm:text-6xl;
+    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000 w-full h-full text-8xl sm:text-7xl;
   }
 
   .navbar-bottom {
@@ -47,6 +47,6 @@
   .toddler-mode #progress,
   .toddler-mode #timer,
   .toddler-mode button {
-    @apply text-2xl;
+    @apply text-3xl;
   }
 }
