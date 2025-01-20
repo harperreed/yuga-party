@@ -35,6 +35,7 @@ let currentProgress = 0;
 let gameInstance;
 let letterMistakes = {};
 let playerName = '';
+let toddlerMode = false;
 
 // Load saved game data
 function loadGameData() {
@@ -141,17 +142,40 @@ function getNextLetterIndex() {
 }
 
 function showMessage(text) {
-    const messageElement = document.getElementById('message');
-    if (messageElement) {
-        messageElement.textContent = text;
-        messageElement.classList.remove('hidden');
+    if (toddlerMode) {
+        const toddlerMessage = document.getElementById('toddlerMessage');
+        if (toddlerMessage) {
+            toddlerMessage.textContent = text === "Try again!" ? "❌" : "✨";
+            toddlerMessage.classList.remove('hidden');
+            setTimeout(() => hideMessage(), 1500);
+        }
+    } else {
+        const messageElement = document.getElementById('message');
+        if (messageElement) {
+            messageElement.textContent = text;
+            messageElement.classList.remove('hidden');
+        }
     }
 }
 
 function hideMessage() {
     const messageElement = document.getElementById('message');
+    const toddlerMessage = document.getElementById('toddlerMessage');
     if (messageElement) {
         messageElement.classList.add('hidden');
+    }
+    if (toddlerMessage) {
+        toddlerMessage.classList.add('hidden');
+    }
+}
+
+function toggleToddlerMode() {
+    toddlerMode = !toddlerMode;
+    const gameContainer = document.getElementById('game-container');
+    const btn = document.getElementById('toddlerModeBtn');
+    if (gameContainer && btn) {
+        gameContainer.classList.toggle('toddler-mode', toddlerMode);
+        btn.textContent = toddlerMode ? '👶 Normal Mode' : '👶 Toddler Mode';
     }
 }
 
@@ -303,6 +327,11 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
             audioToggleBtn.addEventListener('click', () => {
                 toggleAudio();
             });
+        }
+
+        const toddlerModeBtn = document.getElementById('toddlerModeBtn');
+        if (toddlerModeBtn) {
+            toddlerModeBtn.addEventListener('click', toggleToddlerMode);
         }
     });
     });

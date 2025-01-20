@@ -48,7 +48,8 @@
                     Alphabet Explorer! 🎉
                 </div>
                 <div id="progress" class="text-gray-600 font-medium">Progress: 1 / 1</div>
-                <div id="message" class="hidden mt-2 text-red-500 font-medium animate-bounce">Try again!</div>
+                <div id="message" class="hidden mt-2 text-red-500 font-medium animate-bounce"></div>
+                <div id="toddlerMessage" class="hidden toddler-message"></div>
             </div>
             <input type="text" 
                 id="letterInput" 
@@ -62,8 +63,12 @@
     <!-- Bottom Navbar -->
     <nav class="navbar-bottom">
         <div class="navbar-content">
-            <div class="text-sm font-medium text-gray-600">
-                <span id="level">Level: 1</span>
+            <div class="flex items-center gap-4">
+                <span id="level" class="text-sm font-medium text-gray-600">Level: 1</span>
+                <button id="toddlerModeBtn" 
+                    class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">
+                    👶 Toddler Mode
+                </button>
             </div>
             <button id="audioToggleBtn" 
                 class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">

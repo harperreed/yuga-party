@@ -24,4 +24,12 @@
   .navbar-content {
     @apply max-w-2xl mx-auto flex justify-between items-center;
   }
+
+  .toddler-message {
+    @apply text-8xl text-center my-4 animate-bounce;
+  }
+
+  .toddler-mode .card {
+    @apply text-8xl;
+  }
 }
