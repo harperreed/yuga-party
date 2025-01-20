@@ -77,6 +77,7 @@ export function checkLetter(input) {
         if (audioEnabled) {
             playAudio(LETTERS_DATA[currentIndex].audio);
         }
+        gameInstance.incrementScore();
         currentIndex = (currentIndex + 1) % currentSubsetSize;
         const nextLetterData = LETTERS_DATA[currentIndex];
         const nextLetter = nextLetterData[currentLanguage];
@@ -96,12 +97,25 @@ export class Game {
     getScore() {
         return this.score;
     }
+
+    incrementScore() {
+        this.score++;
+        this.updateScoreDisplay();
+    }
+
+    updateScoreDisplay() {
+        const scoreElement = document.getElementById('score');
+        if (scoreElement) {
+            scoreElement.textContent = `Score: ${this.score}`;
+        }
+    }
 }
 
 // Only run initialization if we're in a browser context
 if (typeof window !== 'undefined') {
+    let gameInstance;
     window.addEventListener('DOMContentLoaded', () => {
-        const game = new Game();
+        gameInstance = new Game();
         currentIndex = 0; // Start at first letter
         const firstLetter = LETTERS_DATA[currentIndex][currentLanguage];
         renderLetter(firstLetter);
