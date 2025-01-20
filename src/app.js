@@ -89,19 +89,21 @@ function saveGameData(data) {
 
 function updateProgress() {
     const subsetSize = getCurrentSubsetSize();
-    currentProgress = (currentIndex + 1) % subsetSize;
+    const newProgress = (gameState.currentIndex + 1) % subsetSize;
+    gameState.setCurrentProgress(newProgress);
     const progressElement = document.getElementById('progress');
     if (progressElement) {
-        progressElement.textContent = `Progress: ${currentProgress + 1} / ${subsetSize}`;
+        progressElement.textContent = `Progress: ${gameState.currentProgress + 1} / ${subsetSize}`;
     }
 }
 
 function checkAndIncreaseLevel() {
-    if (currentIndex + 1 >= getCurrentSubsetSize()) {
-        roundsInLevel++;
-        if (roundsInLevel >= ROUNDS_TO_LEVEL_UP && currentLevel < LETTERS_DATA.length) {
-            currentLevel++;
-            roundsInLevel = 0;
+    if (gameState.currentIndex + 1 >= getCurrentSubsetSize()) {
+        const newRounds = gameState.roundsInLevel + 1;
+        gameState.setRoundsInLevel(newRounds);
+        if (newRounds >= ROUNDS_TO_LEVEL_UP && gameState.currentLevel < LETTERS_DATA.length) {
+            gameState.setCurrentLevel(gameState.currentLevel + 1);
+            gameState.setRoundsInLevel(0);
             updateLevelDisplay();
         }
     }
@@ -115,7 +117,7 @@ function updateLevelDisplay() {
 }
 
 export function getCurrentSubsetSize() {
-    return Math.min(currentLevel, LETTERS_DATA.length);
+    return Math.min(gameState.currentLevel, LETTERS_DATA.length);
 }
 
 export function playAudio(audioFile) {
@@ -143,12 +145,12 @@ export function playAudio(audioFile) {
 }
 
 export function toggleAudio() {
-    audioEnabled = !audioEnabled;
+    gameState.setAudioEnabled(!gameState.audioEnabled);
     const btn = document.getElementById('audioToggleBtn');
     if (btn) {
-        btn.textContent = audioEnabled ? '🔊 Audio On' : '🔈 Audio Off';
+        btn.textContent = gameState.audioEnabled ? '🔊 Audio On' : '🔈 Audio Off';
     }
-    return audioEnabled;
+    return gameState.audioEnabled;
 }
 
 export function checkLetter(input) {
