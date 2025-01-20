@@ -33,6 +33,30 @@ let completedRounds = 0;
 let currentProgress = 0;
 let gameInstance;
 let letterMistakes = {};
+let playerName = '';
+
+// Load saved game data
+function loadGameData() {
+    const savedData = localStorage.getItem('letterSwipeData');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        playerName = data.name || '';
+        return data;
+    }
+    return null;
+}
+
+// Save game data
+function saveGameData(data) {
+    const gameData = {
+        name: playerName,
+        score: data.score,
+        stars: data.stars,
+        mistakes: data.mistakes,
+        timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('letterSwipeData', JSON.stringify(gameData));
+}
 
 export function getCurrentSubsetSize() {
     return currentSubsetSize;
@@ -124,10 +148,18 @@ function hideMessage() {
 import confetti from 'canvas-confetti';
 
 export class Game {
-    constructor() {
-        this.score = 0;
-        this.starsEarned = 0;
-        this.mistakes = 0;
+    constructor(savedData = null) {
+        if (savedData) {
+            this.score = savedData.score || 0;
+            this.starsEarned = savedData.stars || 0;
+            this.mistakes = savedData.mistakes || 0;
+        } else {
+            this.score = 0;
+            this.starsEarned = 0;
+            this.mistakes = 0;
+        }
+        this.updateScoreDisplay();
+        this.updateStars();
     }
 
     getMistakes() {
@@ -151,6 +183,7 @@ export class Game {
         this.updateScoreDisplay();
         this.checkAchievements();
         this.celebrateSuccess();
+        saveGameData(this);
     }
 
     updateScoreDisplay() {
@@ -202,7 +235,26 @@ export class Game {
 // Only run initialization if we're in a browser context
 if (typeof window !== 'undefined') {
     window.addEventListener('DOMContentLoaded', () => {
-        gameInstance = new Game();
+        const savedData = loadGameData();
+        
+        const nameForm = document.getElementById('name-form');
+        const gameContainer = document.getElementById('game-container');
+        const startButton = document.getElementById('startButton');
+        const playerNameInput = document.getElementById('playerName');
+        const playerNameDisplay = document.getElementById('playerNameDisplay');
+
+        if (savedData && savedData.name) {
+            playerNameInput.value = savedData.name;
+        }
+
+        startButton.addEventListener('click', () => {
+            playerName = playerNameInput.value.trim() || 'Friend';
+            playerNameDisplay.textContent = playerName;
+            nameForm.classList.add('hidden');
+            gameContainer.classList.remove('hidden');
+            
+            // Initialize game with saved data if available
+            gameInstance = new Game(savedData);
         currentIndex = 0; // Start at first letter
         const firstLetter = LETTERS_DATA[currentIndex][currentLanguage];
         renderLetter(firstLetter);

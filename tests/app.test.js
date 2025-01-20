@@ -2,8 +2,10 @@ import { Game } from '../src/app.js';
 
 describe('Game', () => {
     let game;
-
+    
     beforeEach(() => {
+        // Clear localStorage before each test
+        localStorage.clear();
         game = new Game();
         // Mock DOM elements
         document.body.innerHTML = `
@@ -70,5 +72,43 @@ describe('Game', () => {
         
         const nextIndex = getNextLetterIndex();
         expect(nextIndex).toBe(0); // Should repeat the same letter
+    });
+
+    test('should load saved game data', () => {
+        const savedData = {
+            name: 'TestPlayer',
+            score: 10,
+            stars: 2,
+            mistakes: 3
+        };
+        localStorage.setItem('letterSwipeData', JSON.stringify(savedData));
+        
+        const loadedData = loadGameData();
+        expect(loadedData.name).toBe('TestPlayer');
+        expect(loadedData.score).toBe(10);
+        expect(loadedData.stars).toBe(2);
+        expect(loadedData.mistakes).toBe(3);
+    });
+
+    test('should initialize game with saved data', () => {
+        const savedData = {
+            score: 15,
+            stars: 3,
+            mistakes: 2
+        };
+        
+        const game = new Game(savedData);
+        expect(game.getScore()).toBe(15);
+        expect(game.getStars()).toBe(3);
+        expect(game.getMistakes()).toBe(2);
+    });
+
+    test('should save game data after score increment', () => {
+        const game = new Game();
+        game.incrementScore();
+        
+        const savedData = JSON.parse(localStorage.getItem('letterSwipeData'));
+        expect(savedData.score).toBe(1);
+        expect(savedData.stars).toBe(0);
     });
 });
