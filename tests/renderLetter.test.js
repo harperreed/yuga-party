@@ -1,3 +1,5 @@
+import { renderLetter } from '../src/app.js';
+
 describe('renderLetter', () => {
     test('renders single uppercase letter', () => {
         expect(() => renderLetter('A')).toThrow('Function not implemented');
