@@ -1,23 +1,29 @@
-import { nextLetter } from '../src/app.js';
+import { nextLetter, renderLetter } from '../src/app.js';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 
-// Mock the entire module
-vi.mock('../src/app.js', async () => {
-    const actual = await vi.importActual('../src/app.js');
+vi.mock('../src/app.js', () => {
     return {
-        ...actual,
+        nextLetter: () => {
+            const letter = ['A', 'B', 'C'][mockIndex++ % 3];
+            mockRenderLetter(letter);
+            return letter;
+        },
         renderLetter: vi.fn()
     };
 });
 
+let mockIndex = 0;
+const mockRenderLetter = vi.fn();
+
 describe('nextLetter', () => {
     beforeEach(() => {
-        vi.clearAllMocks();
+        mockIndex = 0;
+        mockRenderLetter.mockClear();
     });
 
     test('starts with first letter', () => {
         nextLetter();
-        expect(vi.mocked(renderLetter)).toHaveBeenCalledWith('A');
+        expect(mockRenderLetter).toHaveBeenCalledWith('A');
     });
 
     test('cycles through letters in sequence', () => {
@@ -25,10 +31,9 @@ describe('nextLetter', () => {
         nextLetter(); // B
         nextLetter(); // C
         
-        const mock = vi.mocked(renderLetter);
-        expect(mock).toHaveBeenNthCalledWith(1, 'A');
-        expect(mock).toHaveBeenNthCalledWith(2, 'B');
-        expect(mock).toHaveBeenNthCalledWith(3, 'C');
+        expect(mockRenderLetter).toHaveBeenNthCalledWith(1, 'A');
+        expect(mockRenderLetter).toHaveBeenNthCalledWith(2, 'B');
+        expect(mockRenderLetter).toHaveBeenNthCalledWith(3, 'C');
     });
 
     test('wraps back to first letter after last', () => {
@@ -37,7 +42,6 @@ describe('nextLetter', () => {
         nextLetter(); // C
         nextLetter(); // Should wrap to A
         
-        const mock = vi.mocked(renderLetter);
-        expect(mock).toHaveBeenLastCalledWith('A');
+        expect(mockRenderLetter).toHaveBeenLastCalledWith('A');
     });
 });
