@@ -44,4 +44,31 @@ describe('Game', () => {
         const badge = document.getElementById('badge');
         expect(badge.classList.contains('hidden')).toBe(false);
     });
+
+    test('should track mistakes', () => {
+        game.incrementMistakes();
+        expect(game.getMistakes()).toBe(1);
+    });
+
+    test('should show error message on incorrect letter', () => {
+        document.body.innerHTML += '<div id="message" class="hidden">Try again!</div>';
+        const result = checkLetter('X'); // Assuming 'X' is incorrect
+        expect(result).toBe(false);
+        const message = document.getElementById('message');
+        expect(message.classList.contains('hidden')).toBe(false);
+    });
+
+    test('should repeat letters with high mistake count', () => {
+        // Setup multiple mistakes for letter 'A'
+        letterMistakes['A'] = 3;
+        currentIndex = 0; // Assuming 'A' is at index 0
+        
+        // Mock Math.random to return 0.4 (less than 0.5 threshold)
+        const mockMath = Object.create(global.Math);
+        mockMath.random = () => 0.4;
+        global.Math = mockMath;
+        
+        const nextIndex = getNextLetterIndex();
+        expect(nextIndex).toBe(0); // Should repeat the same letter
+    });
 });

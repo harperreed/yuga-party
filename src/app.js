@@ -32,6 +32,7 @@ let currentSubsetSize = 1;
 let completedRounds = 0;
 let currentProgress = 0;
 let gameInstance;
+let letterMistakes = {};
 
 export function getCurrentSubsetSize() {
     return currentSubsetSize;
@@ -81,15 +82,43 @@ export function checkLetter(input) {
         if (gameInstance) {
             gameInstance.incrementScore();
         }
-        currentIndex = (currentIndex + 1) % currentSubsetSize;
+        currentIndex = getNextLetterIndex();
         const nextLetterData = LETTERS_DATA[currentIndex];
         const nextLetter = nextLetterData[currentLanguage];
         renderLetter(nextLetter);
         updateProgress();
         checkAndIncreaseSubset();
+        hideMessage();
         return true;
+    } else {
+        letterMistakes[currentLetter] = (letterMistakes[currentLetter] || 0) + 1;
+        showMessage("Try again!");
+        return false;
     }
-    return false;
+}
+
+function getNextLetterIndex() {
+    // If current letter has high mistakes, 50% chance to repeat it
+    const currentLetter = LETTERS_DATA[currentIndex][currentLanguage];
+    if (letterMistakes[currentLetter] >= 2 && Math.random() < 0.5) {
+        return currentIndex;
+    }
+    return (currentIndex + 1) % currentSubsetSize;
+}
+
+function showMessage(text) {
+    const messageElement = document.getElementById('message');
+    if (messageElement) {
+        messageElement.textContent = text;
+        messageElement.classList.remove('hidden');
+    }
+}
+
+function hideMessage() {
+    const messageElement = document.getElementById('message');
+    if (messageElement) {
+        messageElement.classList.add('hidden');
+    }
 }
 
 import confetti from 'canvas-confetti';
@@ -98,6 +127,15 @@ export class Game {
     constructor() {
         this.score = 0;
         this.starsEarned = 0;
+        this.mistakes = 0;
+    }
+
+    getMistakes() {
+        return this.mistakes;
+    }
+
+    incrementMistakes() {
+        this.mistakes++;
     }
 
     getScore() {
