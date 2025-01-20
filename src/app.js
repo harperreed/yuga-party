@@ -104,7 +104,7 @@ function checkAndIncreaseLevel() {
 function updateLevelDisplay() {
     const levelElement = document.getElementById('level');
     if (levelElement) {
-        levelElement.textContent = `Level: ${currentLevel}`;
+        levelElement.textContent = `Level: ${gameState.currentLevel}`;
     }
 }
 
@@ -113,7 +113,7 @@ export function getCurrentSubsetSize() {
 }
 
 export function playAudio(audioFile) {
-    if (!audioEnabled) {
+    if (!gameState.audioEnabled) {
         return Promise.resolve();
     }
 
