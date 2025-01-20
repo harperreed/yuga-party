@@ -290,6 +290,7 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
 
         if (isMobile) {
             // Auto-start on mobile
+            nameForm.style.display = 'none';
             startGame();
         } else {
             // On desktop, show name form and wait for click
