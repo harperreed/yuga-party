@@ -119,11 +119,27 @@ export function getCurrentSubsetSize() {
 }
 
 export function playAudio(audioFile) {
-    if (audioEnabled) {
-        const audio = new Audio(audioFile);
-        return audio.play();
+    if (!audioEnabled) {
+        return Promise.resolve();
     }
-    return Promise.resolve();
+
+    return new Promise((resolve, reject) => {
+        const audio = new Audio(audioFile);
+        
+        audio.onerror = () => {
+            console.error('Audio failed to load:', audioFile);
+            showMessage("Sound unavailable");
+            resolve(); // Resolve anyway to not break game flow
+        };
+
+        audio.play().catch(error => {
+            console.error('Audio playback failed:', error);
+            showMessage("Sound unavailable");
+            resolve(); // Resolve anyway to not break game flow
+        });
+
+        audio.onended = resolve;
+    });
 }
 
 export function toggleAudio() {
