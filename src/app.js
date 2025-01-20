@@ -233,7 +233,7 @@ export class Game {
 }
 
 // Only run initialization if we're in a browser context
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     window.addEventListener('DOMContentLoaded', () => {
         const savedData = loadGameData();
         
