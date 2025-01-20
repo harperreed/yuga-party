@@ -31,6 +31,7 @@ let audioEnabled = true;
 let currentSubsetSize = 1;
 let completedRounds = 0;
 let currentProgress = 0;
+let gameInstance;
 
 export function getCurrentSubsetSize() {
     return currentSubsetSize;
@@ -77,7 +78,9 @@ export function checkLetter(input) {
         if (audioEnabled) {
             playAudio(LETTERS_DATA[currentIndex].audio);
         }
-        gameInstance.incrementScore();
+        if (gameInstance) {
+            gameInstance.incrementScore();
+        }
         currentIndex = (currentIndex + 1) % currentSubsetSize;
         const nextLetterData = LETTERS_DATA[currentIndex];
         const nextLetter = nextLetterData[currentLanguage];
@@ -113,7 +116,6 @@ export class Game {
 
 // Only run initialization if we're in a browser context
 if (typeof window !== 'undefined') {
-    let gameInstance;
     window.addEventListener('DOMContentLoaded', () => {
         gameInstance = new Game();
         currentIndex = 0; // Start at first letter
