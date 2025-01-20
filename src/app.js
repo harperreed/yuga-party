@@ -232,8 +232,8 @@ export class Game {
     }
 }
 
-// Only run initialization if we're in a browser context
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+// Only run initialization if we're in a full browser context with DOM APIs
+if (typeof window !== 'undefined' && window.document && 'addEventListener' in window) {
     window.addEventListener('DOMContentLoaded', () => {
         const savedData = loadGameData();
         
