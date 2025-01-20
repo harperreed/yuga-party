@@ -295,4 +295,5 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
             });
         }
     });
+    });
 }
