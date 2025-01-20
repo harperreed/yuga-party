@@ -92,24 +92,71 @@ export function checkLetter(input) {
     return false;
 }
 
+import confetti from 'canvas-confetti';
+
 export class Game {
     constructor() {
         this.score = 0;
+        this.starsEarned = 0;
     }
 
     getScore() {
         return this.score;
     }
 
+    getStars() {
+        return this.starsEarned;
+    }
+
     incrementScore() {
         this.score++;
         this.updateScoreDisplay();
+        this.checkAchievements();
+        this.celebrateSuccess();
     }
 
     updateScoreDisplay() {
         const scoreElement = document.getElementById('score');
         if (scoreElement) {
             scoreElement.textContent = `Score: ${this.score}`;
+        }
+    }
+
+    celebrateSuccess() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
+    checkAchievements() {
+        const newStars = Math.floor(this.score / 5);
+        if (newStars > this.starsEarned) {
+            this.starsEarned = newStars;
+            this.updateStars();
+        }
+        
+        if (this.score >= 25 && this.starsEarned === 5) {
+            this.showBadge();
+        }
+    }
+
+    updateStars() {
+        const starsContainer = document.getElementById('stars');
+        if (starsContainer) {
+            const stars = starsContainer.children;
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].classList.toggle('opacity-30', i >= this.starsEarned);
+                stars[i].classList.toggle('text-yellow-400', i < this.starsEarned);
+            }
+        }
+    }
+
+    showBadge() {
+        const badge = document.getElementById('badge');
+        if (badge) {
+            badge.classList.remove('hidden');
         }
     }
 }
