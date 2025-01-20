@@ -19,6 +19,16 @@ export function renderLetter(letter) {
     cardElement.textContent = letter;
 }
 
+const LETTERS = ['A', 'B', 'C'];
+let currentIndex = -1;
+
+export function nextLetter() {
+    currentIndex = (currentIndex + 1) % LETTERS.length;
+    const letter = LETTERS[currentIndex];
+    renderLetter(letter);
+    return letter;
+}
+
 export class Game {
     constructor() {
         this.score = 0;
