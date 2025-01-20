@@ -71,17 +71,21 @@ export function toggleAudio() {
     return audioEnabled;
 }
 
-export function nextLetter() {
-    currentIndex = (currentIndex + 1) % currentSubsetSize;
-    const letterData = LETTERS_DATA[currentIndex];
-    const letter = letterData[currentLanguage];
-    renderLetter(letter);
-    if (audioEnabled) {
-        playAudio(letterData.audio);
+export function checkLetter(input) {
+    const currentLetter = LETTERS_DATA[currentIndex][currentLanguage];
+    if (input.toUpperCase() === currentLetter) {
+        currentIndex = (currentIndex + 1) % currentSubsetSize;
+        const nextLetterData = LETTERS_DATA[currentIndex];
+        const nextLetter = nextLetterData[currentLanguage];
+        renderLetter(nextLetter);
+        if (audioEnabled) {
+            playAudio(nextLetterData.audio);
+        }
+        updateProgress();
+        checkAndIncreaseSubset();
+        return true;
     }
-    updateProgress();
-    checkAndIncreaseSubset();
-    return letter;
+    return false;
 }
 
 export class Game {
@@ -101,10 +105,15 @@ if (typeof window !== 'undefined') {
         renderLetter('A'); // Initialize with 'A'
         updateProgress(); // Show initial progress
         
-        const nextBtn = document.getElementById('nextBtn');
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                nextLetter();
+        const letterInput = document.getElementById('letterInput');
+        if (letterInput) {
+            letterInput.addEventListener('input', (e) => {
+                const input = e.target.value;
+                if (input) {
+                    if (checkLetter(input)) {
+                        e.target.value = ''; // Clear input on success
+                    }
+                }
             });
         }
 
