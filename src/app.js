@@ -107,9 +107,19 @@ if (typeof window !== 'undefined') {
         renderLetter(firstLetter);
         updateProgress();
         
+        // Handle keyboard input anywhere on the page
+        document.addEventListener('keypress', (e) => {
+            const input = e.key.toUpperCase();
+            if (/^[A-Z]$/.test(input)) {
+                if (checkLetter(input)) {
+                    // Success handled in checkLetter
+                }
+            }
+        });
+
+        // Keep hidden input for mobile support
         const letterInput = document.getElementById('letterInput');
         if (letterInput) {
-            letterInput.focus(); // Auto-focus the input
             letterInput.addEventListener('input', (e) => {
                 const input = e.target.value.toUpperCase();
                 if (input) {
@@ -119,6 +129,11 @@ if (typeof window !== 'undefined') {
                 }
             });
         }
+
+        // Handle clicks anywhere to focus hidden input (for mobile)
+        document.addEventListener('click', () => {
+            letterInput?.focus();
+        });
 
         const audioToggleBtn = document.getElementById('audioToggleBtn');
         if (audioToggleBtn) {
