@@ -161,7 +161,7 @@ export function checkLetter(input) {
         updateProgress();
         checkAndIncreaseLevel();
         hideMessage();
-        if (timedMode) {
+        if (gameState.timedMode) {
             startTimer(); // Reset timer only in timed mode
         }
         return true;
@@ -189,7 +189,7 @@ function getNextLetterIndex() {
 }
 
 function showMessage(text) {
-    if (toddlerMode) {
+    if (gameState.toddlerMode) {
         const toddlerMessage = document.getElementById('toddlerMessage');
         if (toddlerMessage) {
             toddlerMessage.textContent = text === "Try again!" ? "❌" : "✨";
@@ -243,9 +243,9 @@ function handleTimeUp() {
     if (gameInstance) {
         gameInstance.handleTimeOut();
     }
-    currentIndex = getNextLetterIndex();
-    const nextLetterData = LETTERS_DATA[currentIndex];
-    const nextLetter = nextLetterData[currentLanguage];
+    gameState.setCurrentIndex(getNextLetterIndex());
+    const nextLetterData = LETTERS_DATA[gameState.currentIndex];
+    const nextLetter = nextLetterData[gameState.currentLanguage];
     renderLetter(nextLetter);
     updateProgress();
     checkAndIncreaseLevel();
@@ -254,12 +254,12 @@ function handleTimeUp() {
 }
 
 function toggleToddlerMode() {
-    toddlerMode = !toddlerMode;
+    gameState.setToddlerMode(!gameState.toddlerMode);
     const gameContainer = document.getElementById('game-container');
     const btn = document.getElementById('toddlerModeBtn');
     if (gameContainer && btn) {
-        gameContainer.classList.toggle('toddler-mode', toddlerMode);
-        btn.textContent = toddlerMode ? '👶 Normal Mode' : '👶 Toddler Mode';
+        gameContainer.classList.toggle('toddler-mode', gameState.toddlerMode);
+        btn.textContent = gameState.toddlerMode ? '👶 Normal Mode' : '👶 Toddler Mode';
     }
     // Initialize toddler mode on page load
     if (gameContainer) {
@@ -268,19 +268,19 @@ function toggleToddlerMode() {
 }
 
 function toggleTimedMode() {
-    timedMode = !timedMode;
+    gameState.setTimedMode(!gameState.timedMode);
     const timerElement = document.getElementById('timer');
     const btn = document.getElementById('timedModeBtn');
     
     if (timerElement) {
-        timerElement.style.display = timedMode ? 'block' : 'none';
+        timerElement.style.display = gameState.timedMode ? 'block' : 'none';
     }
     
     if (btn) {
-        btn.textContent = timedMode ? '⏱️ Untimed' : '⏱️ Timed';
+        btn.textContent = gameState.timedMode ? '⏱️ Untimed' : '⏱️ Timed';
     }
     
-    if (timedMode) {
+    if (gameState.timedMode) {
         startTimer();
     } else {
         clearInterval(timerInterval);
