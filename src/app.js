@@ -59,10 +59,6 @@ function saveGameData(data) {
     localStorage.setItem('letterSwipeData', JSON.stringify(gameData));
 }
 
-export function getCurrentSubsetSize() {
-    return currentSubsetSize;
-}
-
 function updateProgress() {
     const subsetSize = getCurrentSubsetSize();
     currentProgress = (currentIndex + 1) % subsetSize;
