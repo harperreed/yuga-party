@@ -119,6 +119,14 @@ describe('Game', () => {
         expect(game.getScore()).toBe(0);
     });
 
+    test('should toggle timed mode', () => {
+        expect(timedMode).toBe(false);
+        toggleTimedMode();
+        expect(timedMode).toBe(true);
+        toggleTimedMode();
+        expect(timedMode).toBe(false);
+    });
+
     test('should save game data after score increment', () => {
         const game = new Game();
         game.incrementScore();

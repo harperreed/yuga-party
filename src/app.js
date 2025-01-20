@@ -36,6 +36,7 @@ let gameInstance;
 let letterMistakes = {};
 let playerName = '';
 let toddlerMode = true;
+let timedMode = false;
 let timerInterval = null;
 const TIMER_DURATION = 10; // seconds
 let timeLeft = TIMER_DURATION;
@@ -127,7 +128,9 @@ export function checkLetter(input) {
         updateProgress();
         checkAndIncreaseLevel();
         hideMessage();
-        startTimer(); // Reset timer on success
+        if (timedMode) {
+            startTimer(); // Reset timer only in timed mode
+        }
         return true;
     } else {
         letterMistakes[currentLetter] = (letterMistakes[currentLetter] || 0) + 1;
@@ -221,6 +224,26 @@ function toggleToddlerMode() {
     // Initialize toddler mode on page load
     if (gameContainer) {
         gameContainer.classList.add('toddler-mode');
+    }
+}
+
+function toggleTimedMode() {
+    timedMode = !timedMode;
+    const timerElement = document.getElementById('timer');
+    const btn = document.getElementById('timedModeBtn');
+    
+    if (timerElement) {
+        timerElement.style.display = timedMode ? 'block' : 'none';
+    }
+    
+    if (btn) {
+        btn.textContent = timedMode ? '⏱️ Untimed' : '⏱️ Timed';
+    }
+    
+    if (timedMode) {
+        startTimer();
+    } else {
+        clearInterval(timerInterval);
     }
 }
 
@@ -397,6 +420,17 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
         const toddlerModeBtn = document.getElementById('toddlerModeBtn');
         if (toddlerModeBtn) {
             toddlerModeBtn.addEventListener('click', toggleToddlerMode);
+        }
+
+        const timedModeBtn = document.getElementById('timedModeBtn');
+        if (timedModeBtn) {
+            timedModeBtn.addEventListener('click', toggleTimedMode);
+        }
+
+        // Hide timer initially
+        const timerElement = document.getElementById('timer');
+        if (timerElement) {
+            timerElement.style.display = 'none';
         }
     });
 }
