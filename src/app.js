@@ -73,14 +73,14 @@ export function toggleAudio() {
 
 export function checkLetter(input) {
     const currentLetter = LETTERS_DATA[currentIndex][currentLanguage];
-    if (input.toUpperCase() === currentLetter) {
+    if (input === currentLetter) {
+        if (audioEnabled) {
+            playAudio(LETTERS_DATA[currentIndex].audio);
+        }
         currentIndex = (currentIndex + 1) % currentSubsetSize;
         const nextLetterData = LETTERS_DATA[currentIndex];
         const nextLetter = nextLetterData[currentLanguage];
         renderLetter(nextLetter);
-        if (audioEnabled) {
-            playAudio(nextLetterData.audio);
-        }
         updateProgress();
         checkAndIncreaseSubset();
         return true;
@@ -102,13 +102,16 @@ export class Game {
 if (typeof window !== 'undefined') {
     window.addEventListener('DOMContentLoaded', () => {
         const game = new Game();
-        renderLetter('A'); // Initialize with 'A'
-        updateProgress(); // Show initial progress
+        currentIndex = 0; // Start at first letter
+        const firstLetter = LETTERS_DATA[currentIndex][currentLanguage];
+        renderLetter(firstLetter);
+        updateProgress();
         
         const letterInput = document.getElementById('letterInput');
         if (letterInput) {
+            letterInput.focus(); // Auto-focus the input
             letterInput.addEventListener('input', (e) => {
-                const input = e.target.value;
+                const input = e.target.value.toUpperCase();
                 if (input) {
                     if (checkLetter(input)) {
                         e.target.value = ''; // Clear input on success
