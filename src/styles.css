@@ -21,11 +21,11 @@
     animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
   }
   .card-container {
-    @apply relative w-64 h-64 sm:w-40 sm:h-40;
+    @apply relative w-80 h-80 sm:w-64 sm:h-64;
   }
   
   .card {
-    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000 w-full h-full text-8xl sm:text-7xl;
+    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000 w-full h-full text-9xl sm:text-8xl;
   }
 
   .navbar-bottom {
@@ -41,7 +41,7 @@
   }
 
   .toddler-mode .card {
-    @apply text-9xl;
+    @apply text-[10rem];
   }
 
   .toddler-mode #score,
