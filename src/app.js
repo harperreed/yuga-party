@@ -137,7 +137,7 @@ function getNextLetterIndex() {
     if (letterMistakes[currentLetter] >= 2 && Math.random() < 0.5) {
         return currentIndex;
     }
-    return (currentIndex + 1) % currentSubsetSize;
+    return (currentIndex + 1) % getCurrentSubsetSize();
 }
 
 function showMessage(text) {
