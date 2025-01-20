@@ -48,21 +48,12 @@ const LETTERS_DATA = [
     { en: 'Z', es: 'Z', jp: 'は', audio: 'audio/en_z.mp3' }
 ];
 
-let currentIndex = -1;
-let currentLanguage = 'en';
-let audioEnabled = true;
-let currentLevel = 1;
-let roundsInLevel = 0;
+import { GameState } from './gameState.js';
+
 const ROUNDS_TO_LEVEL_UP = 2;
-let currentProgress = 0;
-let gameInstance;
-let letterMistakes = {};
-let playerName = '';
-let toddlerMode = true;
-let timedMode = false;
 let timerInterval = null;
-const TIMER_DURATION = 10; // seconds
-let timeLeft = TIMER_DURATION;
+let gameInstance;
+const gameState = new GameState();
 
 // Load saved game data
 function loadGameData() {
