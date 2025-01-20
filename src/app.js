@@ -42,5 +42,5 @@ export class Game {
 // Only run initialization if we're in a browser context
 if (typeof window !== 'undefined') {
     const game = new Game();
-    const container = document.getElementById('game-container');
+    renderLetter('A'); // Initialize with 'A'
 }
