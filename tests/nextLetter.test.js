@@ -1,19 +1,16 @@
 import { nextLetter, renderLetter } from '../src/app.js';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 
-vi.mock('../src/app.js', () => ({
-    renderLetter: vi.fn(),
-    nextLetter: vi.importActual('../src/app.js').nextLetter
-}));
-
 describe('nextLetter', () => {
+    const renderLetterSpy = vi.spyOn({ renderLetter }, 'renderLetter');
+
     beforeEach(() => {
-        vi.clearAllMocks();
+        renderLetterSpy.mockClear();
     });
 
     test('starts with first letter', () => {
         nextLetter();
-        expect(renderLetter).toHaveBeenCalledWith('A');
+        expect(renderLetterSpy).toHaveBeenCalledWith('A');
     });
 
     test('cycles through letters in sequence', () => {
@@ -21,9 +18,9 @@ describe('nextLetter', () => {
         nextLetter(); // B
         nextLetter(); // C
         
-        expect(renderLetter).toHaveBeenNthCalledWith(1, 'A');
-        expect(renderLetter).toHaveBeenNthCalledWith(2, 'B');
-        expect(renderLetter).toHaveBeenNthCalledWith(3, 'C');
+        expect(renderLetterSpy).toHaveBeenNthCalledWith(1, 'A');
+        expect(renderLetterSpy).toHaveBeenNthCalledWith(2, 'B');
+        expect(renderLetterSpy).toHaveBeenNthCalledWith(3, 'C');
     });
 
     test('wraps back to first letter after last', () => {
@@ -32,6 +29,6 @@ describe('nextLetter', () => {
         nextLetter(); // C
         nextLetter(); // Should wrap to A
         
-        expect(renderLetter).toHaveBeenLastCalledWith('A');
+        expect(renderLetterSpy).toHaveBeenLastCalledWith('A');
     });
 });
