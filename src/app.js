@@ -312,13 +312,13 @@ export class Game {
     }
 
     checkAchievements() {
-        const newStars = Math.floor(this.score / 5);
+        const newStars = Math.floor(this.score / 15);
         if (newStars > this.starsEarned) {
             this.starsEarned = newStars;
             this.updateStars();
         }
         
-        if (this.score >= 25 && this.starsEarned === 5) {
+        if (this.score >= 75 && this.starsEarned === 5) {
             this.showBadge();
         }
     }
