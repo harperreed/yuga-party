@@ -111,4 +111,30 @@ describe('Game', () => {
         expect(savedData.score).toBe(1);
         expect(savedData.stars).toBe(0);
     });
+
+    test('should level up after completing required rounds', () => {
+        // Start at level 1
+        expect(getCurrentSubsetSize()).toBe(1);
+        
+        // Complete first round
+        checkLetter(LETTERS_DATA[0][currentLanguage]);
+        expect(roundsInLevel).toBe(1);
+        
+        // Complete second round
+        checkLetter(LETTERS_DATA[0][currentLanguage]);
+        
+        // Should now be at level 2
+        expect(getCurrentSubsetSize()).toBe(2);
+        expect(roundsInLevel).toBe(0);
+    });
+
+    test('should only show letters for current level', () => {
+        // At level 1, should only use first letter
+        expect(getCurrentSubsetSize()).toBe(1);
+        const firstLetter = LETTERS_DATA[0][currentLanguage];
+        checkLetter(firstLetter);
+        
+        // Next letter should still be from level 1
+        expect(LETTERS_DATA[currentIndex][currentLanguage]).toBe(firstLetter);
+    });
 });

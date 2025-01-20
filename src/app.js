@@ -28,8 +28,9 @@ const LETTERS_DATA = [
 let currentIndex = -1;
 let currentLanguage = 'en';
 let audioEnabled = true;
-let currentSubsetSize = 1;
-let completedRounds = 0;
+let currentLevel = 1;
+let roundsInLevel = 0;
+const ROUNDS_TO_LEVEL_UP = 2;
 let currentProgress = 0;
 let gameInstance;
 let letterMistakes = {};
@@ -63,21 +64,34 @@ export function getCurrentSubsetSize() {
 }
 
 function updateProgress() {
-    currentProgress = (currentIndex + 1) % currentSubsetSize;
+    const subsetSize = getCurrentSubsetSize();
+    currentProgress = (currentIndex + 1) % subsetSize;
     const progressElement = document.getElementById('progress');
     if (progressElement) {
-        progressElement.textContent = `Progress: ${currentProgress + 1} / ${currentSubsetSize}`;
+        progressElement.textContent = `Progress: ${currentProgress + 1} / ${subsetSize}`;
     }
 }
 
-function checkAndIncreaseSubset() {
-    if (currentIndex + 1 >= currentSubsetSize) {
-        completedRounds++;
-        if (completedRounds >= 2 && currentSubsetSize < LETTERS_DATA.length) {
-            currentSubsetSize = Math.min(currentSubsetSize + 1, LETTERS_DATA.length);
-            completedRounds = 0;
+function checkAndIncreaseLevel() {
+    if (currentIndex + 1 >= getCurrentSubsetSize()) {
+        roundsInLevel++;
+        if (roundsInLevel >= ROUNDS_TO_LEVEL_UP && currentLevel < LETTERS_DATA.length) {
+            currentLevel++;
+            roundsInLevel = 0;
+            updateLevelDisplay();
         }
     }
+}
+
+function updateLevelDisplay() {
+    const levelElement = document.getElementById('level');
+    if (levelElement) {
+        levelElement.textContent = `Level: ${currentLevel}`;
+    }
+}
+
+export function getCurrentSubsetSize() {
+    return Math.min(currentLevel, LETTERS_DATA.length);
 }
 
 export function playAudio(audioFile) {
@@ -111,7 +125,7 @@ export function checkLetter(input) {
         const nextLetter = nextLetterData[currentLanguage];
         renderLetter(nextLetter);
         updateProgress();
-        checkAndIncreaseSubset();
+        checkAndIncreaseLevel();
         hideMessage();
         return true;
     } else {
