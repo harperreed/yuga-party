@@ -7,8 +7,8 @@
     <link href="./styles.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
-    <div class="container mx-auto p-6 max-w-2xl">
-        <h1 class="text-5xl font-bold text-center text-gray-800 mb-8 tracking-tight">Letter Swipe</h1>
+    <div class="container mx-auto p-4 sm:p-6 max-w-2xl">
+        <h1 class="text-4xl sm:text-5xl font-bold text-center text-gray-800 mb-6 sm:mb-8 tracking-tight">Letter Swipe</h1>
         
         <!-- Name Input Form -->
         <div id="name-form" class="bg-white rounded-2xl shadow-xl p-8 mb-8">
@@ -31,7 +31,7 @@
                 Welcome, <span id="playerNameDisplay">Friend</span>!
             </div>
             <div class="card-container mx-auto">
-                <div id="card" class="card text-6xl font-bold flex items-center justify-center w-40 h-40 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md mx-auto"></div>
+                <div id="card" class="card text-5xl sm:text-6xl font-bold flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md mx-auto"></div>
             </div>
             <div class="text-center mt-4">
                 <div class="flex items-center justify-center gap-2 mb-2">
@@ -63,17 +63,19 @@
     <!-- Bottom Navbar -->
     <nav class="navbar-bottom">
         <div class="navbar-content">
-            <div class="flex items-center gap-4">
+            <div class="flex flex-wrap items-center justify-between w-full gap-2">
                 <span id="level" class="text-sm font-medium text-gray-600">Level: 1</span>
-                <button id="toddlerModeBtn" 
-                    class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">
-                    👶 Toddler Mode
-                </button>
+                <div class="flex gap-2">
+                    <button id="toddlerModeBtn" 
+                        class="px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">
+                        👶 Mode
+                    </button>
+                    <button id="audioToggleBtn" 
+                        class="px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">
+                        🔊
+                    </button>
+                </div>
             </div>
-            <button id="audioToggleBtn" 
-                class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transform transition-all duration-200 hover:scale-105 shadow-sm text-sm">
-                🔊 Audio On
-            </button>
         </div>
     </nav>
 

@@ -10,11 +10,11 @@
 
 @layer components {
   .card-container {
-    @apply relative w-40 h-40;
+    @apply relative w-32 h-32 sm:w-40 sm:h-40;
   }
   
   .card {
-    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000;
+    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000 w-full h-full;
   }
 
   .navbar-bottom {
