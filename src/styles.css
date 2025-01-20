@@ -35,10 +35,18 @@
   }
 
   .toddler-message {
-    @apply text-8xl text-center my-4 animate-bounce;
+    @apply text-9xl text-center my-4 animate-bounce;
   }
 
   .toddler-mode .card {
-    @apply text-8xl;
+    @apply text-9xl;
+  }
+
+  .toddler-mode #score,
+  .toddler-mode #level,
+  .toddler-mode #progress,
+  .toddler-mode #timer,
+  .toddler-mode button {
+    @apply text-2xl;
   }
 }
