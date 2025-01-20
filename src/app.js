@@ -22,7 +22,30 @@ export function renderLetter(letter) {
 const LETTERS_DATA = [
     { en: 'A', es: 'A', jp: 'あ', audio: 'audio/en_a.mp3' },
     { en: 'B', es: 'B', jp: 'い', audio: 'audio/en_b.mp3' },
-    { en: 'C', es: 'C', jp: 'う', audio: 'audio/en_c.mp3' }
+    { en: 'C', es: 'C', jp: 'う', audio: 'audio/en_c.mp3' },
+    { en: 'D', es: 'D', jp: 'え', audio: 'audio/en_d.mp3' },
+    { en: 'E', es: 'E', jp: 'お', audio: 'audio/en_e.mp3' },
+    { en: 'F', es: 'F', jp: 'か', audio: 'audio/en_f.mp3' },
+    { en: 'G', es: 'G', jp: 'き', audio: 'audio/en_g.mp3' },
+    { en: 'H', es: 'H', jp: 'く', audio: 'audio/en_h.mp3' },
+    { en: 'I', es: 'I', jp: 'け', audio: 'audio/en_i.mp3' },
+    { en: 'J', es: 'J', jp: 'こ', audio: 'audio/en_j.mp3' },
+    { en: 'K', es: 'K', jp: 'さ', audio: 'audio/en_k.mp3' },
+    { en: 'L', es: 'L', jp: 'し', audio: 'audio/en_l.mp3' },
+    { en: 'M', es: 'M', jp: 'す', audio: 'audio/en_m.mp3' },
+    { en: 'N', es: 'N', jp: 'せ', audio: 'audio/en_n.mp3' },
+    { en: 'O', es: 'O', jp: 'そ', audio: 'audio/en_o.mp3' },
+    { en: 'P', es: 'P', jp: 'た', audio: 'audio/en_p.mp3' },
+    { en: 'Q', es: 'Q', jp: 'ち', audio: 'audio/en_q.mp3' },
+    { en: 'R', es: 'R', jp: 'つ', audio: 'audio/en_r.mp3' },
+    { en: 'S', es: 'S', jp: 'て', audio: 'audio/en_s.mp3' },
+    { en: 'T', es: 'T', jp: 'と', audio: 'audio/en_t.mp3' },
+    { en: 'U', es: 'U', jp: 'な', audio: 'audio/en_u.mp3' },
+    { en: 'V', es: 'V', jp: 'に', audio: 'audio/en_v.mp3' },
+    { en: 'W', es: 'W', jp: 'ぬ', audio: 'audio/en_w.mp3' },
+    { en: 'X', es: 'X', jp: 'ね', audio: 'audio/en_x.mp3' },
+    { en: 'Y', es: 'Y', jp: 'の', audio: 'audio/en_y.mp3' },
+    { en: 'Z', es: 'Z', jp: 'は', audio: 'audio/en_z.mp3' }
 ];
 
 let currentIndex = -1;
