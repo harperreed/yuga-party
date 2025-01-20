@@ -51,6 +51,7 @@ const LETTERS_DATA = [
 import { GameState } from './gameState.js';
 
 const ROUNDS_TO_LEVEL_UP = 2;
+const TIMER_DURATION = 10; // seconds
 let timerInterval = null;
 let gameInstance;
 const gameState = new GameState();
@@ -145,17 +146,17 @@ export function toggleAudio() {
 }
 
 export function checkLetter(input) {
-    const currentLetter = LETTERS_DATA[currentIndex][currentLanguage];
+    const currentLetter = LETTERS_DATA[gameState.currentIndex][gameState.currentLanguage];
     if (input === currentLetter) {
-        if (audioEnabled) {
-            playAudio(LETTERS_DATA[currentIndex].audio);
+        if (gameState.audioEnabled) {
+            playAudio(LETTERS_DATA[gameState.currentIndex].audio);
         }
         if (gameInstance) {
             gameInstance.incrementScore();
         }
-        currentIndex = getNextLetterIndex();
-        const nextLetterData = LETTERS_DATA[currentIndex];
-        const nextLetter = nextLetterData[currentLanguage];
+        gameState.setCurrentIndex(getNextLetterIndex());
+        const nextLetterData = LETTERS_DATA[gameState.currentIndex];
+        const nextLetter = nextLetterData[gameState.currentLanguage];
         renderLetter(nextLetter);
         updateProgress();
         checkAndIncreaseLevel();
@@ -180,11 +181,11 @@ export function checkLetter(input) {
 
 function getNextLetterIndex() {
     // If current letter has high mistakes, 50% chance to repeat it
-    const currentLetter = LETTERS_DATA[currentIndex][currentLanguage];
-    if (letterMistakes[currentLetter] >= 2 && Math.random() < 0.5) {
-        return currentIndex;
+    const currentLetter = LETTERS_DATA[gameState.currentIndex][gameState.currentLanguage];
+    if (gameState.letterMistakes[currentLetter] >= 2 && Math.random() < 0.5) {
+        return gameState.currentIndex;
     }
-    return (currentIndex + 1) % getCurrentSubsetSize();
+    return (gameState.currentIndex + 1) % getCurrentSubsetSize();
 }
 
 function showMessage(text) {
@@ -416,8 +417,8 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
             
             startButton.addEventListener('click', startGame);
         }
-        currentIndex = 0; // Start at first letter
-        const firstLetter = LETTERS_DATA[currentIndex][currentLanguage];
+        gameState.setCurrentIndex(0); // Start at first letter
+        const firstLetter = LETTERS_DATA[gameState.currentIndex][gameState.currentLanguage];
         renderLetter(firstLetter);
         updateProgress();
         
