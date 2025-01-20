@@ -173,6 +173,13 @@ export function checkLetter(input) {
         return true;
     } else {
         letterMistakes[currentLetter] = (letterMistakes[currentLetter] || 0) + 1;
+        const gameContainer = document.getElementById('game-container');
+        if (gameContainer) {
+            gameContainer.classList.add('shake');
+            setTimeout(() => {
+                gameContainer.classList.remove('shake');
+            }, 500);
+        }
         showMessage("Try again!");
         return false;
     }
