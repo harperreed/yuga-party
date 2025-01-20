@@ -344,5 +344,4 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
             toddlerModeBtn.addEventListener('click', toggleToddlerMode);
         }
     });
-    });
 }
