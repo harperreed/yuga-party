@@ -402,7 +402,9 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
             nameForm.classList.add('hidden');
             gameContainer.classList.remove('hidden');
             gameInstance = new Game(savedData);
-            startTimer();
+            if (gameState.timedMode) {
+                startTimer();
+            }
         };
 
         if (isMobile) {
