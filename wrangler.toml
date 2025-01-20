@@ -1,0 +1,13 @@
+name = "letter-swipe"
+type = "webpack"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+
+[site]
+bucket = "./src"
+entry-point = "workers-site"
+
+[env.production]
+workers_dev = false
