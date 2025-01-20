@@ -1,8 +1,14 @@
 import { renderLetter } from '../src/app.js';
+import '@testing-library/jest-dom';
 
 describe('renderLetter', () => {
+    beforeEach(() => {
+        document.body.innerHTML = '<div id="card"></div>';
+    });
     test('renders single uppercase letter', () => {
-        expect(() => renderLetter('A')).toThrow('Function not implemented');
+        renderLetter('B');
+        const cardElement = document.getElementById('card');
+        expect(cardElement).toHaveTextContent('B');
     });
 
     test('throws error for empty string', () => {
