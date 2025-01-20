@@ -44,5 +44,12 @@ if (typeof window !== 'undefined') {
     window.addEventListener('DOMContentLoaded', () => {
         const game = new Game();
         renderLetter('A'); // Initialize with 'A'
+        
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                nextLetter();
+            });
+        }
     });
 }
