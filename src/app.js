@@ -12,7 +12,11 @@ export function renderLetter(letter) {
         throw new Error('Invalid input');
     }
 
-    throw new Error('Function not implemented');
+    const cardElement = document.getElementById('card');
+    if (!cardElement) {
+        throw new Error('Card element not found');
+    }
+    cardElement.textContent = letter;
 }
 
 export class Game {
