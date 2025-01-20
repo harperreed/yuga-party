@@ -36,6 +36,9 @@ let gameInstance;
 let letterMistakes = {};
 let playerName = '';
 let toddlerMode = true;
+let timerInterval = null;
+const TIMER_DURATION = 10; // seconds
+let timeLeft = TIMER_DURATION;
 
 // Load saved game data
 function loadGameData() {
@@ -124,6 +127,7 @@ export function checkLetter(input) {
         updateProgress();
         checkAndIncreaseLevel();
         hideMessage();
+        startTimer(); // Reset timer on success
         return true;
     } else {
         letterMistakes[currentLetter] = (letterMistakes[currentLetter] || 0) + 1;
@@ -167,6 +171,43 @@ function hideMessage() {
     if (toddlerMessage) {
         toddlerMessage.classList.add('hidden');
     }
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    timeLeft = TIMER_DURATION;
+    updateTimerDisplay();
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            handleTimeUp();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const timerElement = document.getElementById('timer');
+    if (timerElement) {
+        timerElement.textContent = `Time Left: ${timeLeft}s`;
+    }
+}
+
+function handleTimeUp() {
+    if (gameInstance) {
+        gameInstance.handleTimeOut();
+    }
+    currentIndex = getNextLetterIndex();
+    const nextLetterData = LETTERS_DATA[currentIndex];
+    const nextLetter = nextLetterData[currentLanguage];
+    renderLetter(nextLetter);
+    updateProgress();
+    checkAndIncreaseLevel();
+    showMessage("Time's up!");
+    startTimer();
 }
 
 function toggleToddlerMode() {
@@ -222,6 +263,14 @@ export class Game {
         this.checkAchievements();
         this.celebrateSuccess();
         saveGameData(this);
+    }
+
+    handleTimeOut() {
+        if (this.score > 0) {
+            this.score--;
+            this.updateScoreDisplay();
+            saveGameData(this);
+        }
     }
 
     updateScoreDisplay() {
@@ -290,6 +339,7 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
             nameForm.classList.add('hidden');
             gameContainer.classList.remove('hidden');
             gameInstance = new Game(savedData);
+            startTimer();
         };
 
         if (isMobile) {

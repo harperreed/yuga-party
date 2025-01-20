@@ -103,6 +103,22 @@ describe('Game', () => {
         expect(game.getMistakes()).toBe(2);
     });
 
+    test('timer should start at 10 seconds', () => {
+        expect(timeLeft).toBe(TIMER_DURATION);
+    });
+
+    test('should deduct point when timer expires', () => {
+        const game = new Game({ score: 5 });
+        game.handleTimeOut();
+        expect(game.getScore()).toBe(4);
+    });
+
+    test('should not deduct points below zero', () => {
+        const game = new Game({ score: 0 });
+        game.handleTimeOut();
+        expect(game.getScore()).toBe(0);
+    });
+
     test('should save game data after score increment', () => {
         const game = new Game();
         game.incrementScore();
