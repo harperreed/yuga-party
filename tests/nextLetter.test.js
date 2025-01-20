@@ -1,13 +1,14 @@
 import { nextLetter, renderLetter } from '../src/app.js';
+import { vi, describe, test, expect, beforeEach } from 'vitest';
 
-jest.mock('../src/app.js', () => ({
-    ...jest.requireActual('../src/app.js'),
-    renderLetter: jest.fn()
+vi.mock('../src/app.js', () => ({
+    renderLetter: vi.fn(),
+    nextLetter: vi.importActual('../src/app.js').nextLetter
 }));
 
 describe('nextLetter', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('starts with first letter', () => {
