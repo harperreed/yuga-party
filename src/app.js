@@ -35,7 +35,7 @@ let currentProgress = 0;
 let gameInstance;
 let letterMistakes = {};
 let playerName = '';
-let toddlerMode = false;
+let toddlerMode = true;
 
 // Load saved game data
 function loadGameData() {
@@ -176,6 +176,10 @@ function toggleToddlerMode() {
     if (gameContainer && btn) {
         gameContainer.classList.toggle('toddler-mode', toddlerMode);
         btn.textContent = toddlerMode ? '👶 Normal Mode' : '👶 Toddler Mode';
+    }
+    // Initialize toddler mode on page load
+    if (gameContainer) {
+        gameContainer.classList.add('toddler-mode');
     }
 }
 
