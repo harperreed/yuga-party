@@ -277,18 +277,28 @@ if (typeof window !== 'undefined' && window.document && 'addEventListener' in wi
         const playerNameInput = document.getElementById('playerName');
         const playerNameDisplay = document.getElementById('playerNameDisplay');
 
-        if (savedData && savedData.name) {
-            playerNameInput.value = savedData.name;
-        }
+        // Check if we're on mobile
+        const isMobile = window.innerWidth < 640; // matches sm: breakpoint
 
-        startButton.addEventListener('click', () => {
-            playerName = playerNameInput.value.trim() || 'Friend';
+        const startGame = () => {
+            playerName = (playerNameInput.value.trim() || savedData?.name || 'Friend');
             playerNameDisplay.textContent = playerName;
             nameForm.classList.add('hidden');
             gameContainer.classList.remove('hidden');
-            
-            // Initialize game with saved data if available
             gameInstance = new Game(savedData);
+        };
+
+        if (isMobile) {
+            // Auto-start on mobile
+            startGame();
+        } else {
+            // On desktop, show name form and wait for click
+            if (savedData && savedData.name) {
+                playerNameInput.value = savedData.name;
+            }
+            
+            startButton.addEventListener('click', startGame);
+        }
         currentIndex = 0; // Start at first letter
         const firstLetter = LETTERS_DATA[currentIndex][currentLanguage];
         renderLetter(firstLetter);
