@@ -12,6 +12,7 @@
   "description": "A letter swiping game",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.11.0",
+    "@parcel/transformer-postcss": "^2.11.0",
     "autoprefixer": "^10.4.17",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
