@@ -19,13 +19,41 @@ export function renderLetter(letter) {
     cardElement.textContent = letter;
 }
 
-const LETTERS = ['A', 'B', 'C'];
+const LETTERS_DATA = [
+    { en: 'A', es: 'A', jp: 'あ', audio: 'audio/en_a.mp3' },
+    { en: 'B', es: 'B', jp: 'い', audio: 'audio/en_b.mp3' },
+    { en: 'C', es: 'C', jp: 'う', audio: 'audio/en_c.mp3' }
+];
+
 let currentIndex = -1;
+let currentLanguage = 'en';
+let audioEnabled = true;
+
+export function playAudio(audioFile) {
+    if (audioEnabled) {
+        const audio = new Audio(audioFile);
+        return audio.play();
+    }
+    return Promise.resolve();
+}
+
+export function toggleAudio() {
+    audioEnabled = !audioEnabled;
+    const btn = document.getElementById('audioToggleBtn');
+    if (btn) {
+        btn.textContent = audioEnabled ? '🔊 Audio On' : '🔈 Audio Off';
+    }
+    return audioEnabled;
+}
 
 export function nextLetter() {
-    currentIndex = (currentIndex + 1) % LETTERS.length;
-    const letter = LETTERS[currentIndex];
+    currentIndex = (currentIndex + 1) % LETTERS_DATA.length;
+    const letterData = LETTERS_DATA[currentIndex];
+    const letter = letterData[currentLanguage];
     renderLetter(letter);
+    if (audioEnabled) {
+        playAudio(letterData.audio);
+    }
     return letter;
 }
 
@@ -49,6 +77,13 @@ if (typeof window !== 'undefined') {
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
                 nextLetter();
+            });
+        }
+
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        if (audioToggleBtn) {
+            audioToggleBtn.addEventListener('click', () => {
+                toggleAudio();
             });
         }
     });
