@@ -2,12 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
 @layer components {
   .card-container {
-    @apply relative w-40 h-40 perspective-1000;
+    @apply relative w-40 h-40;
   }
   
   .card {
-    @apply transform transition-transform duration-300 ease-in-out hover:scale-105;
+    @apply transform transition-all duration-300 ease-in-out hover:scale-105 perspective-1000;
   }
 }
