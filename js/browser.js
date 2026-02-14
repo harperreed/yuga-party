@@ -238,7 +238,8 @@ var Browser = {
     /**
      * Render a site's content into the page content area. Sites provide a
      * render(container, browser) function that builds DOM content safely.
-     * This is the only code path that sets page content from site data.
+     * After rendering, declarative click targets are wired up via
+     * SiteRegistry.attachClickTargets.
      *
      * @param {object} site - The site object from the registry
      */
@@ -249,6 +250,11 @@ var Browser = {
         // Sites are expected to provide a render function that builds DOM
         if (typeof site.render === 'function') {
             site.render(content, this);
+        }
+
+        // Wire up declarative click targets after the site has rendered its DOM
+        if (typeof SiteRegistry !== 'undefined' && typeof SiteRegistry.attachClickTargets === 'function') {
+            SiteRegistry.attachClickTargets(content, site, this);
         }
     },
 
