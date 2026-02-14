@@ -1,5 +1,5 @@
-<!-- ABOUTME: In-browser test runner for the Yugaaaaa! game logic. -->
-<!-- ABOUTME: Loads game.js and game.test.js, provides a minimal assertion framework, displays pass/fail results. -->
+<!-- ABOUTME: In-browser test runner for the Yugaaaaa! game engine and browser navigation. -->
+<!-- ABOUTME: Loads game.js, browser.js, and their test files, provides a minimal assertion framework, displays pass/fail results. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,8 +73,66 @@
     <div id="summary">Running tests...</div>
     <div id="results"></div>
 
-    <!-- Load the module under test -->
+    <!-- DOM fixtures for browser.js tests -->
+    <div id="test-fixtures" style="display:none;">
+        <div id="chrome-shell">
+            <div id="title-bar">
+                <span id="page-title">Yugaaaaa! - The Internet</span>
+            </div>
+            <div id="tab-bar">
+                <div class="tab active">
+                    <span class="tab-title">Yugaaaaa!</span>
+                    <span class="tab-close">&times;</span>
+                </div>
+            </div>
+            <div id="toolbar">
+                <div id="nav-buttons">
+                    <button id="btn-back">&larr;</button>
+                    <button id="btn-forward">&rarr;</button>
+                    <button id="btn-refresh">&#8635;</button>
+                    <button id="btn-settings">&#9881;</button>
+                </div>
+                <div id="address-bar">
+                    <span id="url-display">http://www.yugaaaaa.com</span>
+                    <input id="url-input" type="text" placeholder="Type a URL..." />
+                </div>
+                <div id="sound-toggle">
+                    <button id="btn-sound">&#128266;</button>
+                </div>
+            </div>
+            <div id="bookmarks-bar"></div>
+            <div id="content-area">
+                <div id="loading-screen">
+                    <div class="loading-bar-container">
+                        <div class="loading-bar"></div>
+                    </div>
+                    <p class="loading-text">Connecting...</p>
+                </div>
+                <div id="page-content"></div>
+            </div>
+            <div id="status-bar">
+                <div class="currency">
+                    <span class="currency-icon">&#128433;</span>
+                    <span id="clicks-count">0</span>
+                    <span class="currency-label">clicks</span>
+                </div>
+                <div class="currency">
+                    <span class="currency-icon">&#128190;</span>
+                    <span id="data-count">0 KB</span>
+                    <span class="currency-label">data</span>
+                </div>
+                <div class="currency">
+                    <span class="currency-icon">&#11088;</span>
+                    <span id="reputation-count">0</span>
+                    <span class="currency-label">rep</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the modules under test -->
     <script src="../js/game.js"></script>
+    <script src="../js/browser.js"></script>
 
     <!-- Test framework -->
     <script>
@@ -178,6 +236,7 @@
 
     <!-- Load test files -->
     <script src="game.test.js"></script>
+    <script src="browser.test.js"></script>
 
     <!-- Run tests after all scripts loaded -->
     <script>
