@@ -441,3 +441,605 @@ SiteRegistry.register({
         // Banner ad is handled manually inside render() because each ad has a unique reward value
     ]
 });
+
+// --- HamsterTrax — Your #1 Source for Hamster Info ---
+
+SiteRegistry.register({
+    id: 'hamstertrax',
+    url: 'http://www.hamstertrax.com',
+    title: 'HamsterTrax - #1 Hamster Info Source!',
+    zone: 1,
+    icon: '\uD83D\uDC39',
+    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 hamstertrax-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'hamstertrax-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'hamstertrax-logo';
+        logo.textContent = '\uD83D\uDC39 HamsterTrax';
+        header.appendChild(logo);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'hamstertrax-subtitle';
+        subtitle.textContent = 'Your #1 Source for Hamster Info Since 1997!';
+        header.appendChild(subtitle);
+
+        var rainbowHr = document.createElement('hr');
+        rainbowHr.className = 'rainbow-hr';
+        header.appendChild(rainbowHr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. MIDI player widget (cosmetic)
+        // ========================================
+        var midiWidget = document.createElement('div');
+        midiWidget.className = 'hamstertrax-midi';
+
+        var midiLabel = document.createElement('span');
+        midiLabel.textContent = '\u266B Now Playing: hamsterdance.mid ';
+        midiWidget.appendChild(midiLabel);
+
+        var stopBtn = document.createElement('button');
+        stopBtn.className = 'midi-btn';
+        stopBtn.textContent = '\u25A0 Stop';
+        midiWidget.appendChild(stopBtn);
+
+        var spacer = document.createTextNode(' ');
+        midiWidget.appendChild(spacer);
+
+        var playBtn = document.createElement('button');
+        playBtn.className = 'midi-btn';
+        playBtn.textContent = '\u25BA Play';
+        midiWidget.appendChild(playBtn);
+
+        container.appendChild(midiWidget);
+
+        // ========================================
+        // 3. Main content area: gallery + sidebar
+        // ========================================
+        var mainArea = document.createElement('div');
+        mainArea.className = 'hamstertrax-main';
+
+        // --- Photo gallery ---
+        var gallery = document.createElement('div');
+        gallery.className = 'hamstertrax-gallery';
+
+        var galleryTitle = document.createElement('h2');
+        galleryTitle.textContent = '\uD83D\uDCF8 Hamster Photo Gallery';
+        gallery.appendChild(galleryTitle);
+
+        var galleryGrid = document.createElement('div');
+        galleryGrid.className = 'hamstertrax-gallery-grid';
+
+        var hamsters = [
+            { name: 'Mr. Whiskers', color: '#ffb3ba' },
+            { name: 'Hamtaro Jr.', color: '#bae1ff' },
+            { name: 'Sir Nibbles III', color: '#baffc9' },
+            { name: 'Princess Fluffbutt', color: '#ffffba' },
+            { name: 'Captain Wheelrunner', color: '#e8baff' },
+            { name: 'The Notorious H.A.M.', color: '#ffdfba' }
+        ];
+
+        hamsters.forEach(function (hamster) {
+            var photo = document.createElement('div');
+            photo.className = 'hamster-photo';
+            photo.style.backgroundColor = hamster.color;
+
+            var emoji = document.createElement('div');
+            emoji.className = 'hamster-photo-emoji';
+            emoji.textContent = '\uD83D\uDC39';
+            photo.appendChild(emoji);
+
+            var name = document.createElement('div');
+            name.className = 'hamster-photo-name';
+            name.textContent = hamster.name;
+            photo.appendChild(name);
+
+            galleryGrid.appendChild(photo);
+        });
+
+        gallery.appendChild(galleryGrid);
+        mainArea.appendChild(gallery);
+
+        // --- Sidebar: Hamster Stock Exchange ---
+        var sidebar = document.createElement('div');
+        sidebar.className = 'hamstertrax-sidebar';
+
+        var stockTitle = document.createElement('h3');
+        stockTitle.textContent = '\uD83D\uDC39 Hamster Stock Exchange';
+        sidebar.appendChild(stockTitle);
+
+        var stockTable = document.createElement('table');
+        stockTable.className = 'hamstertrax-stock-table';
+
+        var stockHeader = document.createElement('tr');
+        var thBreed = document.createElement('th');
+        thBreed.textContent = 'Breed';
+        stockHeader.appendChild(thBreed);
+        var thPrice = document.createElement('th');
+        thPrice.textContent = 'Price';
+        stockHeader.appendChild(thPrice);
+        var thTrend = document.createElement('th');
+        thTrend.textContent = 'Trend';
+        stockHeader.appendChild(thTrend);
+        stockTable.appendChild(stockHeader);
+
+        var stocks = [
+            { breed: 'Syrian Golden', price: '$42.00', trend: '\u2191' },
+            { breed: 'Dwarf Campbell', price: '$18.50', trend: '\u2193' },
+            { breed: 'Roborovski', price: '$99.99', trend: '\u2191\u2191' },
+            { breed: 'Chinese', price: '$7.77', trend: '\u2192' },
+            { breed: 'Winter White', price: '$33.33', trend: '\u2191' }
+        ];
+
+        stocks.forEach(function (stock) {
+            var row = document.createElement('tr');
+            row.className = 'stock-row';
+
+            var tdBreed = document.createElement('td');
+            tdBreed.textContent = stock.breed;
+            row.appendChild(tdBreed);
+
+            var tdPrice = document.createElement('td');
+            tdPrice.textContent = stock.price;
+            row.appendChild(tdPrice);
+
+            var tdTrend = document.createElement('td');
+            tdTrend.textContent = stock.trend;
+            row.appendChild(tdTrend);
+
+            stockTable.appendChild(row);
+        });
+
+        sidebar.appendChild(stockTable);
+        mainArea.appendChild(sidebar);
+        container.appendChild(mainArea);
+
+        // ========================================
+        // 4. Adopt button
+        // ========================================
+        var adoptBtn = document.createElement('button');
+        adoptBtn.className = 'adopt-btn';
+        adoptBtn.textContent = '\uD83D\uDC39 Adopt a Virtual Hamster! \uD83D\uDC39';
+        container.appendChild(adoptBtn);
+
+        // ========================================
+        // 5. Guestbook link
+        // ========================================
+        var guestbookDiv = document.createElement('div');
+        guestbookDiv.className = 'hamstertrax-guestbook';
+
+        var guestbookLink = document.createElement('a');
+        guestbookLink.className = 'guestbook-link';
+        guestbookLink.href = '#';
+        guestbookLink.textContent = '\uD83D\uDCD6 Sign Our Guestbook!';
+        guestbookDiv.appendChild(guestbookLink);
+
+        container.appendChild(guestbookDiv);
+
+        // ========================================
+        // 6. Footer with Netscape badge
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'hamstertrax-footer';
+
+        var netscapeBadge = document.createElement('div');
+        netscapeBadge.className = 'netscape-badge';
+        netscapeBadge.textContent = '\uD83C\uDF10 Best viewed with Netscape Navigator';
+        footer.appendChild(netscapeBadge);
+
+        var copyright = document.createElement('p');
+        copyright.textContent = '\u00A9 1997 HamsterTrax. All hamsters reserved.';
+        footer.appendChild(copyright);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.hamster-photo', reward: { clicks: 3 } },
+        { selector: '.stock-row', reward: { clicks: 2 } },
+        { selector: '.midi-btn', reward: { clicks: 5 } },
+        { selector: '.adopt-btn', reward: { reputation: 10 } },
+        { selector: '.guestbook-link', reward: { reputation: 5 }, action: 'navigate', target: 'infinite-guestbook' }
+    ]
+});
+
+// --- Kevin's Page — coolguyz.net ---
+
+SiteRegistry.register({
+    id: 'coolguyz',
+    url: 'http://www.coolguyz.net',
+    title: "Kevin's Page - coolguyz.net",
+    zone: 1,
+    icon: '\uD83D\uDE0E',
+    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 coolguyz-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Track under-construction click count in a closure
+        var constructionClicks = 0;
+
+        // ========================================
+        // 1. Under construction banner
+        // ========================================
+        var ucBanner = document.createElement('div');
+        ucBanner.className = 'under-construction-banner';
+        ucBanner.textContent = '\uD83D\uDEA7 THIS PAGE IS UNDER CONSTRUCTION \uD83D\uDEA7';
+
+        // Hidden secret text revealed after 50 clicks
+        var secretText = document.createElement('div');
+        secretText.className = 'coolguyz-secret';
+        secretText.textContent = "KEVIN'S SECRET: Gerald the hamster can do a backflip";
+        secretText.style.display = 'none';
+        ucBanner.appendChild(secretText);
+
+        ucBanner.addEventListener('click', function () {
+            constructionClicks++;
+            if (constructionClicks >= 50) {
+                secretText.style.display = 'block';
+            }
+        });
+
+        container.appendChild(ucBanner);
+
+        // ========================================
+        // 2. WordArt-style header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'coolguyz-header';
+
+        var wordart = document.createElement('h1');
+        wordart.className = 'coolguyz-wordart';
+        wordart.textContent = "Welcome to Kevin's Page";
+        header.appendChild(wordart);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 3. About Me section
+        // ========================================
+        var aboutSection = document.createElement('div');
+        aboutSection.className = 'coolguyz-about';
+
+        var aboutTitle = document.createElement('h2');
+        aboutTitle.textContent = 'About Me';
+        aboutSection.appendChild(aboutTitle);
+
+        var aboutText = document.createElement('p');
+        aboutText.textContent = 'My name is Kevin. I am 12. I like spoons. My favorite color is blue. My favorite food is macaroni. I have a hamster named Gerald.';
+        aboutSection.appendChild(aboutText);
+
+        container.appendChild(aboutSection);
+
+        // ========================================
+        // 4. Spoon Collection gallery
+        // ========================================
+        var spoonSection = document.createElement('div');
+        spoonSection.className = 'coolguyz-spoons';
+
+        var spoonTitle = document.createElement('h2');
+        spoonTitle.textContent = '\uD83E\uDD44 My Spoon Collection \uD83E\uDD44';
+        spoonSection.appendChild(spoonTitle);
+
+        var spoonGrid = document.createElement('div');
+        spoonGrid.className = 'coolguyz-spoon-grid';
+
+        var spoons = [
+            'Spoon #1: The Regular One (found at Denny\'s)',
+            'Spoon #2: The Big One (from Grandma)',
+            'Spoon #3: The Bent One (accident)',
+            'Spoon #4: The Fancy One (Christmas 1998)',
+            'Spoon #5: The Wooden One (camp)',
+            'Spoon #6: The Mystery One (appeared one day)',
+            'Spoon #7: The Plastic One (from the hospital)',
+            'Spoon #8: Gerald\'s Spoon (he chose it himself)'
+        ];
+
+        spoons.forEach(function (spoonDesc) {
+            var item = document.createElement('div');
+            item.className = 'spoon-item';
+
+            var emoji = document.createElement('div');
+            emoji.className = 'spoon-emoji';
+            emoji.textContent = '\uD83E\uDD44';
+            item.appendChild(emoji);
+
+            var desc = document.createElement('div');
+            desc.className = 'spoon-desc';
+            desc.textContent = spoonDesc;
+            item.appendChild(desc);
+
+            spoonGrid.appendChild(item);
+        });
+
+        spoonSection.appendChild(spoonGrid);
+        container.appendChild(spoonSection);
+
+        // ========================================
+        // 5. Visitor counter
+        // ========================================
+        var counterDiv = document.createElement('div');
+        counterDiv.className = 'coolguyz-counter';
+
+        var counterLabel = document.createElement('span');
+        counterLabel.textContent = 'You are visitor number: ';
+        counterDiv.appendChild(counterLabel);
+
+        var hitCounter = document.createElement('span');
+        hitCounter.className = 'hit-counter';
+        hitCounter.textContent = String(47 + Math.floor(Math.random() * 100));
+        counterDiv.appendChild(hitCounter);
+
+        container.appendChild(counterDiv);
+
+        // ========================================
+        // 6. Guestbook
+        // ========================================
+        var guestbookDiv = document.createElement('div');
+        guestbookDiv.className = 'coolguyz-guestbook';
+
+        var guestbookLink = document.createElement('a');
+        guestbookLink.className = 'guestbook-link';
+        guestbookLink.href = '#';
+        guestbookLink.textContent = "\uD83D\uDCD6 Sign Kevin's Guestbook!";
+        guestbookDiv.appendChild(guestbookLink);
+
+        container.appendChild(guestbookDiv);
+
+        // ========================================
+        // 7. Friend links
+        // ========================================
+        var friendsDiv = document.createElement('div');
+        friendsDiv.className = 'coolguyz-friends';
+
+        var friendsLabel = document.createElement('span');
+        friendsLabel.textContent = "My friend's pages: ";
+        friendsDiv.appendChild(friendsLabel);
+
+        var friendSites = [
+            { label: 'HamsterTrax', site: 'hamstertrax' },
+            { label: 'Recipez4U', site: 'recipez4u' }
+        ];
+
+        friendSites.forEach(function (friend, idx) {
+            if (idx > 0) {
+                friendsDiv.appendChild(document.createTextNode(' '));
+            }
+            var link = document.createElement('a');
+            link.className = 'friend-link';
+            link.href = '#';
+            link.setAttribute('data-site', friend.site);
+            link.textContent = '[' + friend.label + ']';
+            friendsDiv.appendChild(link);
+        });
+
+        container.appendChild(friendsDiv);
+
+        // ========================================
+        // 8. Webring footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'coolguyz-footer';
+
+        var webring = document.createElement('div');
+        webring.className = 'webring-nav';
+        webring.textContent = 'coolguyz.net is a proud member of the Spoon Lovers WebRing';
+        footer.appendChild(webring);
+
+        var webringLinks = document.createElement('div');
+        webringLinks.className = 'webring-nav';
+        webringLinks.textContent = '[\u2190 Previous] [Random] [Next \u2192]';
+        footer.appendChild(webringLinks);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.spoon-item', reward: { clicks: 2 } },
+        { selector: '.under-construction-banner', reward: { clicks: 1 } },
+        { selector: '.hit-counter', reward: { clicks: 1 } },
+        { selector: '.guestbook-link', reward: { reputation: 5 }, action: 'navigate', target: 'infinite-guestbook' },
+        { selector: '.friend-link[data-site="hamstertrax"]', reward: { clicks: 3 }, action: 'navigate', target: 'hamstertrax' },
+        { selector: '.friend-link[data-site="recipez4u"]', reward: { clicks: 3 }, action: 'navigate', target: 'recipez4u' }
+    ]
+});
+
+// --- Recipez4U — The Internet's Premier Toast Resource ---
+
+SiteRegistry.register({
+    id: 'recipez4u',
+    url: 'http://www.recipez4u.com',
+    title: 'Recipez4U - Every Recipe is Toast',
+    zone: 1,
+    icon: '\uD83C\uDF5E',
+    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 recipez4u-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'recipez4u-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'recipez4u-logo';
+        logo.textContent = '\uD83C\uDF5E Recipez4U \uD83C\uDF5E';
+        header.appendChild(logo);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'recipez4u-subtitle';
+        subtitle.textContent = "The Internet's Premier Toast Resource";
+        header.appendChild(subtitle);
+
+        var rainbowHr = document.createElement('hr');
+        rainbowHr.className = 'rainbow-hr';
+        header.appendChild(rainbowHr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Recipe of the Day featured box
+        // ========================================
+        var featured = document.createElement('div');
+        featured.className = 'recipez4u-featured';
+
+        var featuredTitle = document.createElement('h2');
+        featuredTitle.className = 'blink';
+        featuredTitle.textContent = '\u2B50 RECIPE OF THE DAY: Extreme Toast \u2B50';
+        featured.appendChild(featuredTitle);
+
+        var featuredDesc = document.createElement('p');
+        featuredDesc.textContent = 'Take toast. Add more toast. Stack vertically. This is Extreme Toast.';
+        featured.appendChild(featuredDesc);
+
+        container.appendChild(featured);
+
+        // ========================================
+        // 3. Recipe cards
+        // ========================================
+        var recipesSection = document.createElement('div');
+        recipesSection.className = 'recipez4u-recipes';
+
+        var recipes = [
+            {
+                emoji: '\uD83C\uDF05',
+                title: 'Breakfast Toast',
+                desc: 'Toast with toast crumbs on top. Prep time: 2 min. Pairs well with: more toast.'
+            },
+            {
+                emoji: '\uD83E\uDD6A',
+                title: 'Lunch Toast',
+                desc: 'Two slices of toast with a slice of toast in between. The classic toast sandwich.'
+            },
+            {
+                emoji: '\uD83C\uDF7D',
+                title: 'Dinner Toast',
+                desc: 'Toast flamb\u00E9. Burn the toast. Serve on a plate. Garnish with breadcrumbs.'
+            },
+            {
+                emoji: '\uD83C\uDF70',
+                title: 'Dessert Toast',
+                desc: 'Toast \u00E0 la mode. Put ice cream on toast. The ice cream will melt. This is fine.'
+            },
+            {
+                emoji: '\uD83D\uDEA8',
+                title: 'Emergency Toast',
+                desc: 'For when all other toast has failed. Instructions: Toast.'
+            }
+        ];
+
+        recipes.forEach(function (recipe) {
+            var card = document.createElement('div');
+            card.className = 'recipe-card';
+
+            var cardTitle = document.createElement('h3');
+            cardTitle.textContent = recipe.emoji + ' ' + recipe.title;
+            card.appendChild(cardTitle);
+
+            var cardDesc = document.createElement('p');
+            cardDesc.textContent = recipe.desc;
+            card.appendChild(cardDesc);
+
+            var printBtn = document.createElement('button');
+            printBtn.className = 'print-btn';
+            printBtn.textContent = '\uD83D\uDDA8 PRINT RECIPE';
+            card.appendChild(printBtn);
+
+            recipesSection.appendChild(card);
+        });
+
+        container.appendChild(recipesSection);
+
+        // ========================================
+        // 4. Pro tip callout
+        // ========================================
+        var proTip = document.createElement('div');
+        proTip.className = 'recipez4u-protip';
+
+        var proTipTitle = document.createElement('strong');
+        proTipTitle.textContent = '\uD83D\uDCA1 Pro Tip: ';
+        proTip.appendChild(proTipTitle);
+
+        var proTipText = document.createTextNode('Always butter BOTH sides of the toast');
+        proTip.appendChild(proTipText);
+
+        container.appendChild(proTip);
+
+        // ========================================
+        // 5. Submit recipe form
+        // ========================================
+        var formSection = document.createElement('div');
+        formSection.className = 'recipez4u-submit';
+
+        var formTitle = document.createElement('h2');
+        formTitle.textContent = 'Submit YOUR Toast Recipe!';
+        formSection.appendChild(formTitle);
+
+        var formRow = document.createElement('div');
+        formRow.className = 'recipez4u-form-row';
+
+        var formInput = document.createElement('input');
+        formInput.type = 'text';
+        formInput.className = 'recipez4u-input';
+        formInput.placeholder = 'Describe your toast masterpiece...';
+        formRow.appendChild(formInput);
+
+        var submitBtn = document.createElement('button');
+        submitBtn.className = 'submit-recipe-btn';
+        submitBtn.textContent = 'Submit!';
+        formRow.appendChild(submitBtn);
+
+        formSection.appendChild(formRow);
+        container.appendChild(formSection);
+
+        // ========================================
+        // 6. Cookbook banner ad
+        // ========================================
+        var cookbookAd = document.createElement('div');
+        cookbookAd.className = 'banner-ad cookbook-ad';
+        cookbookAd.textContent = "\uD83D\uDCD5 Buy the Recipez4U Cookbook! Only $49.99! (it's just a picture of toast)";
+        container.appendChild(cookbookAd);
+
+        // ========================================
+        // 7. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'recipez4u-footer';
+
+        var copyright = document.createElement('p');
+        copyright.textContent = '\u00A9 1998 Recipez4U. Toast rights reserved.';
+        footer.appendChild(copyright);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.recipe-card', reward: { clicks: 3 } },
+        { selector: '.print-btn', reward: { clicks: 5 } },
+        { selector: '.submit-recipe-btn', reward: { reputation: 8 } },
+        { selector: '.cookbook-ad', reward: { clicks: 10 } }
+    ]
+});
