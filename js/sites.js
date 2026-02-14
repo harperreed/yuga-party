@@ -1043,3 +1043,823 @@ SiteRegistry.register({
         { selector: '.cookbook-ad', reward: { clicks: 10 } }
     ]
 });
+
+// --- NetSurf WebRing Hub — Connecting the World Wide Web ---
+
+SiteRegistry.register({
+    id: 'webring',
+    url: 'http://www2.netsurf.org/~webring',
+    title: 'NetSurf WebRing Hub',
+    zone: 1,
+    icon: '\uD83D\uDD17',
+    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 webring-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Member sites data for the webring
+        var memberSites = [
+            { id: 'yugaaaaa', name: 'yugaaaaa.com', desc: "The Internet's Premier Portal" },
+            { id: 'hamstertrax', name: 'hamstertrax.com', desc: 'Everything Hamster, All Day' },
+            { id: 'coolguyz', name: 'coolguyz.net', desc: "Kevin's Personal Homepage" },
+            { id: 'recipez4u', name: 'recipez4u.com', desc: 'Toast Recipes and More (Just Kidding, Only Toast)' },
+            { id: 'totallyrealfacts', name: 'totallyrealfacts.com', desc: '100% Verified Real Facts' },
+            { id: 'freesmileyz', name: 'freesmileyz.biz', desc: 'Free Downloads, No Virus We Promise' },
+            { id: 'mega-deals-warehouse', name: 'mega-deals-warehouse.com', desc: 'Unbeatable Deals on Stuff' }
+        ];
+
+        // Track current index for Previous/Next navigation
+        var currentIndex = 0;
+
+        // Helper to build the webring navigation bar
+        function buildWebringNav() {
+            var nav = document.createElement('div');
+            nav.className = 'webring-nav-bar';
+
+            var prevBtn = document.createElement('a');
+            prevBtn.className = 'webring-nav-link';
+            prevBtn.href = '#';
+            prevBtn.textContent = '\u2190 Previous';
+            prevBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                currentIndex = (currentIndex - 1 + memberSites.length) % memberSites.length;
+                browser.handleReward({ clicks: 5 });
+                browser.navigate(memberSites[currentIndex].id);
+            });
+            nav.appendChild(prevBtn);
+
+            var randomBtn = document.createElement('a');
+            randomBtn.className = 'webring-nav-link';
+            randomBtn.href = '#';
+            randomBtn.textContent = 'Random';
+            randomBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var randIdx = Math.floor(Math.random() * memberSites.length);
+                browser.handleReward({ clicks: 5 });
+                browser.navigate(memberSites[randIdx].id);
+            });
+            nav.appendChild(randomBtn);
+
+            var nextBtn = document.createElement('a');
+            nextBtn.className = 'webring-nav-link';
+            nextBtn.href = '#';
+            nextBtn.textContent = 'Next \u2192';
+            nextBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                currentIndex = (currentIndex + 1) % memberSites.length;
+                browser.handleReward({ clicks: 5 });
+                browser.navigate(memberSites[currentIndex].id);
+            });
+            nav.appendChild(nextBtn);
+
+            return nav;
+        }
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'webring-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'webring-logo';
+        logo.textContent = '\uD83D\uDD17 NetSurf WebRing \u2014 Connecting the World Wide Web!';
+        header.appendChild(logo);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'webring-subtitle';
+        subtitle.textContent = 'The Best of the Web, All in One Ring!';
+        header.appendChild(subtitle);
+
+        var rainbowHr = document.createElement('hr');
+        rainbowHr.className = 'rainbow-hr';
+        header.appendChild(rainbowHr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Top webring navigation
+        // ========================================
+        container.appendChild(buildWebringNav());
+
+        // ========================================
+        // 3. Banner ad (top)
+        // ========================================
+        var topBanner = document.createElement('div');
+        topBanner.className = 'banner-ad webring-banner';
+        topBanner.textContent = '\uD83D\uDD25 JOIN THE WEBRING REVOLUTION! Your Site Could Be Here! \uD83D\uDD25';
+        container.appendChild(topBanner);
+
+        // ========================================
+        // 4. Member sites listing
+        // ========================================
+        var listSection = document.createElement('div');
+        listSection.className = 'webring-listings';
+
+        memberSites.forEach(function (site, idx) {
+            var entry = document.createElement('div');
+            entry.className = 'webring-entry';
+
+            var siteNum = document.createElement('span');
+            siteNum.className = 'webring-entry-num';
+            siteNum.textContent = '#' + (idx + 1);
+            entry.appendChild(siteNum);
+
+            var siteInfo = document.createElement('div');
+            siteInfo.className = 'webring-entry-info';
+
+            var siteName = document.createElement('strong');
+            siteName.textContent = site.name;
+            siteInfo.appendChild(siteName);
+
+            var siteDesc = document.createElement('p');
+            siteDesc.textContent = site.desc;
+            siteInfo.appendChild(siteDesc);
+
+            entry.appendChild(siteInfo);
+
+            var visitLink = document.createElement('a');
+            visitLink.className = 'webring-visit';
+            visitLink.href = '#';
+            visitLink.setAttribute('data-site', site.id);
+            visitLink.textContent = 'Visit \u2192';
+            entry.appendChild(visitLink);
+
+            listSection.appendChild(entry);
+
+            // Insert a banner ad after every 3rd listing
+            if ((idx + 1) % 3 === 0 && idx < memberSites.length - 1) {
+                var midBanner = document.createElement('div');
+                midBanner.className = 'banner-ad webring-banner';
+                var adTexts = [
+                    '\uD83C\uDF10 Get Your OWN WebRing! Only $9.99/month!',
+                    '\u2B50 WebRing Pro: Unlimited Sites, Unlimited Fun!',
+                    '\uD83D\uDCE7 FREE WebRing Newsletter - Subscribe Now!'
+                ];
+                midBanner.textContent = adTexts[Math.floor(Math.random() * adTexts.length)];
+                listSection.appendChild(midBanner);
+            }
+        });
+
+        container.appendChild(listSection);
+
+        // ========================================
+        // 5. Join button
+        // ========================================
+        var joinSection = document.createElement('div');
+        joinSection.className = 'webring-join-section';
+
+        var joinBtn = document.createElement('button');
+        joinBtn.className = 'join-btn';
+        joinBtn.textContent = '\uD83D\uDD17 Join This WebRing!';
+        joinSection.appendChild(joinBtn);
+
+        container.appendChild(joinSection);
+
+        // ========================================
+        // 6. Bottom banner ad
+        // ========================================
+        var bottomBanner = document.createElement('div');
+        bottomBanner.className = 'banner-ad webring-banner';
+        bottomBanner.textContent = '\uD83C\uDF1F Best of the Web Award Winner 1997! Click to Nominate YOUR Site!';
+        container.appendChild(bottomBanner);
+
+        // ========================================
+        // 7. Bottom webring navigation
+        // ========================================
+        container.appendChild(buildWebringNav());
+
+        // ========================================
+        // 8. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'webring-footer';
+
+        var footerText = document.createElement('p');
+        footerText.textContent = 'This WebRing has been running since 1996. 847 sites and counting!';
+        footer.appendChild(footerText);
+
+        var copyright = document.createElement('p');
+        copyright.textContent = '\u00A9 1996-1999 NetSurf WebRing. All rights reserved.';
+        footer.appendChild(copyright);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        // Visit links navigate to the target site
+        { selector: '.webring-visit[data-site="yugaaaaa"]', reward: { clicks: 3 }, action: 'navigate', target: 'yugaaaaa' },
+        { selector: '.webring-visit[data-site="hamstertrax"]', reward: { clicks: 3 }, action: 'navigate', target: 'hamstertrax' },
+        { selector: '.webring-visit[data-site="coolguyz"]', reward: { clicks: 3 }, action: 'navigate', target: 'coolguyz' },
+        { selector: '.webring-visit[data-site="recipez4u"]', reward: { clicks: 3 }, action: 'navigate', target: 'recipez4u' },
+        { selector: '.webring-visit[data-site="totallyrealfacts"]', reward: { clicks: 3 }, action: 'navigate', target: 'totallyrealfacts' },
+        { selector: '.webring-visit[data-site="freesmileyz"]', reward: { clicks: 3 }, action: 'navigate', target: 'freesmileyz' },
+        { selector: '.webring-visit[data-site="mega-deals-warehouse"]', reward: { clicks: 3 }, action: 'navigate', target: 'mega-deals-warehouse' },
+        // Join button earns reputation
+        { selector: '.join-btn', reward: { reputation: 15 } },
+        // Banner ads
+        { selector: '.webring-banner', reward: { clicks: 8 } }
+        // Previous/Next/Random handled manually in render() because they need index tracking
+    ]
+});
+
+// --- Totally Real Facts — 100% Verified by the Internet ---
+
+SiteRegistry.register({
+    id: 'totallyrealfacts',
+    url: 'http://www.totallyrealfacts.com',
+    title: 'Totally Real Facts - 100% Verified',
+    zone: 1,
+    icon: '\uD83D\uDCDA',
+    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 totallyrealfacts-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Fact categories with their facts
+        var categories = [
+            {
+                emoji: '\uD83D\uDC3E',
+                name: 'Animals',
+                facts: [
+                    'Dolphins invented the internet in 1987 but didn\'t tell humans until 1991.',
+                    'Cats have exactly 47 bones. Scientists stopped counting there.',
+                    'Goldfish have a memory of 30 years, but choose not to use it.'
+                ]
+            },
+            {
+                emoji: '\uD83D\uDD2C',
+                name: 'Science',
+                facts: [
+                    'The sun is actually cold. It just looks hot because of the yellow color.',
+                    'Gravity was invented by Isaac Newton when he dropped an apple on purpose.',
+                    'Water is wet because it\'s made of tiny wet particles.'
+                ]
+            },
+            {
+                emoji: '\uD83D\uDCDC',
+                name: 'History',
+                facts: [
+                    'The wheel was invented in 1997 by a man named Gary Wheel.',
+                    'The moon landing was real but the moon is fake.',
+                    'Ancient Egyptians had WiFi but with very slow speeds.'
+                ]
+            },
+            {
+                emoji: '\uD83C\uDF0D',
+                name: 'Geography',
+                facts: [
+                    'Mount Everest is located in Ohio.',
+                    'The ocean is just a really big lake that got out of hand.',
+                    'Australia is upside down, which is why their toilets flush the other way.'
+                ]
+            }
+        ];
+
+        // Collect all facts for the random featured fact
+        var allFacts = [];
+        categories.forEach(function (cat) {
+            cat.facts.forEach(function (f) { allFacts.push(f); });
+        });
+        var featuredFact = allFacts[Math.floor(Math.random() * allFacts.length)];
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'trf-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'trf-logo';
+        logo.textContent = '\uD83D\uDCDA TOTALLY REAL FACTS';
+        header.appendChild(logo);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'trf-subtitle';
+        subtitle.textContent = 'Verified by the Internet\u2122';
+        header.appendChild(subtitle);
+
+        var rainbowHr = document.createElement('hr');
+        rainbowHr.className = 'rainbow-hr';
+        header.appendChild(rainbowHr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Featured "Did You Know?" box
+        // ========================================
+        var featuredBox = document.createElement('div');
+        featuredBox.className = 'trf-featured';
+
+        var featuredTitle = document.createElement('h2');
+        featuredTitle.className = 'blink';
+        featuredTitle.textContent = '\uD83D\uDCA1 Did You Know?';
+        featuredBox.appendChild(featuredTitle);
+
+        var featuredText = document.createElement('p');
+        featuredText.className = 'trf-featured-text';
+        featuredText.textContent = featuredFact;
+        featuredBox.appendChild(featuredText);
+
+        container.appendChild(featuredBox);
+
+        // ========================================
+        // 3. Category browse sections
+        // ========================================
+        var categoriesSection = document.createElement('div');
+        categoriesSection.className = 'trf-categories';
+
+        categories.forEach(function (cat) {
+            var catDiv = document.createElement('div');
+            catDiv.className = 'trf-category';
+
+            var catHeader = document.createElement('h2');
+            catHeader.className = 'category-header';
+            catHeader.textContent = cat.emoji + ' ' + cat.name;
+            catDiv.appendChild(catHeader);
+
+            cat.facts.forEach(function (factText) {
+                var factItem = document.createElement('div');
+                factItem.className = 'fact-item';
+
+                var factP = document.createElement('p');
+                factP.className = 'trf-fact-text';
+                factP.textContent = '\u2714 ' + factText;
+                factItem.appendChild(factP);
+
+                var citeBtn = document.createElement('button');
+                citeBtn.className = 'cite-btn';
+                citeBtn.textContent = '\uD83D\uDCCB Cite This Fact';
+                factItem.appendChild(citeBtn);
+
+                catDiv.appendChild(factItem);
+            });
+
+            categoriesSection.appendChild(catDiv);
+        });
+
+        container.appendChild(categoriesSection);
+
+        // ========================================
+        // 4. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'trf-footer';
+
+        var footerText = document.createElement('p');
+        footerText.textContent = 'All facts verified by Dr. Reginald Facts, PhD in Factology';
+        footer.appendChild(footerText);
+
+        var copyright = document.createElement('p');
+        copyright.textContent = '\u00A9 1998 TotallyRealFacts.com. Facts may not be real.';
+        footer.appendChild(copyright);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.fact-item', reward: { clicks: 2 } },
+        { selector: '.cite-btn', reward: { clicks: 3 } },
+        { selector: '.category-header', reward: { clicks: 3 } }
+    ]
+});
+
+// --- FreeSmileyz.biz — FREE Downloads, No Virus We Promise ---
+
+SiteRegistry.register({
+    id: 'freesmileyz',
+    url: 'http://www.freesmileyz.biz',
+    title: 'FreeSmileyz.biz - FREE Downloads!',
+    zone: 1,
+    icon: '\uD83D\uDE00',
+    requirements: { minModem: 0, dataCost: 10, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 freesmileyz-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Smiley/cursor data with download counts and CSS cursor mappings
+        var smileys = [
+            { emoji: '\uD83D\uDE0A', name: 'Happy Smiley', downloads: 4782, cursor: 'default' },
+            { emoji: '\u2B50', name: 'Star Cursor', downloads: 3291, cursor: 'pointer' },
+            { emoji: '\uD83C\uDFAF', name: 'Crosshair Pro', downloads: 8104, cursor: 'crosshair' },
+            { emoji: '\uD83C\uDF08', name: 'Rainbow Trail', downloads: 6543, cursor: 'grab' },
+            { emoji: '\uD83D\uDC80', name: 'Skull Cursor', downloads: 9876, cursor: 'not-allowed' },
+            { emoji: '\uD83D\uDD25', name: 'Fire Cursor', downloads: 7210, cursor: 'cell' },
+            { emoji: '\u2764\uFE0F', name: 'Heart Smiley', downloads: 5555, cursor: 'help' },
+            { emoji: '\uD83C\uDFB5', name: 'Music Note', downloads: 2345, cursor: 'progress' },
+            { emoji: '\uD83D\uDC7D', name: 'Alien Smiley', downloads: 4321, cursor: 'alias' },
+            { emoji: '\uD83E\uDD84', name: 'Unicorn Cursor', downloads: 6789, cursor: 'zoom-in' },
+            { emoji: '\uD83D\uDC8E', name: 'Diamond Cursor', downloads: 1234, cursor: 'col-resize' },
+            { emoji: '\uD83C\uDF19', name: 'Moon Cursor', downloads: 3456, cursor: 'wait' }
+        ];
+
+        // Current cursor indicator text element (updated on download)
+        var currentCursorName = 'DEFAULT';
+
+        // ========================================
+        // 1. Header with animated text
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'freesmileyz-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'freesmileyz-logo blink';
+        logo.textContent = '\uD83D\uDE00 FREE SMILEYZ & CURSORZ! \uD83D\uDE00';
+        header.appendChild(logo);
+
+        var noVirus = document.createElement('p');
+        noVirus.className = 'freesmileyz-novirus blink';
+        noVirus.textContent = '100% FREE! NO VIRUS! GUARANTEED!';
+        header.appendChild(noVirus);
+
+        var rainbowHr = document.createElement('hr');
+        rainbowHr.className = 'rainbow-hr';
+        header.appendChild(rainbowHr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Current cursor indicator
+        // ========================================
+        var cursorIndicator = document.createElement('div');
+        cursorIndicator.className = 'freesmileyz-cursor-indicator';
+
+        var cursorLabel = document.createElement('span');
+        cursorLabel.textContent = 'Your current cursor: ';
+        cursorIndicator.appendChild(cursorLabel);
+
+        var cursorValue = document.createElement('strong');
+        cursorValue.className = 'freesmileyz-cursor-value';
+        cursorValue.textContent = currentCursorName;
+        cursorIndicator.appendChild(cursorValue);
+
+        container.appendChild(cursorIndicator);
+
+        // ========================================
+        // 3. Main layout: grid + sidebar
+        // ========================================
+        var mainArea = document.createElement('div');
+        mainArea.className = 'freesmileyz-main';
+
+        // --- Smiley grid ---
+        var grid = document.createElement('div');
+        grid.className = 'freesmileyz-grid';
+
+        smileys.forEach(function (smiley) {
+            var item = document.createElement('div');
+            item.className = 'smiley-item';
+
+            var emojiDiv = document.createElement('div');
+            emojiDiv.className = 'smiley-emoji';
+            emojiDiv.textContent = smiley.emoji;
+            item.appendChild(emojiDiv);
+
+            var nameDiv = document.createElement('div');
+            nameDiv.className = 'smiley-name';
+            nameDiv.textContent = smiley.name;
+            item.appendChild(nameDiv);
+
+            var downloadCount = document.createElement('div');
+            downloadCount.className = 'smiley-download-count';
+            downloadCount.textContent = 'Downloaded ' + smiley.downloads.toLocaleString() + ' times!';
+            item.appendChild(downloadCount);
+
+            var downloadBtn = document.createElement('button');
+            downloadBtn.className = 'download-btn';
+            downloadBtn.textContent = '\u2B07 DOWNLOAD NOW \u2B07';
+
+            // Capture smiley in closure for the popup
+            (function (s, countEl) {
+                downloadBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Create the fake popup overlay
+                    var overlay = document.createElement('div');
+                    overlay.className = 'freesmileyz-popup-overlay';
+
+                    var popup = document.createElement('div');
+                    popup.className = 'freesmileyz-popup';
+
+                    var popupTitle = document.createElement('p');
+                    popupTitle.className = 'freesmileyz-popup-title';
+                    popupTitle.textContent = 'Are you SURE you want this smiley?';
+                    popup.appendChild(popupTitle);
+
+                    var popupBtns = document.createElement('div');
+                    popupBtns.className = 'freesmileyz-popup-btns';
+
+                    var yesBtn = document.createElement('button');
+                    yesBtn.className = 'popup-btn';
+                    yesBtn.textContent = 'YES';
+                    popupBtns.appendChild(yesBtn);
+
+                    var alsoYesBtn = document.createElement('button');
+                    alsoYesBtn.className = 'popup-btn';
+                    alsoYesBtn.textContent = 'ALSO YES';
+                    popupBtns.appendChild(alsoYesBtn);
+
+                    popup.appendChild(popupBtns);
+                    overlay.appendChild(popup);
+                    container.appendChild(overlay);
+
+                    // Both buttons do the same thing
+                    function handlePopupConfirm(evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        browser.handleReward({ clicks: 2 });
+                        // Update cursor
+                        document.body.style.cursor = s.cursor;
+                        cursorValue.textContent = s.name.toUpperCase();
+                        // Increment download count
+                        s.downloads++;
+                        countEl.textContent = 'Downloaded ' + s.downloads.toLocaleString() + ' times!';
+                        // Remove overlay
+                        if (overlay.parentNode) {
+                            overlay.parentNode.removeChild(overlay);
+                        }
+                    }
+
+                    yesBtn.addEventListener('click', handlePopupConfirm);
+                    alsoYesBtn.addEventListener('click', handlePopupConfirm);
+                });
+            })(smiley, downloadCount);
+
+            item.appendChild(downloadBtn);
+            grid.appendChild(item);
+        });
+
+        mainArea.appendChild(grid);
+
+        // --- Sidebar: Top Downloads This Week ---
+        var sidebar = document.createElement('div');
+        sidebar.className = 'freesmileyz-sidebar';
+
+        var sidebarTitle = document.createElement('h3');
+        sidebarTitle.textContent = '\uD83C\uDFC6 Top Downloads This Week';
+        sidebar.appendChild(sidebarTitle);
+
+        // Sort smileys by download count descending for ranking
+        var ranked = smileys.slice().sort(function (a, b) { return b.downloads - a.downloads; });
+        ranked.slice(0, 5).forEach(function (s, idx) {
+            var rankItem = document.createElement('div');
+            rankItem.className = 'freesmileyz-rank-item';
+            rankItem.textContent = (idx + 1) + '. ' + s.emoji + ' ' + s.name;
+            sidebar.appendChild(rankItem);
+        });
+
+        mainArea.appendChild(sidebar);
+        container.appendChild(mainArea);
+
+        // ========================================
+        // 4. Disclaimer
+        // ========================================
+        var disclaimer = document.createElement('div');
+        disclaimer.className = 'freesmileyz-disclaimer';
+        disclaimer.textContent = '\u26A0\uFE0F This site is NOT responsible for any cursors that become sentient';
+        container.appendChild(disclaimer);
+
+        // ========================================
+        // 5. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'freesmileyz-footer';
+
+        var copyright = document.createElement('p');
+        copyright.textContent = '\u00A9 1999 FreeSmileyz.biz. All smileys are free forever.';
+        footer.appendChild(copyright);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.download-btn', reward: { clicks: 8 } },
+        // popup-btn reward handled manually in the popup confirm handler
+        { selector: '.smiley-item', reward: { clicks: 3 } }
+    ]
+});
+
+// --- Mega Deals Warehouse — EVERYTHING MUST GO ---
+
+SiteRegistry.register({
+    id: 'mega-deals-warehouse',
+    url: 'http://www.mega-deals-warehouse.com',
+    title: 'MEGA DEALS WAREHOUSE - HUGE SAVINGS',
+    zone: 1,
+    icon: '\uD83D\uDCB0',
+    requirements: { minModem: 0, dataCost: 10, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-1 megadeals-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Cart item count (cosmetic for most, functional for pixel)
+        var cartCount = 0;
+
+        // Product data
+        var products = [
+            { emoji: '\uD83C\uDFA9', name: 'Invisible Hat', desc: "You can't see it, but trust us, it's there", price: 1000000 },
+            { emoji: '\uD83D\uDCA8', name: 'Bottle of Used Air', desc: 'Pre-breathed for your convenience', price: 500000 },
+            { emoji: '\uD83E\uDEA8', name: 'Pet Rock NFT', desc: 'Non-Fungible. Non-Moving. Non-Alive.', price: 999999 },
+            { emoji: '\uD83D\uDCE6', name: 'Box of Nothing', desc: "What's in the box? Nothing. That's the product.", price: 750000 },
+            { emoji: '\uD83D\uDD07', name: 'Sound of Silence (MP3)', desc: '3 hours of premium nothing', price: 250000 },
+            { emoji: '\u2B1B', name: 'Slightly Used Pixel', desc: 'One pixel. Slightly used. Good condition.', price: 100 }
+        ];
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'megadeals-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'megadeals-logo';
+        logo.textContent = '\uD83D\uDCB0 MEGA DEALS WAREHOUSE \uD83D\uDCB0';
+        header.appendChild(logo);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'megadeals-subtitle';
+        subtitle.textContent = 'EVERYTHING MUST GO! TODAY ONLY! (We say this every day)';
+        header.appendChild(subtitle);
+
+        var rainbowHr = document.createElement('hr');
+        rainbowHr.className = 'rainbow-hr';
+        header.appendChild(rainbowHr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Flashing SALE banner
+        // ========================================
+        var saleBanner = document.createElement('div');
+        saleBanner.className = 'megadeals-sale-banner blink';
+        saleBanner.textContent = 'SALE! SALE! SALE!';
+        container.appendChild(saleBanner);
+
+        // ========================================
+        // 3. Shopping cart indicator
+        // ========================================
+        var cartDiv = document.createElement('div');
+        cartDiv.className = 'megadeals-cart';
+
+        var cartIcon = document.createElement('span');
+        cartIcon.textContent = '\uD83D\uDED2 ';
+        cartDiv.appendChild(cartIcon);
+
+        var cartText = document.createElement('span');
+        cartText.className = 'megadeals-cart-count';
+        cartText.textContent = 'Items: 0';
+        cartDiv.appendChild(cartText);
+
+        container.appendChild(cartDiv);
+
+        // ========================================
+        // 4. Product grid
+        // ========================================
+        var productGrid = document.createElement('div');
+        productGrid.className = 'megadeals-products';
+
+        products.forEach(function (product) {
+            var card = document.createElement('div');
+            card.className = 'megadeals-product-card';
+
+            var productImg = document.createElement('div');
+            productImg.className = 'product-img';
+            productImg.textContent = product.emoji;
+            card.appendChild(productImg);
+
+            var productName = document.createElement('h3');
+            productName.className = 'megadeals-product-name';
+            productName.textContent = product.name;
+            card.appendChild(productName);
+
+            var productDesc = document.createElement('p');
+            productDesc.className = 'megadeals-product-desc';
+            productDesc.textContent = product.desc;
+            card.appendChild(productDesc);
+
+            var productPrice = document.createElement('div');
+            productPrice.className = 'megadeals-product-price';
+            productPrice.textContent = product.price.toLocaleString() + ' clicks';
+            card.appendChild(productPrice);
+
+            // The pixel is the only purchasable item
+            if (product.name === 'Slightly Used Pixel') {
+                var buyBtn = document.createElement('button');
+                buyBtn.className = 'megadeals-buy-btn';
+                buyBtn.textContent = '\uD83D\uDED2 Buy Now!';
+                buyBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Spend 100 clicks, earn 50 data
+                    browser.handleReward({ clicks: -100, data: 50 });
+                    cartCount++;
+                    cartText.textContent = 'Items: ' + cartCount;
+
+                    // Show congratulations message
+                    var congrats = document.createElement('div');
+                    congrats.className = 'megadeals-congrats';
+                    congrats.textContent = 'CONGRATULATIONS! You now own a slightly used pixel!';
+                    card.appendChild(congrats);
+                    setTimeout(function () {
+                        if (congrats.parentNode) {
+                            congrats.parentNode.removeChild(congrats);
+                        }
+                    }, 3000);
+                });
+                card.appendChild(buyBtn);
+            } else {
+                var addToCartBtn = document.createElement('button');
+                addToCartBtn.className = 'add-to-cart';
+                addToCartBtn.textContent = '\uD83D\uDED2 Add to Cart';
+                card.appendChild(addToCartBtn);
+            }
+
+            productGrid.appendChild(card);
+        });
+
+        container.appendChild(productGrid);
+
+        // ========================================
+        // 5. Free shipping notice
+        // ========================================
+        var shippingNotice = document.createElement('div');
+        shippingNotice.className = 'megadeals-shipping';
+        shippingNotice.textContent = '\uD83D\uDE9A Free shipping on orders over 10,000,000 clicks!';
+        container.appendChild(shippingNotice);
+
+        // ========================================
+        // 6. Customer reviews
+        // ========================================
+        var reviewsSection = document.createElement('div');
+        reviewsSection.className = 'megadeals-reviews';
+
+        var reviewsTitle = document.createElement('h2');
+        reviewsTitle.textContent = '\u2B50 Customer Reviews';
+        reviewsSection.appendChild(reviewsTitle);
+
+        var reviews = [
+            { stars: '\u2605\u2605\u2605\u2605\u2605', text: "I bought the invisible hat and I can confirm I cannot see it.", author: 'Dave' },
+            { stars: '\u2605\u2605\u2605\u2605\u2605', text: 'The used air smells exactly like I expected.', author: 'Sandra' },
+            { stars: '\u2605\u2605\u2605\u2606\u2606', text: 'The box of nothing arrived empty. 3 stars because the box itself was nice.', author: 'Greg' },
+            { stars: '\u2605\u2605\u2605\u2605\u2605', text: "The sound of silence MP3 is my favorite album now.", author: 'DJ Quiet' }
+        ];
+
+        reviews.forEach(function (review) {
+            var reviewDiv = document.createElement('div');
+            reviewDiv.className = 'review-item';
+
+            var reviewStars = document.createElement('span');
+            reviewStars.className = 'megadeals-review-stars';
+            reviewStars.textContent = review.stars;
+            reviewDiv.appendChild(reviewStars);
+
+            var reviewText = document.createElement('span');
+            reviewText.className = 'megadeals-review-text';
+            reviewText.textContent = ' "' + review.text + '" - ' + review.author;
+            reviewDiv.appendChild(reviewText);
+
+            reviewsSection.appendChild(reviewDiv);
+        });
+
+        container.appendChild(reviewsSection);
+
+        // ========================================
+        // 7. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'megadeals-footer';
+
+        var guarantee = document.createElement('p');
+        guarantee.textContent = 'Satisfaction Guaranteed (guarantee not guaranteed)';
+        footer.appendChild(guarantee);
+
+        var copyright = document.createElement('p');
+        copyright.textContent = '\u00A9 1999 Mega Deals Warehouse. All deals are final. All deals are mega.';
+        footer.appendChild(copyright);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.product-img', reward: { clicks: 3 } },
+        { selector: '.add-to-cart', reward: { clicks: 5 } },
+        // Pixel buy button handled manually in render()
+        { selector: '.review-item', reward: { clicks: 2 } }
+    ]
+});
