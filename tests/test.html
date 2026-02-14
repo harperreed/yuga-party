@@ -1,0 +1,189 @@
+<!-- ABOUTME: In-browser test runner for the Yugaaaaa! game logic. -->
+<!-- ABOUTME: Loads game.js and game.test.js, provides a minimal assertion framework, displays pass/fail results. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yugaaaaa! — Tests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 24px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #00d4ff;
+        }
+
+        #summary {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #16213e;
+        }
+
+        #summary.all-pass {
+            border-left: 4px solid #00ff88;
+        }
+
+        #summary.has-fail {
+            border-left: 4px solid #ff4444;
+        }
+
+        .test-result {
+            padding: 6px 12px;
+            margin: 4px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .test-result.pass {
+            background: #0a2e1a;
+            color: #00ff88;
+        }
+
+        .test-result.fail {
+            background: #2e0a0a;
+            color: #ff4444;
+        }
+
+        .test-result .error-detail {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: #ff8888;
+            padding-left: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Yugaaaaa! Test Runner</h1>
+    <div id="summary">Running tests...</div>
+    <div id="results"></div>
+
+    <!-- Load the module under test -->
+    <script src="../js/game.js"></script>
+
+    <!-- Test framework -->
+    <script>
+        // Minimal test runner
+        const TestRunner = {
+            tests: [],
+            passed: 0,
+            failed: 0,
+            results: [],
+
+            test(name, fn) {
+                this.tests.push({ name, fn });
+            },
+
+            assert(condition, message) {
+                if (!condition) {
+                    throw new Error(message || 'Assertion failed');
+                }
+            },
+
+            assertEqual(actual, expected, message) {
+                if (actual !== expected) {
+                    const detail = message || `Expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`;
+                    throw new Error(detail);
+                }
+            },
+
+            assertDeepEqual(actual, expected, message) {
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    const detail = message || `Expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`;
+                    throw new Error(detail);
+                }
+            },
+
+            assertThrows(fn, message) {
+                let threw = false;
+                try {
+                    fn();
+                } catch (e) {
+                    threw = true;
+                }
+                if (!threw) {
+                    throw new Error(message || 'Expected function to throw');
+                }
+            },
+
+            async run() {
+                for (const { name, fn } of this.tests) {
+                    try {
+                        await fn();
+                        this.passed++;
+                        this.results.push({ name, status: 'pass' });
+                    } catch (error) {
+                        this.failed++;
+                        this.results.push({ name, status: 'fail', error: error.message });
+                    }
+                }
+                this.render();
+            },
+
+            render() {
+                const summaryEl = document.getElementById('summary');
+                const resultsEl = document.getElementById('results');
+                const total = this.passed + this.failed;
+
+                summaryEl.textContent = `${this.passed} passed, ${this.failed} failed (${total} total)`;
+                summaryEl.className = this.failed > 0 ? 'has-fail' : 'all-pass';
+
+                // Clear previous results
+                while (resultsEl.firstChild) {
+                    resultsEl.removeChild(resultsEl.firstChild);
+                }
+
+                // Build results using safe DOM methods
+                this.results.forEach(function(r) {
+                    var div = document.createElement('div');
+                    div.className = 'test-result ' + r.status;
+
+                    var icon = r.status === 'pass' ? '\u2713 ' : '\u2717 ';
+                    div.appendChild(document.createTextNode(icon + r.name));
+
+                    if (r.error) {
+                        var errorSpan = document.createElement('span');
+                        errorSpan.className = 'error-detail';
+                        errorSpan.textContent = r.error;
+                        div.appendChild(errorSpan);
+                    }
+
+                    resultsEl.appendChild(div);
+                });
+            }
+        };
+
+        // Expose globally for test files
+        window.test = TestRunner.test.bind(TestRunner);
+        window.assert = TestRunner.assert.bind(TestRunner);
+        window.assertEqual = TestRunner.assertEqual.bind(TestRunner);
+        window.assertDeepEqual = TestRunner.assertDeepEqual.bind(TestRunner);
+        window.assertThrows = TestRunner.assertThrows.bind(TestRunner);
+    </script>
+
+    <!-- Load test files -->
+    <script src="game.test.js"></script>
+
+    <!-- Run tests after all scripts loaded -->
+    <script>
+        window.addEventListener('load', function() {
+            TestRunner.run();
+        });
+    </script>
+</body>
+</html>
