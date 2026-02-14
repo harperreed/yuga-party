@@ -11,15 +11,67 @@
 </head>
 <body>
     <div id="chrome-shell">
-        <div id="title-bar"></div>
-        <div id="tab-bar"></div>
-        <div id="toolbar">
-            <div id="nav-buttons"></div>
-            <div id="address-bar"></div>
+        <div id="title-bar">
+            <span id="page-title">Yugaaaaa! - The Internet</span>
+            <div class="window-buttons">
+                <span class="minimize-btn">&mdash;</span>
+                <span class="maximize-btn">&#9633;</span>
+                <span class="close-btn">&times;</span>
+            </div>
         </div>
+
+        <div id="tab-bar">
+            <div class="tab active">
+                <span class="tab-title">Yugaaaaa!</span>
+                <span class="tab-close">&times;</span>
+            </div>
+        </div>
+
+        <div id="toolbar">
+            <div id="nav-buttons">
+                <button id="btn-back">&larr;</button>
+                <button id="btn-forward">&rarr;</button>
+                <button id="btn-refresh">&#8635;</button>
+                <button id="btn-settings">&#9881;</button>
+            </div>
+            <div id="address-bar">
+                <span id="url-display">http://www.yugaaaaa.com</span>
+                <input id="url-input" type="text" placeholder="Type a URL..." />
+            </div>
+            <div id="sound-toggle">
+                <button id="btn-sound">&#128266;</button>
+            </div>
+        </div>
+
         <div id="bookmarks-bar"></div>
-        <div id="content-area"></div>
-        <div id="status-bar"></div>
+
+        <div id="content-area">
+            <div id="loading-screen">
+                <div class="loading-bar-container">
+                    <div class="loading-bar"></div>
+                </div>
+                <p class="loading-text">Connecting...</p>
+            </div>
+            <div id="page-content"></div>
+        </div>
+
+        <div id="status-bar">
+            <div class="currency">
+                <span class="currency-icon">&#128433;</span>
+                <span id="clicks-count">0</span>
+                <span class="currency-label">clicks</span>
+            </div>
+            <div class="currency">
+                <span class="currency-icon">&#128190;</span>
+                <span id="data-count">0 KB</span>
+                <span class="currency-label">data</span>
+            </div>
+            <div class="currency">
+                <span class="currency-icon">&#11088;</span>
+                <span id="reputation-count">0</span>
+                <span class="currency-label">rep</span>
+            </div>
+        </div>
     </div>
 
     <script src="js/game.js" defer></script>
