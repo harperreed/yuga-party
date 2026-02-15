@@ -18,6 +18,7 @@ function GameState() {
     this.tabsUnlocked = false;
     this.searchUnlocked = false;
     this.bookmarks = [];
+    this.reachedEnd = false;
 }
 
 // --- Currency adders ---
@@ -228,7 +229,8 @@ GameState.prototype.save = function () {
         monitorLevel: this.monitorLevel,
         tabsUnlocked: this.tabsUnlocked,
         searchUnlocked: this.searchUnlocked,
-        bookmarks: this.bookmarks.slice()
+        bookmarks: this.bookmarks.slice(),
+        reachedEnd: this.reachedEnd
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
 };
@@ -253,6 +255,7 @@ GameState.load = function () {
         gs.tabsUnlocked = parsed.tabsUnlocked || false;
         gs.searchUnlocked = parsed.searchUnlocked || false;
         gs.bookmarks = parsed.bookmarks || [];
+        gs.reachedEnd = parsed.reachedEnd || false;
     } catch (e) {
         // Corrupt save data — return fresh state
     }

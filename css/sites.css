@@ -2861,3 +2861,815 @@
 .grandma-footer p {
     margin: 4px 0;
 }
+
+/* ============================================================
+   ZONE 3 — THE DEEP WEB
+   Dark, minimal, unsettling. Near-black backgrounds,
+   monospace fonts, VHS scanlines, glitch effects.
+   ============================================================ */
+
+/* ============================================================
+   FOUND FOOTAGE — VHS archive with eerie photographs
+   ============================================================ */
+
+.found-footage-page {
+    background: #080808 !important;
+    color: #777;
+    padding: 0;
+    position: relative;
+}
+
+/* Film grain noise overlay */
+.found-footage-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><rect x="0" y="0" width="1" height="1" fill="rgba(255,255,255,0.03)"/><rect x="3" y="2" width="1" height="1" fill="rgba(255,255,255,0.02)"/><rect x="1" y="4" width="1" height="1" fill="rgba(255,255,255,0.03)"/><rect x="4" y="5" width="1" height="1" fill="rgba(255,255,255,0.02)"/></svg>');
+    pointer-events: none;
+    z-index: 1;
+}
+
+.found-header {
+    text-align: center;
+    padding: 20px 8px 12px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.found-title {
+    font-family: 'Courier New', monospace !important;
+    font-size: 24px;
+    color: #555;
+    text-shadow: 0 0 4px rgba(100, 100, 100, 0.3);
+    margin: 0 0 4px 0;
+    letter-spacing: 4px;
+}
+
+.found-subtitle {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 2px;
+}
+
+.found-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    padding: 16px;
+}
+
+.found-card {
+    border: 1px solid #1a1a1a;
+    padding: 8px;
+    background: #0c0c0c;
+}
+
+/* The "photograph" — a dark rectangle */
+.found-photo {
+    width: 100%;
+    height: 100px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.found-photo:hover {
+    border-color: #333;
+}
+
+.found-photo-large {
+    height: 200px;
+    margin-bottom: 8px;
+}
+
+/* Scene elements inside photos */
+.found-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Window shape — faint yellow rectangle */
+.found-scene-window::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 35%;
+    width: 30%;
+    height: 35%;
+    background: rgba(60, 60, 0, 0.3);
+    border: 1px solid rgba(80, 80, 0, 0.2);
+}
+
+/* Dots scattered — tiny white dots */
+.found-scene-dots::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(1px 1px at 20% 15%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 50% 30%, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 75% 20%, rgba(255, 255, 255, 0.35), transparent),
+        radial-gradient(1px 1px at 30% 60%, rgba(255, 255, 255, 0.25), transparent),
+        radial-gradient(1px 1px at 60% 70%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 85% 55%, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 15% 80%, rgba(255, 255, 255, 0.35), transparent),
+        radial-gradient(1px 1px at 45% 85%, rgba(255, 255, 255, 0.3), transparent);
+}
+
+/* Green circle — forest clearing */
+.found-scene-circle::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 30%;
+    width: 40%;
+    height: 50%;
+    border-radius: 50%;
+    background: rgba(26, 58, 26, 0.4);
+}
+
+/* Nearly all black with a faint lighter area */
+.found-scene-faint::after {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    width: 20%;
+    height: 20%;
+    background: rgba(30, 30, 30, 0.6);
+    filter: blur(8px);
+}
+
+/* Thin white lines — web or grid */
+.found-scene-grid::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(0deg, transparent 48%, rgba(255, 255, 255, 0.08) 49%, rgba(255, 255, 255, 0.08) 51%, transparent 52%),
+        linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.08) 49%, rgba(255, 255, 255, 0.08) 51%, transparent 52%);
+    background-size: 25% 25%;
+}
+
+/* Completely black */
+.found-scene-black {
+    background: #000;
+}
+
+.found-filename {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #555;
+    margin-top: 6px;
+}
+
+.found-date {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #444;
+    margin-top: 2px;
+}
+
+.found-caption {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.found-caption:hover {
+    color: #888;
+}
+
+/* Expanded view (hidden by default) */
+.found-expanded {
+    display: none;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.found-expanded-visible {
+    display: block;
+    animation: void-fade-in 1s ease-in forwards;
+}
+
+.found-hidden {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #555;
+    margin-top: 8px;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.found-footer {
+    text-align: center;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #333;
+    border-top: 1px solid #1a1a1a;
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   404 CLUB — Secret club behind a fake 404 page
+   ============================================================ */
+
+.club404-page {
+    background: #000 !important;
+    color: #aaa;
+    padding: 0;
+    min-height: 400px;
+    position: relative;
+}
+
+.club404-error {
+    padding: 40px 20px;
+    font-family: 'Times New Roman', serif;
+}
+
+.club404-error h1 {
+    font-family: 'Times New Roman', serif !important;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ccc;
+    margin: 0 0 12px 0;
+}
+
+.error-text {
+    cursor: pointer;
+}
+
+.error-text:hover {
+    color: #ddd;
+}
+
+.club404-hr {
+    border: none;
+    height: 1px;
+    background: #333;
+    margin: 16px 0;
+}
+
+.club404-server-sig {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Hidden corner text — barely visible */
+.hidden-corner {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.5s;
+    z-index: 10;
+}
+
+.hidden-corner:hover {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.club404-corner-top-left {
+    top: 4px;
+    left: 4px;
+}
+
+.club404-corner-top-right {
+    top: 4px;
+    right: 4px;
+}
+
+.club404-corner-bottom-left {
+    bottom: 4px;
+    left: 4px;
+}
+
+.club404-corner-bottom-right {
+    bottom: 4px;
+    right: 4px;
+}
+
+/* Members area */
+.club404-members {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.club404-members-title {
+    font-family: 'Courier New', monospace !important;
+    font-size: 28px;
+    color: #ccc;
+    letter-spacing: 6px;
+    margin: 0 0 4px 0;
+}
+
+.club404-members-subtitle {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #666;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+}
+
+.club404-rules {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.club-rule {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #aaa;
+    padding: 8px 0;
+    border-bottom: 1px solid #1a1a1a;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease-in, transform 0.8s ease-in;
+    cursor: pointer;
+}
+
+.club-rule:hover {
+    color: #ddd;
+}
+
+.club-rule-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================================
+   LAST VISITOR 1997 — Sarah's abandoned personal homepage
+   Desaturated Zone 1 colors — a page left in the rain for 29 years
+   ============================================================ */
+
+.sarah-page {
+    background: #1a1a18 !important;
+    color: #8a8a78;
+    padding: 0;
+    font-family: 'Times New Roman', serif;
+    filter: sepia(0.15) saturate(0.4) brightness(0.85);
+}
+
+.sarah-header {
+    text-align: center;
+    padding: 16px 8px 8px;
+    background: #1e1e1a;
+    border-bottom: 2px solid #2a2a24;
+}
+
+.sarah-title {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive !important;
+    font-size: 24px;
+    color: #9a9a78;
+    margin: 0 0 4px 0;
+}
+
+.sarah-updated {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: #666650;
+    cursor: pointer;
+}
+
+.sarah-hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #3a3a30, transparent);
+    margin: 8px 0;
+}
+
+.sarah-counter {
+    text-align: center;
+    padding: 8px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: #666650;
+}
+
+.sarah-counter-value {
+    font-family: 'Courier New', monospace;
+    background: #0a0a08;
+    color: #447744;
+    padding: 2px 8px;
+    border: 2px inset #333;
+    cursor: pointer;
+}
+
+.sarah-about {
+    padding: 12px;
+    margin: 8px;
+    background: #1c1c18;
+    border: 1px solid #2a2a24;
+}
+
+.sarah-about h2 {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 16px;
+    color: #8a8a6a;
+    margin: 0 0 8px 0;
+}
+
+.sarah-about p {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #7a7a68;
+    line-height: 1.6;
+}
+
+.sarah-links {
+    padding: 12px;
+    margin: 8px;
+    background: #1c1c18;
+    border: 1px solid #2a2a24;
+}
+
+.sarah-links h2 {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 16px;
+    color: #8a8a6a;
+    margin: 0 0 8px 0;
+}
+
+.sarah-links-list {
+    list-style: disc;
+    padding-left: 24px;
+    margin: 0;
+}
+
+.sarah-links-list li {
+    padding: 4px 0;
+}
+
+.sarah-link {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #556688 !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sarah-link:hover {
+    color: #7788aa !important;
+}
+
+.sarah-promise {
+    text-align: center;
+    padding: 12px;
+    margin: 8px;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #666650;
+    font-style: italic;
+}
+
+.sarah-guestbook {
+    padding: 12px;
+    margin: 8px;
+    background: #1c1c18;
+    border: 1px solid #2a2a24;
+}
+
+.sarah-guestbook h2 {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 16px;
+    color: #8a8a6a;
+    margin: 0 0 8px 0;
+    border-bottom: 1px dashed #2a2a24;
+    padding-bottom: 4px;
+}
+
+.sarah-gb-entry {
+    padding: 8px;
+    border-bottom: 1px dashed #222220;
+}
+
+.sarah-gb-entry:last-child {
+    border-bottom: none;
+}
+
+.sarah-gb-text {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 13px;
+    color: #7a7a68;
+}
+
+.sarah-gb-date {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #555540;
+    margin-top: 2px;
+    text-align: right;
+}
+
+/* Today's guestbook entry — eerie highlight */
+.today-entry {
+    background: rgba(60, 60, 40, 0.2);
+    border: 1px solid #3a3a2a;
+    cursor: pointer;
+}
+
+.today-entry:hover {
+    background: rgba(80, 80, 50, 0.3);
+}
+
+.today-entry .sarah-gb-text {
+    color: #aaa;
+}
+
+.sarah-footer {
+    text-align: center;
+    padding: 12px;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #444430;
+    border-top: 1px solid #2a2a24;
+}
+
+/* ============================================================
+   MIRROR.MIRROR.MIRROR — Inverted reflection of the last site
+   ============================================================ */
+
+.mirror-page {
+    background: #0a0a0a !important;
+    color: #888;
+    padding: 0;
+    min-height: 400px;
+}
+
+.mirror-top-text {
+    text-align: center;
+    padding: 20px 8px 10px;
+}
+
+.mirror-bottom-text {
+    text-align: center;
+    padding: 10px 8px 20px;
+}
+
+.mirror-text {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #444;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.mirror-text:hover {
+    color: #666;
+}
+
+/* Mirror content area — inverted colors */
+.mirror-content {
+    position: relative;
+    margin: 0 16px;
+    border: 1px solid #222;
+    overflow: hidden;
+    min-height: 200px;
+    cursor: pointer;
+}
+
+.mirror-sub-container {
+    filter: invert(1) hue-rotate(180deg);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Glass overlay texture */
+.mirror-glass-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 40%, rgba(255, 255, 255, 0.03) 60%, transparent 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255, 255, 255, 0.01) 4px, rgba(255, 255, 255, 0.01) 8px);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.mirror-empty {
+    text-align: center;
+    padding: 60px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+}
+
+/* Mirror crack */
+.mirror-crack {
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.mirror-crack-line {
+    display: inline-block;
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        #333 20%,
+        #555 35%,
+        transparent 36%,
+        #444 50%,
+        transparent 51%,
+        #555 65%,
+        #333 80%,
+        transparent 100%
+    );
+    position: relative;
+    transition: all 0.3s;
+}
+
+.mirror-crack-line::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 40%;
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(to bottom, transparent, #444, transparent);
+    transform: rotate(-20deg);
+}
+
+.mirror-crack-line::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 60%;
+    width: 1px;
+    height: 14px;
+    background: linear-gradient(to bottom, transparent, #444, transparent);
+    transform: rotate(15deg);
+}
+
+.mirror-crack:hover .mirror-crack-line {
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        #555 20%,
+        #777 35%,
+        transparent 36%,
+        #666 50%,
+        transparent 51%,
+        #777 65%,
+        #555 80%,
+        transparent 100%
+    );
+}
+
+/* Shatter animation */
+.mirror-shattered {
+    animation: mirror-shatter 0.6s ease-out forwards;
+}
+
+@keyframes mirror-shatter {
+    0% {
+        opacity: 1;
+        filter: none;
+    }
+    30% {
+        filter: blur(2px) brightness(1.5);
+    }
+    60% {
+        opacity: 0.5;
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 0.1;
+        filter: blur(8px) grayscale(1);
+    }
+}
+
+.mirror-reveal-text {
+    text-align: center;
+    padding: 30px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #777;
+    letter-spacing: 1px;
+    animation: void-fade-in 2s ease-in forwards;
+}
+
+/* ============================================================
+   THE END OF THE INTERNET — The final site
+   ============================================================ */
+
+.end-page {
+    background: #050505 !important;
+    color: #888;
+    padding: 0;
+}
+
+.end-center-block {
+    text-align: center;
+    padding: 80px 20px 40px;
+}
+
+.end-text {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    color: #777;
+    margin: 0 0 20px 0;
+    cursor: pointer;
+    letter-spacing: 1px;
+    line-height: 1.6;
+}
+
+.end-text:first-child {
+    font-size: 24px;
+    color: #999;
+    margin-bottom: 30px;
+}
+
+.end-text:hover {
+    color: #999;
+}
+
+.end-spacer {
+    height: 400px;
+}
+
+.end-cursor-area {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Blinking cursor animation */
+.end-cursor {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    color: #555;
+    cursor: pointer;
+    animation: end-blink 1s steps(1) infinite;
+}
+
+@keyframes end-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.end-cursor:hover {
+    color: #888;
+}
+
+.end-reveal-container {
+    margin-top: 20px;
+}
+
+.end-revealed-line {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 16px 0;
+    animation: void-fade-in 1.5s ease-in forwards;
+    line-height: 1.5;
+}
+
+/* Return link at the very end */
+.return-link {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    color: #999;
+    margin-top: 40px;
+    padding: 12px 24px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+    animation: void-fade-in 2s ease-in forwards;
+}
+
+.return-link:hover {
+    color: #ccc;
+}

@@ -127,8 +127,9 @@ SiteRegistry.register({
             container.removeChild(container.firstChild);
         }
 
-        // Closure variable for hit counter
-        var hitCount = 843297 + Math.floor(Math.random() * 100000);
+        // Closure variable for hit counter — special case if player reached the end
+        var hasReachedEnd = browser.gameState.reachedEnd;
+        var hitCount = hasReachedEnd ? 1 : (843297 + Math.floor(Math.random() * 100000));
 
         // ========================================
         // 1. Top marquee — welcome banner
@@ -138,7 +139,10 @@ SiteRegistry.register({
         var topMarqueeInner = document.createElement('div');
         topMarqueeInner.className = 'marquee-inner';
 
-        var welcomeText = document.createTextNode('\uD83C\uDF10 Welcome to the INFORMATION SUPERHIGHWAY! \uD83C\uDF10 You are visitor #');
+        var welcomePrefix = hasReachedEnd
+            ? '\uD83C\uDF10 Welcome back. \uD83C\uDF10 You are visitor #'
+            : '\uD83C\uDF10 Welcome to the INFORMATION SUPERHIGHWAY! \uD83C\uDF10 You are visitor #';
+        var welcomeText = document.createTextNode(welcomePrefix);
         topMarqueeInner.appendChild(welcomeText);
 
         var hitCounterSpan = document.createElement('span');
@@ -214,13 +218,15 @@ SiteRegistry.register({
         // ========================================
         // 4. Banner ad (randomized)
         // ========================================
-        var bannerAds = [
-            { text: '\uD83D\uDD25 FREE INTERNET! Click Here! \uD83D\uDD25', clicks: 15 },
-            { text: 'YOU are the 1,000,000th visitor! CLAIM YOUR PRIZE!', clicks: 25 },
-            { text: 'Download MORE RAM now!! \u2192\u2192\u2192', clicks: 20 },
-            { text: 'Hot Singles in Your Internet Connection Area!', clicks: 10 },
-            { text: 'Make $$$ Fast with this ONE WEIRD TRICK', clicks: 15 }
-        ];
+        var bannerAds = hasReachedEnd
+            ? [{ text: 'Welcome back.', clicks: 100 }]
+            : [
+                { text: '\uD83D\uDD25 FREE INTERNET! Click Here! \uD83D\uDD25', clicks: 15 },
+                { text: 'YOU are the 1,000,000th visitor! CLAIM YOUR PRIZE!', clicks: 25 },
+                { text: 'Download MORE RAM now!! \u2192\u2192\u2192', clicks: 20 },
+                { text: 'Hot Singles in Your Internet Connection Area!', clicks: 10 },
+                { text: 'Make $$$ Fast with this ONE WEIRD TRICK', clicks: 15 }
+            ];
         var chosenAd = bannerAds[Math.floor(Math.random() * bannerAds.length)];
 
         var bannerDiv = document.createElement('div');
@@ -2735,5 +2741,705 @@ SiteRegistry.register({
         { selector: '.email-ethel', reward: { reputation: 20 } },
         { selector: '.photo-album-link', reward: { clicks: 3 } },
         { selector: '.recipe-section', reward: { clicks: 5 } }
+    ]
+});
+
+// ============================================================
+// ZONE 3 — THE DEEP WEB
+// Dark, minimal, unsettling. The humor is gone. This is the deep web.
+// ============================================================
+
+// --- found-footage.net — VHS film archive with eerie photographs ---
+
+SiteRegistry.register({
+    id: 'found-footage',
+    url: 'http://www.found-footage.net',
+    title: 'found_footage',
+    zone: 3,
+    icon: '\uD83D\uDCF7',
+    requirements: { minModem: 3, dataCost: 200, reputationCost: 50 },
+
+    render: function (container, browser) {
+        container.className = 'zone-3 found-footage-page scanlines';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        var photos = [
+            {
+                file: 'IMG_0023.jpg', date: 'March 12, 1997',
+                caption: 'The house. Before.',
+                hidden: 'The lights were on. No one was home.',
+                sceneColor: '#3a3a00', sceneShape: 'window'
+            },
+            {
+                file: 'IMG_0047.jpg', date: 'March 14, 1997',
+                caption: 'Stars? No. Something else.',
+                hidden: 'They moved in patterns. Deliberate patterns.',
+                sceneColor: '#ffffff', sceneShape: 'dots'
+            },
+            {
+                file: 'IMG_0089.jpg', date: 'March 19, 1997',
+                caption: 'Taken at Kevin\'s house. He wasn\'t home.',
+                hidden: 'Gerald was in the yard. The hamster. Just... sitting there.',
+                sceneColor: '#1a3a1a', sceneShape: 'circle'
+            },
+            {
+                file: 'IMG_0102.jpg', date: 'March 22, 1997',
+                caption: 'I don\'t remember taking this.',
+                hidden: 'The camera was found in a drawer. The drawer was sealed.',
+                sceneColor: '#1a1a1a', sceneShape: 'faint'
+            },
+            {
+                file: 'IMG_0156.jpg', date: 'April 1, 1997',
+                caption: 'The counter reads 0023.',
+                hidden: 'The counter hasn\'t changed since this was taken.',
+                sceneColor: '#ffffff', sceneShape: 'grid'
+            },
+            {
+                file: 'IMG_0200.jpg', date: 'undated',
+                caption: 'last one.',
+                hidden: '',
+                sceneColor: '#000000', sceneShape: 'black'
+            }
+        ];
+
+        // ========================================
+        // 1. Header — barely visible
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'found-header';
+        var title = document.createElement('h1');
+        title.className = 'found-title glitch-text';
+        title.textContent = 'found_footage';
+        header.appendChild(title);
+        var subtitle = document.createElement('div');
+        subtitle.className = 'found-subtitle';
+        subtitle.textContent = 'recovered files — do not distribute';
+        header.appendChild(subtitle);
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Photo grid
+        // ========================================
+        var grid = document.createElement('div');
+        grid.className = 'found-grid';
+
+        photos.forEach(function (photo) {
+            var card = document.createElement('div');
+            card.className = 'found-card';
+
+            // The "photo" — a dark rectangle with a CSS-drawn scene
+            var photoEl = document.createElement('div');
+            photoEl.className = 'found-photo';
+
+            // Draw scene elements inside the photo
+            var scene = document.createElement('div');
+            scene.className = 'found-scene found-scene-' + photo.sceneShape;
+            photoEl.appendChild(scene);
+
+            card.appendChild(photoEl);
+
+            // File name
+            var fileName = document.createElement('div');
+            fileName.className = 'found-filename';
+            fileName.textContent = photo.file;
+            card.appendChild(fileName);
+
+            // Date
+            var dateEl = document.createElement('div');
+            dateEl.className = 'found-date';
+            dateEl.textContent = photo.date;
+            card.appendChild(dateEl);
+
+            // Caption
+            var captionEl = document.createElement('div');
+            captionEl.className = 'found-caption';
+            captionEl.textContent = photo.caption;
+            card.appendChild(captionEl);
+
+            // Hidden text — revealed on click
+            var hiddenEl = document.createElement('div');
+            hiddenEl.className = 'found-hidden';
+            if (photo.hidden) {
+                hiddenEl.textContent = photo.hidden;
+            }
+
+            // Expanded view container (initially hidden)
+            var expanded = document.createElement('div');
+            expanded.className = 'found-expanded';
+            var expandedPhoto = photoEl.cloneNode(true);
+            expandedPhoto.className = 'found-photo found-photo-large';
+            expanded.appendChild(expandedPhoto);
+            expanded.appendChild(hiddenEl);
+
+            card.appendChild(expanded);
+
+            // Click to expand
+            photoEl.addEventListener('click', function () {
+                expanded.classList.toggle('found-expanded-visible');
+            });
+
+            grid.appendChild(card);
+        });
+
+        container.appendChild(grid);
+
+        // ========================================
+        // 3. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'found-footer';
+        footer.textContent = 'archive recovered from [REDACTED] — 6 files total';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.found-photo', reward: { clicks: 15 } },
+        { selector: '.found-caption', reward: { clicks: 5 } }
+    ]
+});
+
+// --- 404-club.com — A secret club hidden behind a fake 404 page ---
+
+SiteRegistry.register({
+    id: '404-club',
+    url: 'http://www.404-club.com',
+    title: '404 Not Found',
+    zone: 3,
+    icon: '\u2049',
+    requirements: { minModem: 3, dataCost: 150, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-3 club404-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        var membersRevealed = false;
+
+        // ========================================
+        // 1. Fake 404 error page
+        // ========================================
+        var errorPage = document.createElement('div');
+        errorPage.className = 'club404-error';
+
+        var errorH1 = document.createElement('h1');
+        errorH1.className = 'error-text';
+        errorH1.textContent = '404 Not Found';
+        errorPage.appendChild(errorH1);
+
+        var errorMsg = document.createElement('p');
+        errorMsg.className = 'error-text';
+        errorMsg.textContent = 'The requested URL /club was not found on this server.';
+        errorPage.appendChild(errorMsg);
+
+        var errorHr = document.createElement('hr');
+        errorHr.className = 'club404-hr';
+        errorPage.appendChild(errorHr);
+
+        var serverSig = document.createElement('p');
+        serverSig.className = 'error-text club404-server-sig';
+        serverSig.textContent = 'Apache/1.3.27 Server at 404-club.com Port 80';
+        errorPage.appendChild(serverSig);
+
+        container.appendChild(errorPage);
+
+        // ========================================
+        // 2. Hidden corner text — barely visible
+        // ========================================
+        var corners = [
+            { pos: 'top-left', text: 'look closer' },
+            { pos: 'top-right', text: 'you found us' },
+            { pos: 'bottom-left', text: 'click here' },
+            { pos: 'bottom-right', text: 'rule 1' }
+        ];
+
+        corners.forEach(function (corner) {
+            var el = document.createElement('div');
+            el.className = 'hidden-corner club404-corner-' + corner.pos;
+            el.textContent = corner.text;
+
+            if (corner.pos === 'bottom-left') {
+                el.addEventListener('click', function () {
+                    if (membersRevealed) { return; }
+                    membersRevealed = true;
+                    errorPage.style.display = 'none';
+                    membersArea.style.display = 'block';
+                    // Reveal rules one at a time
+                    var ruleEls = membersArea.querySelectorAll('.club-rule');
+                    ruleEls.forEach(function (ruleEl, idx) {
+                        setTimeout(function () {
+                            ruleEl.classList.add('club-rule-visible');
+                        }, (idx + 1) * 800);
+                    });
+                });
+            }
+
+            container.appendChild(el);
+        });
+
+        // ========================================
+        // 3. Members area (hidden until activated)
+        // ========================================
+        var membersArea = document.createElement('div');
+        membersArea.className = 'club404-members';
+        membersArea.style.display = 'none';
+
+        var membersTitle = document.createElement('h1');
+        membersTitle.className = 'club404-members-title';
+        membersTitle.textContent = 'THE 404 CLUB';
+        membersArea.appendChild(membersTitle);
+
+        var membersSub = document.createElement('div');
+        membersSub.className = 'club404-members-subtitle';
+        membersSub.textContent = 'MEMBERS AREA';
+        membersArea.appendChild(membersSub);
+
+        var rules = [
+            'Rule 1: We do not talk about the 404 Club.',
+            'Rule 2: We DO NOT talk about the 404 Club.',
+            'Rule 3: If a page returns 404, it was one of us.',
+            'Rule 4: Only two sites to a fight.',
+            'Rule 5: One fight at a time.',
+            'Rule 6: No shirts, no servers.',
+            'Rule 7: Fights will go on as long as they have to.',
+            'Rule 8: If this is your first time at 404 Club, you MUST click.'
+        ];
+
+        var rulesContainer = document.createElement('div');
+        rulesContainer.className = 'club404-rules';
+
+        rules.forEach(function (rule) {
+            var ruleEl = document.createElement('div');
+            ruleEl.className = 'club-rule';
+            ruleEl.textContent = rule;
+            rulesContainer.appendChild(ruleEl);
+        });
+
+        membersArea.appendChild(rulesContainer);
+        container.appendChild(membersArea);
+    },
+
+    clickTargets: [
+        { selector: '.hidden-corner', reward: { clicks: 25 } },
+        { selector: '.club-rule', reward: { clicks: 10 } },
+        { selector: '.error-text', reward: { clicks: 5 } }
+    ]
+});
+
+// --- last-visitor-1997.org — Sarah's abandoned personal homepage ---
+
+SiteRegistry.register({
+    id: 'last-visitor-1997',
+    url: 'http://www.last-visitor-1997.org',
+    title: "Sarah's Homepage - Last Updated Oct 14, 1997",
+    zone: 3,
+    icon: '\uD83D\uDD78',
+    requirements: { minModem: 3, dataCost: 180, reputationCost: 30 },
+
+    render: function (container, browser) {
+        container.className = 'zone-3 sarah-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // ========================================
+        // 1. Header — friendly but faded
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'sarah-header';
+
+        var title = document.createElement('h1');
+        title.className = 'sarah-title';
+        title.textContent = "Welcome to Sarah's Homepage!";
+        header.appendChild(title);
+
+        var lastUpdated = document.createElement('div');
+        lastUpdated.className = 'sarah-updated frozen-element';
+        lastUpdated.textContent = 'Last updated: October 14, 1997';
+        header.appendChild(lastUpdated);
+
+        var hr = document.createElement('hr');
+        hr.className = 'sarah-hr';
+        header.appendChild(hr);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Hit counter frozen at 0023
+        // ========================================
+        var counterDiv = document.createElement('div');
+        counterDiv.className = 'sarah-counter';
+        var counterLabel = document.createElement('span');
+        counterLabel.textContent = 'Visitors: ';
+        counterDiv.appendChild(counterLabel);
+        var counterValue = document.createElement('span');
+        counterValue.className = 'sarah-counter-value frozen-element';
+        counterValue.textContent = '0023';
+        counterDiv.appendChild(counterValue);
+        container.appendChild(counterDiv);
+
+        // ========================================
+        // 3. About Me
+        // ========================================
+        var aboutSection = document.createElement('div');
+        aboutSection.className = 'sarah-about';
+
+        var aboutTitle = document.createElement('h2');
+        aboutTitle.textContent = 'About Me';
+        aboutSection.appendChild(aboutTitle);
+
+        var aboutText = document.createElement('p');
+        aboutText.textContent = "My name is Sarah. I'm a junior in high school. I like astronomy and writing poetry.";
+        aboutSection.appendChild(aboutText);
+
+        container.appendChild(aboutSection);
+
+        // ========================================
+        // 4. My Links
+        // ========================================
+        var linksSection = document.createElement('div');
+        linksSection.className = 'sarah-links';
+
+        var linksTitle = document.createElement('h2');
+        linksTitle.textContent = 'My Links';
+        linksSection.appendChild(linksTitle);
+
+        var linksList = document.createElement('ul');
+        linksList.className = 'sarah-links-list';
+
+        // Cool Astronomy Sites — broken
+        var astroLi = document.createElement('li');
+        var astroLink = document.createElement('a');
+        astroLink.href = '#';
+        astroLink.className = 'sarah-link frozen-element';
+        astroLink.textContent = 'Cool Astronomy Sites';
+        astroLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            alert('This site no longer exists');
+        });
+        astroLi.appendChild(astroLink);
+        linksList.appendChild(astroLi);
+
+        // My Poetry Page — broken
+        var poetryLi = document.createElement('li');
+        var poetryLink = document.createElement('a');
+        poetryLink.href = '#';
+        poetryLink.className = 'sarah-link frozen-element';
+        poetryLink.textContent = 'My Poetry Page';
+        poetryLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            alert('This site no longer exists');
+        });
+        poetryLi.appendChild(poetryLink);
+        linksList.appendChild(poetryLi);
+
+        // Email Me — goes nowhere
+        var emailLi = document.createElement('li');
+        var emailLink = document.createElement('a');
+        emailLink.href = '#';
+        emailLink.className = 'sarah-link frozen-element';
+        emailLink.textContent = 'Email Me!';
+        emailLink.addEventListener('click', function (e) {
+            e.preventDefault();
+        });
+        emailLi.appendChild(emailLink);
+        linksList.appendChild(emailLi);
+
+        // Kevin's Page — navigates to coolguyz
+        var kevinLi = document.createElement('li');
+        var kevinLink = document.createElement('a');
+        kevinLink.href = '#';
+        kevinLink.className = 'sarah-link frozen-element';
+        kevinLink.setAttribute('data-site', 'coolguyz');
+        kevinLink.textContent = "My Friend Kevin's Page";
+        kevinLi.appendChild(kevinLink);
+        linksList.appendChild(kevinLi);
+
+        linksSection.appendChild(linksList);
+        container.appendChild(linksSection);
+
+        // ========================================
+        // 5. Update promise — she never did
+        // ========================================
+        var promiseDiv = document.createElement('div');
+        promiseDiv.className = 'sarah-promise';
+        promiseDiv.textContent = "I'll update this page soon!";
+        container.appendChild(promiseDiv);
+
+        // ========================================
+        // 6. Guestbook
+        // ========================================
+        var guestbookSection = document.createElement('div');
+        guestbookSection.className = 'sarah-guestbook';
+
+        var gbTitle = document.createElement('h2');
+        gbTitle.textContent = 'Guestbook';
+        guestbookSection.appendChild(gbTitle);
+
+        var today = new Date();
+        var todayStr = (today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear();
+
+        var guestEntries = [
+            { text: 'Great page Sarah! -Mom', date: 'Oct 10, 1997' },
+            { text: 'Cool! I like space too :) -Kevin', date: 'Oct 12, 1997' },
+            { text: 'update ur page!! -anonymous', date: 'Dec 3, 1997' },
+            { text: 'is anyone still here?', date: 'March 15, 2003' },
+            { text: 'Hello again.', date: todayStr, isToday: true }
+        ];
+
+        guestEntries.forEach(function (entry) {
+            var entryDiv = document.createElement('div');
+            entryDiv.className = entry.isToday ? 'sarah-gb-entry today-entry' : 'sarah-gb-entry';
+
+            var entryText = document.createElement('div');
+            entryText.className = 'sarah-gb-text';
+            entryText.textContent = entry.text;
+            entryDiv.appendChild(entryText);
+
+            var entryDate = document.createElement('div');
+            entryDate.className = 'sarah-gb-date';
+            entryDate.textContent = entry.date;
+            entryDiv.appendChild(entryDate);
+
+            guestbookSection.appendChild(entryDiv);
+        });
+
+        container.appendChild(guestbookSection);
+
+        // ========================================
+        // 7. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'sarah-footer';
+        footer.textContent = 'Best viewed in Netscape Navigator 3.0';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.frozen-element', reward: { clicks: 8 } },
+        { selector: '.today-entry', reward: { clicks: 50, reputation: 30 } },
+        { selector: '.sarah-link[data-site]', action: 'navigate', target: 'coolguyz' }
+    ]
+});
+
+// --- mirror.mirror.mirror — Renders an inverted mirror of the last visited site ---
+
+SiteRegistry.register({
+    id: 'mirror-mirror',
+    url: 'http://mirror.mirror.mirror',
+    title: '???',
+    zone: 3,
+    icon: '\uD83E\uDE9E',
+    requirements: { minModem: 4, dataCost: 300, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-3 mirror-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Figure out the previous site from browser history
+        var prevSiteId = null;
+        if (browser._history && browser._historyIndex > 0) {
+            prevSiteId = browser._history[browser._historyIndex - 1];
+        }
+
+        var prevSite = prevSiteId ? SiteRegistry.get(prevSiteId) : null;
+
+        // ========================================
+        // 1. Top text — faint
+        // ========================================
+        var topText = document.createElement('div');
+        topText.className = 'mirror-text mirror-top-text';
+        topText.textContent = 'This looks familiar.';
+        container.appendChild(topText);
+
+        // ========================================
+        // 2. Mirror content area
+        // ========================================
+        var mirrorWrapper = document.createElement('div');
+        mirrorWrapper.className = 'mirror-content';
+
+        if (prevSite && typeof prevSite.render === 'function') {
+            // Create a sub-container and render the previous site into it
+            var subContainer = document.createElement('div');
+            subContainer.className = 'mirror-sub-container';
+            prevSite.render(subContainer, browser);
+            mirrorWrapper.appendChild(subContainer);
+        } else {
+            // No previous site — empty mirror
+            var emptyMsg = document.createElement('div');
+            emptyMsg.className = 'mirror-empty';
+            emptyMsg.textContent = 'The mirror reflects nothing. There is nothing to reflect.';
+            mirrorWrapper.appendChild(emptyMsg);
+        }
+
+        // Glass overlay effect
+        var glassOverlay = document.createElement('div');
+        glassOverlay.className = 'mirror-glass-overlay';
+        mirrorWrapper.appendChild(glassOverlay);
+
+        container.appendChild(mirrorWrapper);
+
+        // ========================================
+        // 3. Mirror crack
+        // ========================================
+        var crack = document.createElement('div');
+        crack.className = 'mirror-crack';
+
+        var crackLine = document.createElement('div');
+        crackLine.className = 'mirror-crack-line';
+        crack.appendChild(crackLine);
+
+        var crackShattered = false;
+        crack.addEventListener('click', function () {
+            if (crackShattered) { return; }
+            crackShattered = true;
+            mirrorWrapper.classList.add('mirror-shattered');
+            // Brief shatter animation, then reveal text
+            setTimeout(function () {
+                var revealText = document.createElement('div');
+                revealText.className = 'mirror-reveal-text';
+                revealText.textContent = "You've been here before. You'll be here again.";
+                container.appendChild(revealText);
+            }, 600);
+        });
+
+        container.appendChild(crack);
+
+        // ========================================
+        // 4. Bottom text — faint
+        // ========================================
+        var bottomText = document.createElement('div');
+        bottomText.className = 'mirror-text mirror-bottom-text';
+        bottomText.textContent = 'But something is different.';
+        container.appendChild(bottomText);
+    },
+
+    clickTargets: [
+        { selector: '.mirror-crack', reward: { clicks: 20 } },
+        { selector: '.mirror-text', reward: { clicks: 10 } },
+        { selector: '.mirror-content', reward: { clicks: 5 } }
+    ]
+});
+
+// --- the-end-of-the-internet.com — The final site. Simple, powerful. ---
+
+SiteRegistry.register({
+    id: 'the-end-of-the-internet',
+    url: 'http://www.the-end-of-the-internet.com',
+    title: 'The End',
+    zone: 3,
+    icon: '\u23F9',
+    requirements: { minModem: 4, dataCost: 500, reputationCost: 100 },
+
+    render: function (container, browser) {
+        container.className = 'zone-3 end-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // ========================================
+        // 1. Initial centered text
+        // ========================================
+        var centerBlock = document.createElement('div');
+        centerBlock.className = 'end-center-block';
+
+        var lines = [
+            'Congratulations.',
+            'You have reached the end of the internet.',
+            'There is nothing more to see.',
+            'You may now turn off your computer.'
+        ];
+
+        lines.forEach(function (line) {
+            var p = document.createElement('p');
+            p.className = 'end-text';
+            p.textContent = line;
+            centerBlock.appendChild(p);
+        });
+
+        container.appendChild(centerBlock);
+
+        // ========================================
+        // 2. Large empty space
+        // ========================================
+        var spacer = document.createElement('div');
+        spacer.className = 'end-spacer';
+        container.appendChild(spacer);
+
+        // ========================================
+        // 3. Blinking cursor — below the fold
+        // ========================================
+        var cursorArea = document.createElement('div');
+        cursorArea.className = 'end-cursor-area';
+
+        var cursorEl = document.createElement('div');
+        cursorEl.className = 'end-cursor';
+        cursorEl.textContent = '\u258C';
+        cursorArea.appendChild(cursorEl);
+
+        // Lines revealed one at a time by clicking the cursor
+        var revealLines = [
+            '...',
+            'Still here?',
+            "You've clicked through banner ads and hamster stock exchanges.",
+            "You've signed guestbooks and consulted orbs.",
+            "You've read every recipe for toast.",
+            "You've stared into the void, and it stared back.",
+            "You've visited the first page and the last.",
+            'Every click was a choice.',
+            'Every page was a world.',
+            "And now you're here, at the end.",
+            "But the internet never really ends, does it?",
+            'It just loops back to the beginning.'
+        ];
+
+        var revealIndex = 0;
+        var revealContainer = document.createElement('div');
+        revealContainer.className = 'end-reveal-container';
+        cursorArea.appendChild(revealContainer);
+
+        cursorEl.addEventListener('click', function () {
+            if (revealIndex >= revealLines.length) { return; }
+
+            // Award 100 clicks per line
+            browser.handleReward({ clicks: 100 });
+
+            var lineEl = document.createElement('p');
+            lineEl.className = 'end-revealed-line';
+            lineEl.textContent = revealLines[revealIndex];
+            revealContainer.appendChild(lineEl);
+
+            revealIndex++;
+
+            // After the last line, show the return link and set reachedEnd
+            if (revealIndex >= revealLines.length) {
+                cursorEl.style.display = 'none';
+                browser.gameState.reachedEnd = true;
+                browser.gameState.save();
+
+                var returnLink = document.createElement('div');
+                returnLink.className = 'return-link';
+                returnLink.textContent = '\u2192 Return to yugaaaaa.com \u2190';
+                returnLink.addEventListener('click', function () {
+                    browser.navigate('yugaaaaa');
+                });
+                revealContainer.appendChild(returnLink);
+            }
+        });
+
+        container.appendChild(cursorArea);
+    },
+
+    clickTargets: [
+        { selector: '.end-text', reward: { clicks: 10 } }
     ]
 });
