@@ -186,9 +186,13 @@ var Browser = {
             if (site.requirements.dataCost && site.requirements.dataCost > 0) {
                 this.gameState.spendData(site.requirements.dataCost);
             }
+            // Spend reputation cost if the site requires it
+            if (site.requirements.reputationCost && site.requirements.reputationCost > 0) {
+                this.gameState.spendReputation(site.requirements.reputationCost);
+            }
         }
 
-        // Mark site as discovered (adds to bookmarks list)
+        // Mark site as discovered only after passing access check
         this.gameState.discoverSite(siteId);
 
         // Push to history (truncate any forward history)
@@ -316,6 +320,12 @@ var Browser = {
     _renderSite: function (site) {
         var content = document.getElementById('page-content');
         if (!content) { return; }
+
+        // Clear previous content before rendering the new site
+        while (content.firstChild) {
+            content.removeChild(content.firstChild);
+        }
+        content.className = '';
 
         // Sites are expected to provide a render function that builds DOM
         if (typeof site.render === 'function') {
@@ -917,7 +927,7 @@ var Browser = {
      * @param {string} siteId - The site to load in the new tab
      */
     _createTab: function (siteId) {
-        if (this._tabs.length >= MAX_TABS && this.gameState.hasTabsUnlocked()) {
+        if (this.gameState.hasTabsUnlocked() && this._tabs.length >= MAX_TABS) {
             return;
         }
 

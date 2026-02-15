@@ -241,7 +241,7 @@ SiteRegistry.register({
         // Banner click reward is handled manually since each ad has a different reward
         bannerDiv.addEventListener('click', function (e) {
             e.preventDefault();
-            browser.handleReward({ clicks: chosenAd.clicks });
+            browser.handleReward({ clicks: chosenAd.clicks }, e.clientX, e.clientY);
             bannerDiv.classList.add('clicked');
             setTimeout(function () { bannerDiv.classList.remove('clicked'); }, 200);
         });
@@ -1781,8 +1781,20 @@ SiteRegistry.register({
                 buyBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    // Check if player can afford 100 clicks
+                    if (browser.gameState.clicks < 100) {
+                        var noFunds = document.createElement('div');
+                        noFunds.className = 'megadeals-congrats';
+                        noFunds.textContent = 'INSUFFICIENT CLICKS! You need 100 clicks to buy this pixel.';
+                        card.appendChild(noFunds);
+                        setTimeout(function () {
+                            if (noFunds.parentNode) { noFunds.parentNode.removeChild(noFunds); }
+                        }, 3000);
+                        return;
+                    }
                     // Spend 100 clicks, earn 50 data
-                    browser.handleReward({ clicks: -100, data: 50 });
+                    browser.gameState.spendClicks(100);
+                    browser.handleReward({ data: 50 }, e.clientX, e.clientY);
                     cartCount++;
                     cartText.textContent = 'Items: ' + cartCount;
 
@@ -3129,7 +3141,13 @@ SiteRegistry.register({
         astroLink.textContent = 'Cool Astronomy Sites';
         astroLink.addEventListener('click', function (e) {
             e.preventDefault();
-            alert('This site no longer exists');
+            // Show in-page dead link message instead of blocking alert
+            var msg = document.createElement('div');
+            msg.className = 'sarah-dead-link-msg';
+            msg.textContent = 'This site no longer exists.';
+            if (!astroLi.querySelector('.sarah-dead-link-msg')) {
+                astroLi.appendChild(msg);
+            }
         });
         astroLi.appendChild(astroLink);
         linksList.appendChild(astroLi);
@@ -3142,7 +3160,12 @@ SiteRegistry.register({
         poetryLink.textContent = 'My Poetry Page';
         poetryLink.addEventListener('click', function (e) {
             e.preventDefault();
-            alert('This site no longer exists');
+            var msg = document.createElement('div');
+            msg.className = 'sarah-dead-link-msg';
+            msg.textContent = 'This site no longer exists.';
+            if (!poetryLi.querySelector('.sarah-dead-link-msg')) {
+                poetryLi.appendChild(msg);
+            }
         });
         poetryLi.appendChild(poetryLink);
         linksList.appendChild(poetryLi);

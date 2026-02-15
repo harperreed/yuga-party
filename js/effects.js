@@ -76,6 +76,20 @@ var Effects = {
         if (contentArea) {
             contentArea.style.cursor = cursorName;
         }
+        // Persist cursor preference
+        try { localStorage.setItem('yugaaaaa-cursor', cursorName); } catch (e) { /* ignore */ }
+    },
+
+    /**
+     * Restore cursor preference from localStorage.
+     */
+    loadCursorPreference: function () {
+        try {
+            var saved = localStorage.getItem('yugaaaaa-cursor');
+            if (saved) {
+                this.setCursor(saved);
+            }
+        } catch (e) { /* ignore */ }
     },
 
     /**
@@ -246,13 +260,15 @@ var Effects = {
      */
     init: function () {
         this.loadSoundPreference();
+        this.loadCursorPreference();
 
         var self = this;
         var soundBtn = document.getElementById('btn-sound');
         if (soundBtn) {
-            soundBtn.addEventListener('click', function () {
+            // Use onclick assignment to prevent duplicate listener accumulation
+            soundBtn.onclick = function () {
                 self.toggleSound();
-            });
+            };
         }
     }
 };

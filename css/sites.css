@@ -3337,6 +3337,13 @@
     color: #7788aa !important;
 }
 
+.sarah-dead-link-msg {
+    font-size: 11px;
+    color: #664444;
+    font-style: italic;
+    margin-top: 2px;
+}
+
 .sarah-promise {
     text-align: center;
     padding: 12px;
