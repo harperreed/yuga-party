@@ -110,8 +110,32 @@ var Browser = {
         // Apply persisted upgrades (monitor level, tabs, search)
         this._applyUpgrades();
 
+        // Determine starting site from URL hash, default to yugaaaaa
+        var startSite = 'yugaaaaa';
+        if (window.location.hash && window.location.hash.length > 1) {
+            var hashSite = window.location.hash.substring(1);
+            // Only use the hash if it's a known site
+            if (typeof SiteRegistry !== 'undefined' && SiteRegistry.get(hashSite)) {
+                startSite = hashSite;
+            }
+        }
+
         // Create the initial tab
-        this._createTab('yugaaaaa');
+        this._createTab(startSite);
+
+        // Listen for hash changes (browser back/forward)
+        var self2 = this;
+        this._hashChangeHandler = function () {
+            if (self2._updatingHash) { return; }
+            var hash = window.location.hash.substring(1);
+            if (hash && hash !== self2._currentSiteId) {
+                if (typeof SiteRegistry !== 'undefined' && SiteRegistry.get(hash)) {
+                    self2.navigate(hash);
+                }
+            }
+        };
+        window.removeEventListener('hashchange', this._hashChangeHandler);
+        window.addEventListener('hashchange', this._hashChangeHandler);
 
         // Initialize the effects system (sound toggle, preferences)
         if (typeof Effects !== 'undefined') {
@@ -200,6 +224,11 @@ var Browser = {
         this._history.push(siteId);
         this._historyIndex = this._history.length - 1;
         this._currentSiteId = siteId;
+
+        // Update URL hash for reloadability
+        this._updatingHash = true;
+        window.location.hash = siteId;
+        this._updatingHash = false;
 
         // Update active tab state
         this._syncTabState();
@@ -461,6 +490,11 @@ var Browser = {
         var siteId = this._history[this._historyIndex];
         this._currentSiteId = siteId;
 
+        // Update URL hash
+        this._updatingHash = true;
+        window.location.hash = siteId;
+        this._updatingHash = false;
+
         this._syncTabState();
         this._navigateInstant(siteId);
         this._updateNavButtons();
@@ -478,6 +512,11 @@ var Browser = {
         this._historyIndex++;
         var siteId = this._history[this._historyIndex];
         this._currentSiteId = siteId;
+
+        // Update URL hash
+        this._updatingHash = true;
+        window.location.hash = siteId;
+        this._updatingHash = false;
 
         this._syncTabState();
         this._navigateInstant(siteId);
