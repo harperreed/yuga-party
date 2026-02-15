@@ -19,9 +19,20 @@ var LOADING_MESSAGES = [
 ];
 
 /**
+ * Monitor level display names, indexed by level.
+ */
+var MONITOR_NAMES = ['12-inch CRT', '15-inch CRT', '17-inch CRT', '21-inch Flatscreen'];
+
+/**
+ * Maximum number of tabs a player can have open simultaneously.
+ */
+var MAX_TABS = 5;
+
+/**
  * Browser is the main controller for the fake browser chrome.
  * It manages navigation, history, loading animations, address bar,
- * currency display, bookmarks, and wiring up UI event listeners.
+ * currency display, bookmarks, tabs, upgrade shop, and wiring up
+ * UI event listeners.
  */
 var Browser = {
     /** @type {GameState} */
@@ -42,6 +53,21 @@ var Browser = {
     /** @type {boolean} Whether a loading animation is in progress */
     _isLoading: false,
 
+    /** @type {boolean} Whether the upgrade shop overlay is currently visible */
+    _shopOpen: false,
+
+    /**
+     * Tab state. Each element: { id, siteId, history, historyIndex }
+     * @type {Array}
+     */
+    _tabs: [],
+
+    /** @type {number} Index of the currently active tab */
+    _activeTabIndex: 0,
+
+    /** @type {number} Auto-incrementing tab ID counter */
+    _nextTabId: 1,
+
     /**
      * Initialize the browser: load or create game state, wire up
      * event listeners, navigate to the starting site, and start auto-save.
@@ -61,12 +87,24 @@ var Browser = {
         this._historyIndex = -1;
         this._currentSiteId = null;
         this._isLoading = false;
+        this._shopOpen = false;
+
+        // Initialize tab system
+        this._tabs = [];
+        this._activeTabIndex = 0;
+        this._nextTabId = 1;
 
         // Wire up nav button event listeners
         this._bindNavButtons();
 
-        // Navigate to the starting site
-        this.navigate('yugaaaaa');
+        // Wire up the settings (shop) button
+        this._bindSettingsButton();
+
+        // Apply persisted upgrades (monitor level, tabs, search)
+        this._applyUpgrades();
+
+        // Create the initial tab
+        this._createTab('yugaaaaa');
 
         // Start auto-save every 30 seconds
         var self = this;
@@ -77,6 +115,10 @@ var Browser = {
         // Update the currency display
         this.updateCurrencyDisplay();
     },
+
+    // ================================================================
+    // Navigation
+    // ================================================================
 
     /**
      * Bind click handlers to the navigation buttons.
@@ -107,6 +149,11 @@ var Browser = {
      * @param {string} siteId - The site registry identifier
      */
     navigate: function (siteId) {
+        // Close the shop if it's open
+        if (this._shopOpen) {
+            this._closeShop();
+        }
+
         var site = this._lookupSite(siteId);
 
         // Check requirements if the site has them
@@ -129,6 +176,9 @@ var Browser = {
         this._history.push(siteId);
         this._historyIndex = this._history.length - 1;
         this._currentSiteId = siteId;
+
+        // Update active tab state
+        this._syncTabState();
 
         // Update nav button disabled states
         this._updateNavButtons();
@@ -383,6 +433,7 @@ var Browser = {
         var siteId = this._history[this._historyIndex];
         this._currentSiteId = siteId;
 
+        this._syncTabState();
         this._navigateInstant(siteId);
         this._updateNavButtons();
     },
@@ -400,6 +451,7 @@ var Browser = {
         var siteId = this._history[this._historyIndex];
         this._currentSiteId = siteId;
 
+        this._syncTabState();
         this._navigateInstant(siteId);
         this._updateNavButtons();
     },
@@ -435,6 +487,10 @@ var Browser = {
         }
     },
 
+    // ================================================================
+    // Address Bar & URL Display
+    // ================================================================
+
     /**
      * Update the address bar display with the given URL. Wraps the
      * "http://" protocol prefix in a styled span for green coloring.
@@ -464,6 +520,12 @@ var Browser = {
             urlDisplay.appendChild(document.createTextNode(rest));
         } else {
             urlDisplay.textContent = url;
+        }
+
+        // Also update the input field value
+        var urlInput = document.getElementById('url-input');
+        if (urlInput) {
+            urlInput.value = url;
         }
     },
 
@@ -610,6 +672,795 @@ var Browser = {
         if (fwdBtn) {
             fwdBtn.disabled = (this._historyIndex >= this._history.length - 1);
         }
+    },
+
+    // ================================================================
+    // Upgrade Application (called on init and after purchases)
+    // ================================================================
+
+    /**
+     * Apply all persisted upgrade states to the DOM. Called during init()
+     * and after any upgrade purchase to sync the UI with game state.
+     */
+    _applyUpgrades: function () {
+        this._applyMonitorLevel();
+        this._applyTabsUnlock();
+        this._applySearchUnlock();
+    },
+
+    /**
+     * Apply the monitor level CSS class to the chrome shell.
+     * Removes all monitor-level-N classes then adds the correct one.
+     */
+    _applyMonitorLevel: function () {
+        var shell = document.getElementById('chrome-shell');
+        if (!shell) { return; }
+
+        for (var i = 0; i <= 3; i++) {
+            shell.classList.remove('monitor-level-' + i);
+        }
+        shell.classList.add('monitor-level-' + this.gameState.getMonitorLevel());
+    },
+
+    /**
+     * Show or hide the new-tab button in the tab bar based on whether
+     * tabs are unlocked.
+     */
+    _applyTabsUnlock: function () {
+        var tabBar = document.getElementById('tab-bar');
+        if (!tabBar) { return; }
+
+        // Remove any existing new-tab button
+        var existingBtn = tabBar.querySelector('.tab-new-btn');
+        if (existingBtn) {
+            tabBar.removeChild(existingBtn);
+        }
+
+        if (this.gameState.hasTabsUnlocked()) {
+            var btn = document.createElement('button');
+            btn.className = 'tab-new-btn';
+            btn.textContent = '+';
+            btn.title = 'New Tab';
+            var self = this;
+            btn.addEventListener('click', function () {
+                self._createTab('yugaaaaa');
+            });
+            tabBar.appendChild(btn);
+        }
+    },
+
+    /**
+     * Enable or disable the address bar search input based on whether
+     * search is unlocked. When enabled, clicking the address bar
+     * switches to input mode.
+     */
+    _applySearchUnlock: function () {
+        var addressBar = document.getElementById('address-bar');
+        if (!addressBar) { return; }
+
+        if (this.gameState.hasSearchUnlocked()) {
+            addressBar.classList.add('search-enabled');
+            this._bindSearchInput();
+        } else {
+            addressBar.classList.remove('search-enabled');
+            addressBar.classList.remove('search-active');
+        }
+    },
+
+    /**
+     * Wire up the address bar click-to-edit and Enter-to-navigate behavior.
+     * Idempotent: rebinding replaces existing handlers.
+     */
+    _bindSearchInput: function () {
+        var self = this;
+        var addressBar = document.getElementById('address-bar');
+        var urlDisplay = document.getElementById('url-display');
+        var urlInput = document.getElementById('url-input');
+        if (!addressBar || !urlDisplay || !urlInput) { return; }
+
+        // Click the address bar to enter search mode
+        addressBar.onclick = function () {
+            if (!self.gameState.hasSearchUnlocked()) { return; }
+            addressBar.classList.add('search-active');
+            urlInput.value = urlDisplay.textContent;
+            urlInput.focus();
+            urlInput.select();
+        };
+
+        // Handle Enter key to navigate
+        urlInput.onkeydown = function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var query = urlInput.value.trim();
+                if (query) {
+                    self._navigateFromSearch(query);
+                }
+                addressBar.classList.remove('search-active');
+                urlInput.blur();
+            } else if (e.key === 'Escape') {
+                addressBar.classList.remove('search-active');
+                urlInput.blur();
+            }
+        };
+
+        // Leave search mode when input loses focus
+        urlInput.onblur = function () {
+            // Delay to allow click events on other elements to fire first
+            setTimeout(function () {
+                addressBar.classList.remove('search-active');
+            }, 150);
+        };
+    },
+
+    /**
+     * Attempt to match a user-typed URL or search query against known
+     * sites in the registry. Strips common prefixes (http://, www., etc.)
+     * and tries to find a matching site ID or URL.
+     *
+     * @param {string} query - Raw text from the address bar input
+     */
+    _navigateFromSearch: function (query) {
+        // Normalize: lowercase, strip protocol and www prefix
+        var normalized = query.toLowerCase().trim();
+        normalized = normalized.replace(/^https?:\/\//, '');
+        normalized = normalized.replace(/^www\./, '');
+        normalized = normalized.replace(/\/$/, '');
+
+        // Try to match against registered site URLs and IDs
+        if (typeof SiteRegistry !== 'undefined' && typeof SiteRegistry.getAll === 'function') {
+            var allSites = SiteRegistry.getAll();
+            for (var i = 0; i < allSites.length; i++) {
+                var site = allSites[i];
+
+                // Check direct site ID match
+                if (site.id === normalized) {
+                    this.navigate(site.id);
+                    return;
+                }
+
+                // Check URL match (normalize site URL same way)
+                if (site.url) {
+                    var siteUrl = site.url.toLowerCase();
+                    siteUrl = siteUrl.replace(/^https?:\/\//, '');
+                    siteUrl = siteUrl.replace(/^www\./, '');
+                    siteUrl = siteUrl.replace(/\/$/, '');
+
+                    if (siteUrl === normalized) {
+                        this.navigate(site.id);
+                        return;
+                    }
+
+                    // Partial match: query matches start of site URL domain
+                    if (siteUrl.indexOf(normalized) === 0) {
+                        this.navigate(site.id);
+                        return;
+                    }
+                }
+            }
+        }
+
+        // No match found — show a "site not found" page
+        this._renderSearchNotFound(query);
+    },
+
+    /**
+     * Render a message when a searched URL doesn't match any known site.
+     *
+     * @param {string} query - The URL the user typed
+     */
+    _renderSearchNotFound: function (query) {
+        var content = document.getElementById('page-content');
+        if (!content) { return; }
+
+        while (content.firstChild) {
+            content.removeChild(content.firstChild);
+        }
+
+        var container = document.createElement('div');
+        container.style.cssText = 'text-align:center; padding:60px 20px; color:#666; font-family:Arial, sans-serif;';
+
+        var heading = document.createElement('h1');
+        heading.style.cssText = 'font-size:24px; color:#999; margin-bottom:16px;';
+        heading.textContent = 'This site does not exist... yet.';
+
+        var detail = document.createElement('p');
+        detail.style.cssText = 'font-size:13px; color:#aaa;';
+        detail.textContent = 'Could not connect to "' + query + '". The internet is still growing!';
+
+        container.appendChild(heading);
+        container.appendChild(detail);
+        content.appendChild(container);
+
+        // Update address bar to show what was typed
+        this.updateAddressBar(query);
+    },
+
+    // ================================================================
+    // Tab System
+    // ================================================================
+
+    /**
+     * Create a new tab navigated to the given site. If max tabs are
+     * reached, does nothing. Switches to the newly created tab.
+     *
+     * @param {string} siteId - The site to load in the new tab
+     */
+    _createTab: function (siteId) {
+        if (this._tabs.length >= MAX_TABS && this.gameState.hasTabsUnlocked()) {
+            return;
+        }
+
+        var tabData = {
+            id: this._nextTabId++,
+            siteId: siteId,
+            history: [siteId],
+            historyIndex: 0
+        };
+
+        this._tabs.push(tabData);
+        this._activeTabIndex = this._tabs.length - 1;
+
+        // Restore this tab's navigation state as the active state
+        this._history = tabData.history;
+        this._historyIndex = tabData.historyIndex;
+        this._currentSiteId = tabData.siteId;
+
+        // Rebuild the tab bar DOM
+        this._renderTabBar();
+
+        // Navigate to the site in the new tab
+        var site = this._lookupSite(siteId);
+        if (site) {
+            var self = this;
+            var duration = this.getLoadDuration();
+            this.showLoading(duration, function () {
+                self._renderSite(site);
+            });
+        } else {
+            this._renderNotFound(siteId);
+        }
+        this._updateChrome(site, siteId);
+        this._updateNavButtons();
+    },
+
+    /**
+     * Switch to a different tab by index. Saves the current tab state
+     * and restores the target tab state, then renders the target tab's
+     * current site instantly (no loading animation).
+     *
+     * @param {number} index - Index into the _tabs array
+     */
+    _switchToTab: function (index) {
+        if (index < 0 || index >= this._tabs.length) { return; }
+        if (index === this._activeTabIndex) { return; }
+
+        // Save current tab state
+        this._syncTabState();
+
+        // Switch
+        this._activeTabIndex = index;
+        var tab = this._tabs[index];
+
+        // Restore target tab state
+        this._history = tab.history;
+        this._historyIndex = tab.historyIndex;
+        this._currentSiteId = tab.siteId;
+
+        // Render the tab bar with updated active state
+        this._renderTabBar();
+
+        // Render the site instantly (tab switching is instant)
+        this._navigateInstant(this._currentSiteId);
+        this._updateNavButtons();
+    },
+
+    /**
+     * Close a tab by index. If it's the only tab, does nothing.
+     * If the active tab is closed, switches to the nearest remaining tab.
+     *
+     * @param {number} index - Index of the tab to close
+     */
+    _closeTab: function (index) {
+        // Don't close the last tab
+        if (this._tabs.length <= 1) { return; }
+
+        this._tabs.splice(index, 1);
+
+        // Adjust active index
+        if (index < this._activeTabIndex) {
+            this._activeTabIndex--;
+        } else if (index === this._activeTabIndex) {
+            // Closed the active tab — switch to the nearest
+            if (this._activeTabIndex >= this._tabs.length) {
+                this._activeTabIndex = this._tabs.length - 1;
+            }
+            var tab = this._tabs[this._activeTabIndex];
+            this._history = tab.history;
+            this._historyIndex = tab.historyIndex;
+            this._currentSiteId = tab.siteId;
+            this._navigateInstant(this._currentSiteId);
+            this._updateNavButtons();
+        }
+
+        this._renderTabBar();
+    },
+
+    /**
+     * Sync the Browser's current navigation state back into the active
+     * tab's data object.
+     */
+    _syncTabState: function () {
+        var tab = this._tabs[this._activeTabIndex];
+        if (!tab) { return; }
+        tab.history = this._history;
+        tab.historyIndex = this._historyIndex;
+        tab.siteId = this._currentSiteId;
+    },
+
+    /**
+     * Rebuild the tab bar DOM to reflect the current _tabs array.
+     * Clears and rebuilds all tab elements. Preserves the new-tab button
+     * if tabs are unlocked.
+     */
+    _renderTabBar: function () {
+        var tabBar = document.getElementById('tab-bar');
+        if (!tabBar) { return; }
+
+        // Clear existing tabs (but not the new-tab button, which we re-add)
+        while (tabBar.firstChild) {
+            tabBar.removeChild(tabBar.firstChild);
+        }
+
+        var self = this;
+
+        this._tabs.forEach(function (tabData, index) {
+            var tabEl = document.createElement('div');
+            tabEl.className = 'tab';
+            if (index === self._activeTabIndex) {
+                tabEl.classList.add('active');
+            }
+
+            var titleSpan = document.createElement('span');
+            titleSpan.className = 'tab-title';
+
+            // Look up site title
+            var site = self._lookupSite(tabData.siteId);
+            titleSpan.textContent = (site && site.title) ? site.title : (tabData.siteId || 'New Tab');
+
+            tabEl.appendChild(titleSpan);
+
+            // Close button (only if more than one tab)
+            if (self._tabs.length > 1) {
+                var closeSpan = document.createElement('span');
+                closeSpan.className = 'tab-close';
+                closeSpan.textContent = '\u00D7'; // multiplication sign (x)
+                closeSpan.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    self._closeTab(index);
+                });
+                tabEl.appendChild(closeSpan);
+            }
+
+            // Click tab to switch to it
+            tabEl.addEventListener('click', function () {
+                self._switchToTab(index);
+            });
+
+            tabBar.appendChild(tabEl);
+        });
+
+        // Re-add the new tab button if tabs are unlocked
+        if (this.gameState.hasTabsUnlocked()) {
+            var newTabBtn = document.createElement('button');
+            newTabBtn.className = 'tab-new-btn';
+            newTabBtn.textContent = '+';
+            newTabBtn.title = 'New Tab';
+            if (this._tabs.length >= MAX_TABS) {
+                newTabBtn.disabled = true;
+                newTabBtn.title = 'Max tabs reached';
+            }
+            newTabBtn.addEventListener('click', function () {
+                self._createTab('yugaaaaa');
+            });
+            tabBar.appendChild(newTabBtn);
+        }
+    },
+
+    // ================================================================
+    // Settings / Upgrade Shop
+    // ================================================================
+
+    /**
+     * Bind the settings gear button to open the upgrade shop.
+     */
+    _bindSettingsButton: function () {
+        var self = this;
+        var settingsBtn = document.getElementById('btn-settings');
+        if (settingsBtn) {
+            settingsBtn.onclick = function () {
+                if (self._shopOpen) {
+                    self._closeShop();
+                } else {
+                    self._openShop();
+                }
+            };
+        }
+    },
+
+    /**
+     * Open the upgrade shop overlay. Creates the panel DOM if it doesn't
+     * exist, then shows it.
+     */
+    _openShop: function () {
+        this._shopOpen = true;
+        var contentArea = document.getElementById('content-area');
+        if (!contentArea) { return; }
+
+        // Remove any existing shop panel
+        var existing = document.getElementById('upgrade-shop');
+        if (existing) {
+            contentArea.removeChild(existing);
+        }
+
+        // Build the shop panel
+        var panel = this._buildShopPanel();
+        contentArea.appendChild(panel);
+
+        // Make it visible (after append so CSS transition can fire)
+        requestAnimationFrame(function () {
+            panel.classList.add('visible');
+        });
+    },
+
+    /**
+     * Close the upgrade shop overlay.
+     */
+    _closeShop: function () {
+        this._shopOpen = false;
+        var panel = document.getElementById('upgrade-shop');
+        if (panel) {
+            panel.classList.remove('visible');
+            var parent = panel.parentNode;
+            if (parent) {
+                parent.removeChild(panel);
+            }
+        }
+    },
+
+    /**
+     * Build the complete upgrade shop panel DOM. Returns the panel element.
+     * All DOM is built with createElement — no innerHTML.
+     *
+     * @returns {HTMLElement}
+     */
+    _buildShopPanel: function () {
+        var self = this;
+        var gs = this.gameState;
+
+        var panel = document.createElement('div');
+        panel.id = 'upgrade-shop';
+
+        // --- Header ---
+        var header = document.createElement('div');
+        header.className = 'shop-header';
+
+        var headerTitle = document.createElement('h2');
+        headerTitle.textContent = '\u2699 Internet Settings & Upgrades';
+
+        var closeBtn = document.createElement('button');
+        closeBtn.className = 'shop-close-btn';
+        closeBtn.textContent = '\u00D7';
+        closeBtn.addEventListener('click', function () {
+            self._closeShop();
+        });
+
+        header.appendChild(headerTitle);
+        header.appendChild(closeBtn);
+        panel.appendChild(header);
+
+        // --- Body ---
+        var body = document.createElement('div');
+        body.className = 'shop-body';
+
+        // Modem section
+        body.appendChild(this._buildModemSection());
+
+        // Monitor section
+        body.appendChild(this._buildMonitorSection());
+
+        // Tabs section
+        body.appendChild(this._buildTabsSection());
+
+        // Search section
+        body.appendChild(this._buildSearchSection());
+
+        panel.appendChild(body);
+
+        return panel;
+    },
+
+    /**
+     * Build the Modem Speed upgrade section.
+     *
+     * @returns {HTMLElement}
+     */
+    _buildModemSection: function () {
+        var self = this;
+        var gs = this.gameState;
+        var section = document.createElement('div');
+        section.className = 'shop-section';
+
+        var title = document.createElement('div');
+        title.className = 'shop-section-title';
+        title.textContent = '\uD83D\uDCDE Modem Speed';
+        section.appendChild(title);
+
+        // Current modem
+        var currentRow = document.createElement('div');
+        currentRow.className = 'shop-section-row';
+        var currentLabel = document.createElement('span');
+        currentLabel.className = 'shop-section-label';
+        currentLabel.textContent = 'Current:';
+        var currentValue = document.createElement('span');
+        currentValue.className = 'shop-section-value';
+        currentValue.textContent = gs.getModemName();
+        currentRow.appendChild(currentLabel);
+        currentRow.appendChild(currentValue);
+        section.appendChild(currentRow);
+
+        // Speed bar visual
+        var speedTrack = document.createElement('div');
+        speedTrack.className = 'speed-bar-track';
+        var speedFill = document.createElement('div');
+        speedFill.className = 'speed-bar-fill';
+        var modemPercent = ((gs.getModemLevel()) / (MODEM_NAMES.length - 1)) * 100;
+        speedFill.style.width = modemPercent + '%';
+        speedTrack.appendChild(speedFill);
+        section.appendChild(speedTrack);
+
+        // Next upgrade or max
+        var isMaxModem = gs.getModemLevel() >= MODEM_NAMES.length - 1;
+        if (isMaxModem) {
+            var maxLabel = document.createElement('div');
+            maxLabel.className = 'shop-max-label';
+            maxLabel.textContent = 'Maximum speed reached! \uD83D\uDE80';
+            section.appendChild(maxLabel);
+        } else {
+            var nextName = MODEM_NAMES[gs.getModemLevel() + 1];
+            var nextCost = MODEM_COSTS[gs.getModemLevel()];
+
+            var nextRow = document.createElement('div');
+            nextRow.className = 'shop-section-row';
+            var nextLabel = document.createElement('span');
+            nextLabel.className = 'shop-section-label';
+            nextLabel.textContent = 'Next: ' + nextName;
+            var nextCostLabel = document.createElement('span');
+            nextCostLabel.className = 'shop-section-value';
+            nextCostLabel.textContent = 'Cost: ' + nextCost + ' clicks';
+            nextRow.appendChild(nextLabel);
+            nextRow.appendChild(nextCostLabel);
+            section.appendChild(nextRow);
+
+            var buyBtn = document.createElement('button');
+            buyBtn.className = 'shop-buy-btn';
+            buyBtn.textContent = 'Upgrade to ' + nextName;
+            if (gs.clicks < nextCost) {
+                buyBtn.disabled = true;
+            }
+            buyBtn.addEventListener('click', function () {
+                if (self.gameState.upgradeModem()) {
+                    self.updateCurrencyDisplay();
+                    self.gameState.save();
+                    // Refresh the shop panel to reflect new state
+                    self._openShop();
+                }
+            });
+            section.appendChild(buyBtn);
+        }
+
+        return section;
+    },
+
+    /**
+     * Build the Monitor Size upgrade section.
+     *
+     * @returns {HTMLElement}
+     */
+    _buildMonitorSection: function () {
+        var self = this;
+        var gs = this.gameState;
+        var section = document.createElement('div');
+        section.className = 'shop-section';
+
+        var title = document.createElement('div');
+        title.className = 'shop-section-title';
+        title.textContent = '\uD83D\uDCBB Monitor Size';
+        section.appendChild(title);
+
+        // Current monitor
+        var currentRow = document.createElement('div');
+        currentRow.className = 'shop-section-row';
+        var currentLabel = document.createElement('span');
+        currentLabel.className = 'shop-section-label';
+        currentLabel.textContent = 'Current:';
+        var currentValue = document.createElement('span');
+        currentValue.className = 'shop-section-value';
+        currentValue.textContent = MONITOR_NAMES[gs.getMonitorLevel()];
+        currentRow.appendChild(currentLabel);
+        currentRow.appendChild(currentValue);
+        section.appendChild(currentRow);
+
+        var desc = document.createElement('div');
+        desc.className = 'shop-section-desc';
+        desc.textContent = 'Your monitor is currently a ' + MONITOR_NAMES[gs.getMonitorLevel()] + '. Upgrade to see more of the internet!';
+        section.appendChild(desc);
+
+        // Next upgrade or max
+        var isMaxMonitor = gs.getMonitorLevel() >= MONITOR_MAX;
+        if (isMaxMonitor) {
+            var maxLabel = document.createElement('div');
+            maxLabel.className = 'shop-max-label';
+            maxLabel.textContent = 'Maximum screen size! \uD83D\uDCFA';
+            section.appendChild(maxLabel);
+        } else {
+            var nextName = MONITOR_NAMES[gs.getMonitorLevel() + 1];
+            var nextCost = MONITOR_COSTS[gs.getMonitorLevel()];
+
+            var nextRow = document.createElement('div');
+            nextRow.className = 'shop-section-row';
+            var nextLabel = document.createElement('span');
+            nextLabel.className = 'shop-section-label';
+            nextLabel.textContent = 'Next: ' + nextName;
+            var nextCostLabel = document.createElement('span');
+            nextCostLabel.className = 'shop-section-value';
+            nextCostLabel.textContent = 'Cost: ' + nextCost + ' clicks';
+            nextRow.appendChild(nextLabel);
+            nextRow.appendChild(nextCostLabel);
+            section.appendChild(nextRow);
+
+            var buyBtn = document.createElement('button');
+            buyBtn.className = 'shop-buy-btn';
+            buyBtn.textContent = 'Upgrade to ' + nextName;
+            if (gs.clicks < nextCost) {
+                buyBtn.disabled = true;
+            }
+            buyBtn.addEventListener('click', function () {
+                if (self.gameState.upgradeMonitor()) {
+                    self._applyMonitorLevel();
+                    self.updateCurrencyDisplay();
+                    self.gameState.save();
+                    self._openShop();
+                }
+            });
+            section.appendChild(buyBtn);
+        }
+
+        return section;
+    },
+
+    /**
+     * Build the Browser Tabs unlock section.
+     *
+     * @returns {HTMLElement}
+     */
+    _buildTabsSection: function () {
+        var self = this;
+        var gs = this.gameState;
+        var section = document.createElement('div');
+        section.className = 'shop-section';
+
+        var title = document.createElement('div');
+        title.className = 'shop-section-title';
+        title.textContent = '\uD83D\uDCC4 Browser Tabs';
+        section.appendChild(title);
+
+        var desc = document.createElement('div');
+        desc.className = 'shop-section-desc';
+        desc.textContent = 'Open multiple sites at once!';
+        section.appendChild(desc);
+
+        if (gs.hasTabsUnlocked()) {
+            var statusRow = document.createElement('div');
+            statusRow.className = 'shop-section-row';
+            var statusLabel = document.createElement('span');
+            statusLabel.className = 'shop-status-unlocked';
+            statusLabel.textContent = '\u2713 Tabs Unlocked!';
+            statusRow.appendChild(statusLabel);
+            section.appendChild(statusRow);
+        } else {
+            var costRow = document.createElement('div');
+            costRow.className = 'shop-section-row';
+            var costLabel = document.createElement('span');
+            costLabel.className = 'shop-section-label';
+            costLabel.textContent = 'Status: Locked';
+            var costValue = document.createElement('span');
+            costValue.className = 'shop-section-value';
+            costValue.textContent = 'Cost: ' + TABS_COST + ' clicks';
+            costRow.appendChild(costLabel);
+            costRow.appendChild(costValue);
+            section.appendChild(costRow);
+
+            var buyBtn = document.createElement('button');
+            buyBtn.className = 'shop-buy-btn';
+            buyBtn.textContent = 'Unlock Tabs';
+            if (gs.clicks < TABS_COST) {
+                buyBtn.disabled = true;
+            }
+            buyBtn.addEventListener('click', function () {
+                if (self.gameState.unlockTabs()) {
+                    self._applyTabsUnlock();
+                    self._renderTabBar();
+                    self.updateCurrencyDisplay();
+                    self.gameState.save();
+                    self._openShop();
+                }
+            });
+            section.appendChild(buyBtn);
+        }
+
+        return section;
+    },
+
+    /**
+     * Build the Search Engine unlock section.
+     *
+     * @returns {HTMLElement}
+     */
+    _buildSearchSection: function () {
+        var self = this;
+        var gs = this.gameState;
+        var section = document.createElement('div');
+        section.className = 'shop-section';
+
+        var title = document.createElement('div');
+        title.className = 'shop-section-title';
+        title.textContent = '\uD83D\uDD0D Search Engine';
+        section.appendChild(title);
+
+        var desc = document.createElement('div');
+        desc.className = 'shop-section-desc';
+        desc.textContent = 'Type URLs directly into the address bar!';
+        section.appendChild(desc);
+
+        if (gs.hasSearchUnlocked()) {
+            var statusRow = document.createElement('div');
+            statusRow.className = 'shop-section-row';
+            var statusLabel = document.createElement('span');
+            statusLabel.className = 'shop-status-unlocked';
+            statusLabel.textContent = '\u2713 Search Unlocked!';
+            statusRow.appendChild(statusLabel);
+            section.appendChild(statusRow);
+        } else {
+            var costRow = document.createElement('div');
+            costRow.className = 'shop-section-row';
+            var costLabel = document.createElement('span');
+            costLabel.className = 'shop-section-label';
+            costLabel.textContent = 'Status: Locked';
+            var costValue = document.createElement('span');
+            costValue.className = 'shop-section-value';
+            costValue.textContent = 'Cost: ' + SEARCH_COST + ' clicks';
+            costRow.appendChild(costLabel);
+            costRow.appendChild(costValue);
+            section.appendChild(costRow);
+
+            var buyBtn = document.createElement('button');
+            buyBtn.className = 'shop-buy-btn';
+            buyBtn.textContent = 'Unlock Search';
+            if (gs.clicks < SEARCH_COST) {
+                buyBtn.disabled = true;
+            }
+            buyBtn.addEventListener('click', function () {
+                if (self.gameState.unlockSearch()) {
+                    self._applySearchUnlock();
+                    self.updateCurrencyDisplay();
+                    self.gameState.save();
+                    self._openShop();
+                }
+            });
+            section.appendChild(buyBtn);
+        }
+
+        return section;
     }
 };
 
