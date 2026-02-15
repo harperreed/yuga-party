@@ -66,17 +66,56 @@ var Effects = {
     // ================================================================
 
     /**
-     * Apply a CSS cursor to the #content-area element.
+     * Generate a CSS cursor url() value from an emoji character by
+     * rendering it onto a canvas and converting to a data URI.
      *
-     * @param {string} cursorName - A valid CSS cursor value (e.g. 'crosshair', 'pointer')
+     * @param {string} emoji - The emoji to render as a cursor
+     * @returns {string} A CSS cursor value like "url(...) 12 12, auto"
+     */
+    emojiToCursor: function (emoji) {
+        if (this._cursorCache && this._cursorCache[emoji]) {
+            return this._cursorCache[emoji];
+        }
+        if (!this._cursorCache) { this._cursorCache = {}; }
+
+        var canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        var ctx = canvas.getContext('2d');
+        ctx.font = '28px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(emoji, 16, 17);
+        var cursorVal = 'url(' + canvas.toDataURL() + ') 16 16, auto';
+        this._cursorCache[emoji] = cursorVal;
+        return cursorVal;
+    },
+
+    /**
+     * Apply a cursor to the page. If the value starts with an emoji
+     * (non-ASCII), render it as a custom cursor via canvas. Otherwise
+     * treat it as a standard CSS cursor keyword.
+     *
+     * @param {string} cursorName - An emoji or CSS cursor keyword
      */
     setCursor: function (cursorName) {
         this._currentCursor = cursorName;
+
+        // Determine the actual CSS cursor value
+        var cssValue = cursorName;
+        // Check if it looks like an emoji (starts with non-ASCII)
+        if (cursorName && cursorName.charCodeAt(0) > 255) {
+            cssValue = this.emojiToCursor(cursorName);
+        }
+
+        // Apply to both content area and body for full coverage
         var contentArea = document.getElementById('content-area');
         if (contentArea) {
-            contentArea.style.cursor = cursorName;
+            contentArea.style.cursor = cssValue;
         }
-        // Persist cursor preference
+        document.body.style.cursor = cssValue;
+
+        // Persist cursor preference (store the emoji/name, not the data URI)
         try { localStorage.setItem('yugaaaaa-cursor', cursorName); } catch (e) { /* ignore */ }
     },
 

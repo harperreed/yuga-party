@@ -1462,18 +1462,18 @@ SiteRegistry.register({
 
         // Smiley/cursor data with download counts and CSS cursor mappings
         var smileys = [
-            { emoji: '\uD83D\uDE0A', name: 'Happy Smiley', downloads: 4782, cursor: 'default' },
-            { emoji: '\u2B50', name: 'Star Cursor', downloads: 3291, cursor: 'pointer' },
-            { emoji: '\uD83C\uDFAF', name: 'Crosshair Pro', downloads: 8104, cursor: 'crosshair' },
-            { emoji: '\uD83C\uDF08', name: 'Rainbow Trail', downloads: 6543, cursor: 'grab' },
-            { emoji: '\uD83D\uDC80', name: 'Skull Cursor', downloads: 9876, cursor: 'not-allowed' },
-            { emoji: '\uD83D\uDD25', name: 'Fire Cursor', downloads: 7210, cursor: 'cell' },
-            { emoji: '\u2764\uFE0F', name: 'Heart Smiley', downloads: 5555, cursor: 'help' },
-            { emoji: '\uD83C\uDFB5', name: 'Music Note', downloads: 2345, cursor: 'progress' },
-            { emoji: '\uD83D\uDC7D', name: 'Alien Smiley', downloads: 4321, cursor: 'alias' },
-            { emoji: '\uD83E\uDD84', name: 'Unicorn Cursor', downloads: 6789, cursor: 'zoom-in' },
-            { emoji: '\uD83D\uDC8E', name: 'Diamond Cursor', downloads: 1234, cursor: 'col-resize' },
-            { emoji: '\uD83C\uDF19', name: 'Moon Cursor', downloads: 3456, cursor: 'wait' }
+            { emoji: '\uD83D\uDE0A', name: 'Happy Smiley', downloads: 4782, cursor: '\uD83D\uDE0A' },
+            { emoji: '\u2B50', name: 'Star Cursor', downloads: 3291, cursor: '\u2B50' },
+            { emoji: '\uD83C\uDFAF', name: 'Crosshair Pro', downloads: 8104, cursor: '\uD83C\uDFAF' },
+            { emoji: '\uD83C\uDF08', name: 'Rainbow Trail', downloads: 6543, cursor: '\uD83C\uDF08' },
+            { emoji: '\uD83D\uDC80', name: 'Skull Cursor', downloads: 9876, cursor: '\uD83D\uDC80' },
+            { emoji: '\uD83D\uDD25', name: 'Fire Cursor', downloads: 7210, cursor: '\uD83D\uDD25' },
+            { emoji: '\u2764\uFE0F', name: 'Heart Smiley', downloads: 5555, cursor: '\u2764\uFE0F' },
+            { emoji: '\uD83C\uDFB5', name: 'Music Note', downloads: 2345, cursor: '\uD83C\uDFB5' },
+            { emoji: '\uD83D\uDC7D', name: 'Alien Smiley', downloads: 4321, cursor: '\uD83D\uDC7D' },
+            { emoji: '\uD83E\uDD84', name: 'Unicorn Cursor', downloads: 6789, cursor: '\uD83E\uDD84' },
+            { emoji: '\uD83D\uDC8E', name: 'Diamond Cursor', downloads: 1234, cursor: '\uD83D\uDC8E' },
+            { emoji: '\uD83C\uDF19', name: 'Moon Cursor', downloads: 3456, cursor: '\uD83C\uDF19' }
         ];
 
         // Current cursor indicator text element (updated on download)
