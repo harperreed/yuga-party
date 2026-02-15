@@ -635,12 +635,16 @@ var Browser = {
 
         if (reward.clicks) {
             this.gameState.addClicks(reward.clicks);
+            // Clamp currencies to zero (negative rewards like purchases can undershoot)
+            if (this.gameState.clicks < 0) { this.gameState.clicks = 0; }
         }
         if (reward.data) {
             this.gameState.addData(reward.data);
+            if (this.gameState.data < 0) { this.gameState.data = 0; }
         }
         if (reward.reputation) {
             this.gameState.addReputation(reward.reputation);
+            if (this.gameState.reputation < 0) { this.gameState.reputation = 0; }
         }
 
         this.updateCurrencyDisplay();
