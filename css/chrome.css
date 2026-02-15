@@ -694,3 +694,17 @@ html, body {
     font-weight: 700;
     color: #2a8c2a;
 }
+
+/* ===== Auto-Save Indicator ===== */
+
+#save-indicator {
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    color: #888;
+    margin-left: auto;
+}
+
+#save-indicator.visible {
+    opacity: 1;
+}

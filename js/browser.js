@@ -8,14 +8,21 @@
 var LOAD_DURATIONS = [3000, 2000, 1200, 500, 200];
 
 /**
- * Loading screen text sequence shown during navigation.
- * Displayed in order over the loading duration.
+ * Loading screen text sequences shown during navigation, indexed by modem level.
+ * Level 0 = 14.4k, Level 1 = 28.8k, Level 2 = 56k, Level 3 = DSL, Level 4 = Cable
+ * Higher modem levels show fewer (and faster) messages.
  */
-var LOADING_MESSAGES = [
-    'Dialing...',
-    'Connecting at {modemSpeed}...',
-    'Verifying username and password...',
-    'Connected!'
+var LOADING_MESSAGES_BY_LEVEL = [
+    // 14.4k — full dial-up experience
+    ['Dialing...', 'Connecting at 14,400 bps...', 'Verifying username and password...', 'Welcome to the Internet!'],
+    // 28.8k — same ceremony, slightly faster
+    ['Dialing...', 'Connecting at 28,800 bps...', 'Verifying username and password...', 'Welcome to the Internet!'],
+    // 56k — shorter handshake
+    ['Dialing...', 'Connecting at 56,000 bps...', 'Connected!'],
+    // DSL — brief connection message
+    ['Establishing DSL connection...', 'Connected!'],
+    // Cable — near-instant
+    ['Connected!']
 ];
 
 /**
@@ -106,10 +113,18 @@ var Browser = {
         // Create the initial tab
         this._createTab('yugaaaaa');
 
-        // Start auto-save every 30 seconds
+        // Initialize the effects system (sound toggle, preferences)
+        if (typeof Effects !== 'undefined') {
+            Effects.init();
+        }
+
+        // Start auto-save every 30 seconds with visual indicator
         var self = this;
         this._saveInterval = setInterval(function () {
             self.gameState.save();
+            if (typeof Effects !== 'undefined') {
+                Effects.showSaveIndicator();
+            }
         }, 30000);
 
         // Update the currency display
@@ -149,6 +164,11 @@ var Browser = {
      * @param {string} siteId - The site registry identifier
      */
     navigate: function (siteId) {
+        // Play navigation sound
+        if (typeof Effects !== 'undefined') {
+            Effects.playNavigate();
+        }
+
         // Close the shop if it's open
         if (this._shopOpen) {
             this._closeShop();
@@ -381,11 +401,9 @@ var Browser = {
             loadingBar.classList.add('animating');
         }
 
-        // Cycle through loading messages
-        var modemSpeed = this.gameState.getModemName();
-        var messages = LOADING_MESSAGES.map(function (msg) {
-            return msg.replace('{modemSpeed}', modemSpeed);
-        });
+        // Cycle through loading messages based on modem level
+        var modemLevel = this.gameState.getModemLevel();
+        var messages = LOADING_MESSAGES_BY_LEVEL[modemLevel] || LOADING_MESSAGES_BY_LEVEL[0];
         var messageInterval = duration / messages.length;
         var messageTimers = [];
 
@@ -605,11 +623,14 @@ var Browser = {
 
     /**
      * Handle a reward from clicking on site content. Adds the specified
-     * currencies to the game state and updates the display.
+     * currencies to the game state, updates the display, shows floating
+     * reward text at the click position, and plays a reward sound.
      *
      * @param {object} reward - { clicks: N, data: N, reputation: N }
+     * @param {number} [x] - Client X coordinate from the click event
+     * @param {number} [y] - Client Y coordinate from the click event
      */
-    handleReward: function (reward) {
+    handleReward: function (reward, x, y) {
         if (!reward) { return; }
 
         if (reward.clicks) {
@@ -623,6 +644,12 @@ var Browser = {
         }
 
         this.updateCurrencyDisplay();
+
+        // Show floating reward text at click position
+        if (typeof Effects !== 'undefined' && x != null && y != null) {
+            Effects.showRewardFloat(x, y, reward);
+            Effects.playReward();
+        }
     },
 
     /**

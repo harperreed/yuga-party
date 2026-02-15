@@ -67,9 +67,14 @@ var SiteRegistry = {
                 el.addEventListener('click', function (e) {
                     e.preventDefault();
 
-                    // Award reward currencies
+                    // Play subtle click sound
+                    if (typeof Effects !== 'undefined') {
+                        Effects.playClick();
+                    }
+
+                    // Award reward currencies with click position for floating text
                     if (target.reward) {
-                        browser.handleReward(target.reward);
+                        browser.handleReward(target.reward, e.clientX, e.clientY);
                     }
 
                     // Handle navigation action
@@ -1586,8 +1591,12 @@ SiteRegistry.register({
                         evt.preventDefault();
                         evt.stopPropagation();
                         browser.handleReward({ clicks: 2 });
-                        // Update cursor
-                        document.body.style.cursor = s.cursor;
+                        // Update cursor via Effects system
+                        if (typeof Effects !== 'undefined') {
+                            Effects.setCursor(s.cursor);
+                        } else {
+                            document.body.style.cursor = s.cursor;
+                        }
                         cursorValue.textContent = s.name.toUpperCase();
                         // Increment download count
                         s.downloads++;
