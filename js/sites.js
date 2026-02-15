@@ -440,14 +440,14 @@ SiteRegistry.register({
         { selector: '[data-site="recipez4u"]', reward: { clicks: 5 }, action: 'navigate', target: 'recipez4u' },
         { selector: '[data-site="infinite-guestbook"]', reward: { clicks: 5 }, action: 'navigate', target: 'infinite-guestbook' },
 
-        // Hit counter
-        { selector: '.hit-counter', reward: { clicks: 1 } },
+        // Hit counter — awards data to build toward Zone 2
+        { selector: '.hit-counter', reward: { clicks: 1, data: 2 } },
 
         // Stock ticker items
-        { selector: '.stock-item', reward: { clicks: 2 } },
+        { selector: '.stock-item', reward: { clicks: 2, data: 1 } },
 
         // Email widget
-        { selector: '.email-widget', reward: { clicks: 5 } }
+        { selector: '.email-widget', reward: { clicks: 5, data: 3 } }
 
         // Banner ad is handled manually inside render() because each ad has a unique reward value
     ]
@@ -461,7 +461,7 @@ SiteRegistry.register({
     title: 'HamsterTrax - #1 Hamster Info Source!',
     zone: 1,
     icon: '\uD83D\uDC39',
-    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 hamstertrax-page';
@@ -659,10 +659,10 @@ SiteRegistry.register({
     },
 
     clickTargets: [
-        { selector: '.hamster-photo', reward: { clicks: 3 } },
-        { selector: '.stock-row', reward: { clicks: 2 } },
-        { selector: '.midi-btn', reward: { clicks: 5 } },
-        { selector: '.adopt-btn', reward: { reputation: 10 } },
+        { selector: '.hamster-photo', reward: { clicks: 3, data: 2 } },
+        { selector: '.stock-row', reward: { clicks: 2, data: 1 } },
+        { selector: '.midi-btn', reward: { clicks: 5, data: 3 } },
+        { selector: '.adopt-btn', reward: { reputation: 10, data: 2 } },
         { selector: '.guestbook-link', reward: { reputation: 5 }, action: 'navigate', target: 'infinite-guestbook' }
     ]
 });
@@ -675,7 +675,7 @@ SiteRegistry.register({
     title: "Kevin's Page - coolguyz.net",
     zone: 1,
     icon: '\uD83D\uDE0E',
-    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 coolguyz-page';
@@ -863,9 +863,9 @@ SiteRegistry.register({
     },
 
     clickTargets: [
-        { selector: '.spoon-item', reward: { clicks: 2 } },
-        { selector: '.under-construction-banner', reward: { clicks: 1 } },
-        { selector: '.hit-counter', reward: { clicks: 1 } },
+        { selector: '.spoon-item', reward: { clicks: 2, data: 1 } },
+        { selector: '.under-construction-banner', reward: { clicks: 1, data: 1 } },
+        { selector: '.hit-counter', reward: { clicks: 1, data: 1 } },
         { selector: '.guestbook-link', reward: { reputation: 5 }, action: 'navigate', target: 'infinite-guestbook' },
         { selector: '.friend-link[data-site="hamstertrax"]', reward: { clicks: 3 }, action: 'navigate', target: 'hamstertrax' },
         { selector: '.friend-link[data-site="recipez4u"]', reward: { clicks: 3 }, action: 'navigate', target: 'recipez4u' }
@@ -880,7 +880,7 @@ SiteRegistry.register({
     title: 'Recipez4U - Every Recipe is Toast',
     zone: 1,
     icon: '\uD83C\uDF5E',
-    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 recipez4u-page';
@@ -1048,10 +1048,10 @@ SiteRegistry.register({
     },
 
     clickTargets: [
-        { selector: '.recipe-card', reward: { clicks: 3 } },
-        { selector: '.print-btn', reward: { clicks: 5 } },
-        { selector: '.submit-recipe-btn', reward: { reputation: 8 } },
-        { selector: '.cookbook-ad', reward: { clicks: 10 } }
+        { selector: '.recipe-card', reward: { clicks: 3, data: 2 } },
+        { selector: '.print-btn', reward: { clicks: 5, data: 3 } },
+        { selector: '.submit-recipe-btn', reward: { reputation: 8, data: 2 } },
+        { selector: '.cookbook-ad', reward: { clicks: 10, data: 5 } }
     ]
 });
 
@@ -1063,7 +1063,7 @@ SiteRegistry.register({
     title: 'NetSurf WebRing Hub',
     zone: 1,
     icon: '\uD83D\uDD17',
-    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 webring-page';
@@ -1271,9 +1271,9 @@ SiteRegistry.register({
         { selector: '.webring-visit[data-site="freesmileyz"]', reward: { clicks: 3 }, action: 'navigate', target: 'freesmileyz' },
         { selector: '.webring-visit[data-site="mega-deals-warehouse"]', reward: { clicks: 3 }, action: 'navigate', target: 'mega-deals-warehouse' },
         // Join button earns reputation
-        { selector: '.join-btn', reward: { reputation: 15 } },
+        { selector: '.join-btn', reward: { reputation: 15, data: 5 } },
         // Banner ads
-        { selector: '.webring-banner', reward: { clicks: 8 } }
+        { selector: '.webring-banner', reward: { clicks: 8, data: 3 } }
         // Previous/Next/Random handled manually in render() because they need index tracking
     ]
 });
@@ -1286,7 +1286,7 @@ SiteRegistry.register({
     title: 'Totally Real Facts - 100% Verified',
     zone: 1,
     icon: '\uD83D\uDCDA',
-    requirements: { minModem: 0, dataCost: 5, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 totallyrealfacts-page';
@@ -1437,9 +1437,9 @@ SiteRegistry.register({
     },
 
     clickTargets: [
-        { selector: '.fact-item', reward: { clicks: 2 } },
-        { selector: '.cite-btn', reward: { clicks: 3 } },
-        { selector: '.category-header', reward: { clicks: 3 } }
+        { selector: '.fact-item', reward: { clicks: 2, data: 2 } },
+        { selector: '.cite-btn', reward: { clicks: 3, data: 2 } },
+        { selector: '.category-header', reward: { clicks: 3, data: 1 } }
     ]
 });
 
@@ -1451,7 +1451,7 @@ SiteRegistry.register({
     title: 'FreeSmileyz.biz - FREE Downloads!',
     zone: 1,
     icon: '\uD83D\uDE00',
-    requirements: { minModem: 0, dataCost: 10, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 freesmileyz-page';
@@ -1660,9 +1660,9 @@ SiteRegistry.register({
     },
 
     clickTargets: [
-        { selector: '.download-btn', reward: { clicks: 8 } },
+        { selector: '.download-btn', reward: { clicks: 8, data: 4 } },
         // popup-btn reward handled manually in the popup confirm handler
-        { selector: '.smiley-item', reward: { clicks: 3 } }
+        { selector: '.smiley-item', reward: { clicks: 3, data: 2 } }
     ]
 });
 
@@ -1674,7 +1674,7 @@ SiteRegistry.register({
     title: 'MEGA DEALS WAREHOUSE - HUGE SAVINGS',
     zone: 1,
     icon: '\uD83D\uDCB0',
-    requirements: { minModem: 0, dataCost: 10, reputationCost: 0 },
+    requirements: { minModem: 0, dataCost: 0, reputationCost: 0 },
 
     render: function (container, browser) {
         container.className = 'zone-1 megadeals-page';
@@ -1884,10 +1884,10 @@ SiteRegistry.register({
     },
 
     clickTargets: [
-        { selector: '.product-img', reward: { clicks: 3 } },
-        { selector: '.add-to-cart', reward: { clicks: 5 } },
+        { selector: '.product-img', reward: { clicks: 3, data: 2 } },
+        { selector: '.add-to-cart', reward: { clicks: 5, data: 3 } },
         // Pixel buy button handled manually in render()
-        { selector: '.review-item', reward: { clicks: 2 } }
+        { selector: '.review-item', reward: { clicks: 2, data: 1 } }
     ]
 });
 

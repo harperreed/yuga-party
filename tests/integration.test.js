@@ -12,15 +12,25 @@ test('Integration: fresh GameState can access yugaaaaa.com (zone 1, no requireme
     assertEqual(gs.canAccessSite(site.requirements), true);
 });
 
-test('Integration: navigating to a Zone 1 site with dataCost deducts data', function () {
+test('Integration: Zone 1 sites are free to access (dataCost 0)', function () {
     var gs = new GameState();
-    gs.addData(100);
     var site = SiteRegistry.get('hamstertrax');
     assert(site !== null, 'hamstertrax should be registered');
-    assert(site.requirements.dataCost > 0, 'hamstertrax should have a data cost');
+    assertEqual(site.requirements.dataCost, 0, 'Zone 1 sites should be free');
+    assert(gs.canAccessSite(site.requirements), 'Should access Zone 1 sites with fresh state');
+});
+
+test('Integration: navigating to a Zone 2 site with dataCost deducts data', function () {
+    var gs = new GameState();
+    gs.addData(100);
+    // Upgrade modem so Zone 2 is reachable
+    gs.addClicks(100);
+    gs.upgradeModem();
+    var site = SiteRegistry.get('the-void');
+    assert(site !== null, 'the-void should be registered');
+    assert(site.requirements.dataCost > 0, 'Zone 2 sites should have a data cost');
     var dataBefore = gs.data;
-    // Simulate what Browser.navigate does: check access then spend data
-    assert(gs.canAccessSite(site.requirements), 'Should be able to access hamstertrax with enough data');
+    assert(gs.canAccessSite(site.requirements), 'Should access the-void with enough data and modem');
     gs.spendData(site.requirements.dataCost);
     assertEqual(gs.data, dataBefore - site.requirements.dataCost);
 });
