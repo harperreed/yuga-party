@@ -1863,3 +1863,877 @@ SiteRegistry.register({
         { selector: '.review-item', reward: { clicks: 2 } }
     ]
 });
+
+// ============================================================
+//   ZONE 2 — The Weird Web (darker, weirder, more unsettling)
+// ============================================================
+
+// --- The Void — Almost entirely black, cryptic hidden poetry ---
+
+SiteRegistry.register({
+    id: 'the-void',
+    url: 'http://www.the-void.net',
+    title: '...',
+    zone: 2,
+    icon: '\u2B1B',
+    requirements: { minModem: 1, dataCost: 50, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-2 the-void-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // The phrases that form a cryptic poem about the void between pages
+        var phrases = [
+            'you click into nothing',
+            'and nothing clicks back',
+            'the bandwidth is infinite here',
+            'no one counts the hits',
+            'but the counter remembers',
+            'every click echoes',
+            'in the void between pages',
+            'where deleted sites go',
+            'to dream of visitors',
+            'who never came'
+        ];
+
+        // Closure state for tracking revealed zones
+        var revealedCount = 0;
+        var allRevealed = false;
+
+        // ========================================
+        // 1. Minimal title — barely visible
+        // ========================================
+        var title = document.createElement('div');
+        title.className = 'void-title';
+        title.textContent = '...';
+        container.appendChild(title);
+
+        // ========================================
+        // 2. Grid of invisible click zones
+        // ========================================
+        var grid = document.createElement('div');
+        grid.className = 'void-grid';
+
+        // Completion message element (hidden until all revealed)
+        var completionMsg = document.createElement('div');
+        completionMsg.className = 'void-completion';
+        completionMsg.textContent = 'The void appreciates your company.';
+        completionMsg.style.display = 'none';
+
+        phrases.forEach(function (phrase) {
+            var zone = document.createElement('div');
+            zone.className = 'void-zone';
+
+            var text = document.createElement('span');
+            text.className = 'void-phrase';
+            text.textContent = phrase;
+            zone.appendChild(text);
+
+            // Manual click handler for the reveal mechanic
+            zone.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (zone.classList.contains('void-revealed') || allRevealed) {
+                    return;
+                }
+                zone.classList.add('void-revealed');
+                revealedCount++;
+
+                if (revealedCount >= phrases.length && !allRevealed) {
+                    allRevealed = true;
+                    completionMsg.style.display = 'block';
+                    // Award 100 bonus clicks for completing the poem
+                    browser.handleReward({ clicks: 100 });
+                }
+            });
+
+            grid.appendChild(zone);
+        });
+
+        container.appendChild(grid);
+        container.appendChild(completionMsg);
+
+        // ========================================
+        // 3. Footer — barely there
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'void-footer';
+        footer.textContent = '[ ]';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.void-zone', reward: { clicks: 5 } }
+    ]
+});
+
+// --- Infinite Guestbook — Endlessly scrolling guestbook entries ---
+
+SiteRegistry.register({
+    id: 'infinite-guestbook',
+    url: 'http://www.infinite-guestbook.com',
+    title: 'The Infinite Guestbook',
+    zone: 2,
+    icon: '\uD83D\uDCD6',
+    requirements: { minModem: 1, dataCost: 30, reputationCost: 20 },
+
+    render: function (container, browser) {
+        container.className = 'zone-2 infinite-guestbook-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Pre-populated guestbook entries across three tiers of weirdness
+        var entries = [
+            // Normal tier (1-10)
+            { text: 'Great site! Keep it up!', author: 'Dave, Ohio' },
+            { text: 'Hello from Germany! Nice page!', author: 'Hans' },
+            { text: 'first!!!!!', author: 'xXx_ShadowBlade_xXx' },
+            { text: 'Cool guestbook. Signed, Tom.', author: 'Tom' },
+            { text: 'Love your website! Bookmarked!', author: 'Jenny S.' },
+            { text: 'Hi from California! :)', author: 'SurfDude99' },
+            { text: 'My mom says hi too', author: 'Timmy, age 11' },
+            { text: 'Neat site. How do I make one?', author: 'NewbieUser' },
+            { text: 'Greetings from Japan!', author: 'Takeshi' },
+            { text: 'Best guestbook on the web!', author: 'WebMaster Pete' },
+            // Weird tier (11-20)
+            { text: 'The hamsters know what you did.', author: 'Anonymous' },
+            { text: "I've been scrolling for three days. Send help.", author: '???' },
+            { text: "This is my 47th time signing this guestbook.", author: 'Kevin (yes, THAT Kevin)' },
+            { text: 'Is anyone else seeing the faces in the static?', author: 'concerned_user_42' },
+            { text: 'I left something here in 1998. Have you seen it?', author: 'ReturnVisitor' },
+            { text: 'The guestbook signs you.', author: '[REDACTED]' },
+            { text: 'Every entry here is a prayer to the old internet.', author: 'digital_monk' },
+            { text: 'My cursor changed after visiting this page.', author: 'worried_parent' },
+            { text: 'The entries are multiplying.', author: 'Observer' },
+            { text: 'Why does this page know my name?', author: 'YOUR NAME HERE' },
+            // Cryptic tier (21-30)
+            { text: '01001000 01000101 01001100 01010000', author: '[no name]' },
+            { text: "I signed this guestbook in 1997. I'm still here.", author: 'The First Visitor' },
+            { text: "Don't scroll to the bottom.", author: 'A friend' },
+            { text: 'There is no bottom.', author: '[entry appears to be dated tomorrow]' },
+            { text: 'If you are reading this, it is already too late.', author: '[SYSTEM]' },
+            { text: 'The guestbook remembers everyone. Everyone.', author: '...' },
+            { text: 'Entry #\u221E', author: '[overflow error]' },
+            { text: 'You were always here.', author: 'You' },
+            { text: '                                          ', author: '[invisible ink]' },
+            { text: 'Last entry. Or is it?', author: 'The Guestbook Itself' }
+        ];
+
+        // Visitor counter for the sign button
+        var visitorNum = 10000 + Math.floor(Math.random() * 90000);
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'guestbook-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'guestbook-logo';
+        logo.textContent = 'The Infinite Guestbook';
+        header.appendChild(logo);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'guestbook-subtitle';
+        subtitle.textContent = 'Sign it. Read it. You can never leave.';
+        header.appendChild(subtitle);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Sign button (always visible at top)
+        // ========================================
+        var signSection = document.createElement('div');
+        signSection.className = 'guestbook-sign-section';
+
+        var signBtn = document.createElement('button');
+        signBtn.className = 'sign-btn';
+        signBtn.textContent = '\uD83D\uDD8A Sign the Guestbook';
+        signSection.appendChild(signBtn);
+
+        container.appendChild(signSection);
+
+        // ========================================
+        // 3. Entries list
+        // ========================================
+        var entriesList = document.createElement('div');
+        entriesList.className = 'guestbook-entries';
+
+        // Helper to create an entry DOM element
+        function createEntryEl(entry) {
+            var entryDiv = document.createElement('div');
+            entryDiv.className = 'guestbook-entry';
+
+            var entryText = document.createElement('p');
+            entryText.className = 'guestbook-entry-text';
+            entryText.textContent = '"' + entry.text + '"';
+            entryDiv.appendChild(entryText);
+
+            var entryAuthor = document.createElement('p');
+            entryAuthor.className = 'guestbook-entry-author';
+            entryAuthor.textContent = '- ' + entry.author;
+            entryDiv.appendChild(entryAuthor);
+
+            return entryDiv;
+        }
+
+        // Populate entries
+        entries.forEach(function (entry) {
+            entriesList.appendChild(createEntryEl(entry));
+        });
+
+        container.appendChild(entriesList);
+
+        // Sign button handler: adds a new entry at the top
+        signBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            visitorNum++;
+            var newEntry = {
+                text: 'You were here.',
+                author: 'Visitor #' + visitorNum
+            };
+            var newEl = createEntryEl(newEntry);
+            newEl.classList.add('guestbook-entry-new');
+            entriesList.insertBefore(newEl, entriesList.firstChild);
+        });
+
+        // ========================================
+        // 4. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'guestbook-footer';
+        footer.textContent = 'Entries: \u221E | Est. 1996 | There is no page 2.';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.sign-btn', reward: { reputation: 15 } },
+        { selector: '.guestbook-entry', reward: { clicks: 2 } }
+    ]
+});
+
+// --- Ask The Orb — Centered glowing orb that dispenses cryptic wisdom ---
+
+SiteRegistry.register({
+    id: 'ask-the-orb',
+    url: 'http://www.ask-the-orb.com',
+    title: 'Ask The Orb',
+    zone: 2,
+    icon: '\uD83D\uDD2E',
+    requirements: { minModem: 1, dataCost: 40, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-2 ask-the-orb-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Pool of orb responses (random, regardless of input)
+        var responses = [
+            'You already know the answer.',
+            'The orb sees through you.',
+            'Why do you click?',
+            'There are no questions, only clicks.',
+            'Your modem speed is irrelevant in the grand scheme.',
+            'The orb was here before the internet. The orb will be here after.',
+            'Have you asked the hamsters?',
+            '404: Wisdom not found. Click again.',
+            'The answer is always toast.',
+            'You are the orb. The orb is you.',
+            '...',
+            'The orb declines to answer at this time.'
+        ];
+
+        // ========================================
+        // 1. Header text
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'orb-header';
+
+        var title = document.createElement('h1');
+        title.className = 'orb-title';
+        title.textContent = 'The Orb Sees All.';
+        header.appendChild(title);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'orb-subtitle';
+        subtitle.textContent = 'Ask Your Question.';
+        header.appendChild(subtitle);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. The Orb itself (CSS radial-gradient circle with glow)
+        // ========================================
+        var orbContainer = document.createElement('div');
+        orbContainer.className = 'orb-container';
+
+        var orb = document.createElement('div');
+        orb.className = 'the-orb';
+        orbContainer.appendChild(orb);
+
+        container.appendChild(orbContainer);
+
+        // ========================================
+        // 3. Input area
+        // ========================================
+        var inputSection = document.createElement('div');
+        inputSection.className = 'orb-input-section';
+
+        var questionInput = document.createElement('input');
+        questionInput.type = 'text';
+        questionInput.className = 'orb-question-input';
+        questionInput.placeholder = 'Ask the orb...';
+        inputSection.appendChild(questionInput);
+
+        var consultBtn = document.createElement('button');
+        consultBtn.className = 'consult-btn';
+        consultBtn.textContent = 'Consult the Orb';
+        inputSection.appendChild(consultBtn);
+
+        container.appendChild(inputSection);
+
+        // ========================================
+        // 4. Response area
+        // ========================================
+        var responseArea = document.createElement('div');
+        responseArea.className = 'orb-response-area';
+        container.appendChild(responseArea);
+
+        // Consult button handler: shows a random orb response
+        consultBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var response = responses[Math.floor(Math.random() * responses.length)];
+            var responseEl = document.createElement('p');
+            responseEl.className = 'orb-response';
+            responseEl.textContent = response;
+
+            // Clear previous response
+            while (responseArea.firstChild) {
+                responseArea.removeChild(responseArea.firstChild);
+            }
+            responseArea.appendChild(responseEl);
+            questionInput.value = '';
+        });
+
+        // ========================================
+        // 5. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'orb-footer';
+        footer.textContent = 'The Orb has been consulted 1,847,293 times. It has never answered.';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.the-orb', reward: { clicks: 10 } },
+        { selector: '.consult-btn', reward: { clicks: 10 } },
+        { selector: '.orb-response', reward: { clicks: 3 } }
+    ]
+});
+
+// --- TIME CUBE — Chaotic wall of multi-colored conspiracy text ---
+
+SiteRegistry.register({
+    id: 'timecube',
+    url: 'http://www.geocities.com/~area51/TimeCube',
+    title: 'TIME IS CUBE',
+    zone: 2,
+    icon: '\uD83D\uDFE8',
+    requirements: { minModem: 2, dataCost: 80, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-2 timecube-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Paragraphs of Time Cube content with individual styling
+        var paragraphs = [
+            { text: 'EARTH HAS 4 CORNER SIMULTANEOUS 4-DAY TIME CUBE', color: '#ff0000', size: '28px', bold: true, key: true },
+            { text: 'You are educated stupid if you do not understand TIME CUBE', color: '#6666ff', size: '18px', bold: false, key: false },
+            { text: '4 CORNERS = 4 SIMULTANEOUS DAYS', color: '#00cc00', size: '24px', bold: true, key: true },
+            { text: 'No one can disprove TIME CUBE', color: '#ffff00', size: '18px', bold: false, key: false },
+            { text: 'Your teachers are LIARS. TIME is CUBE-SHAPED.', color: '#ff0000', size: '22px', bold: true, rotate: '2deg', key: true },
+            { text: 'I have challenged every university professor. NONE can explain TIME CUBE.', color: '#00ffff', size: '16px', bold: false, key: false },
+            { text: 'There are 4 days in a single rotation of Earth', color: '#ff00ff', size: '22px', bold: true, rotate: '-1deg', key: true },
+            { text: 'Morning, Noon, Evening, and Night are SIMULTANEOUS', color: '#ff8800', size: '18px', bold: false, key: false },
+            { text: 'YOU WERE TAUGHT LIES', color: '#ff0000', size: '28px', bold: true, underline: true, key: true },
+            { text: 'The sun does not rise. YOU rotate to meet the sun.', color: '#00cc00', size: '18px', bold: false, italic: true, key: false },
+            { text: 'THINK ABOUT IT', color: '#ffff00', size: '28px', bold: true, blink: true, key: true },
+            { text: 'Gene Ray, Cubic Awareness Online', color: '#ffffff', size: '14px', bold: false, key: false }
+        ];
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'timecube-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'timecube-logo';
+        logo.textContent = 'TIME IS CUBE';
+        header.appendChild(logo);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Wall of text paragraphs
+        // ========================================
+        var content = document.createElement('div');
+        content.className = 'timecube-content';
+
+        paragraphs.forEach(function (para) {
+            var p = document.createElement('p');
+            p.className = 'timecube-para';
+            if (para.key) {
+                p.classList.add('key-phrase');
+            }
+            if (para.blink) {
+                p.classList.add('blink');
+            }
+
+            p.style.color = para.color;
+            p.style.fontSize = para.size;
+            if (para.bold) { p.style.fontWeight = 'bold'; }
+            if (para.italic) { p.style.fontStyle = 'italic'; }
+            if (para.underline) { p.style.textDecoration = 'underline'; }
+            if (para.rotate) { p.style.transform = 'rotate(' + para.rotate + ')'; }
+
+            p.textContent = para.text;
+            content.appendChild(p);
+        });
+
+        container.appendChild(content);
+
+        // ========================================
+        // 3. ASCII Cube Diagram
+        // ========================================
+        var diagramSection = document.createElement('div');
+        diagramSection.className = 'timecube-diagram-section';
+
+        var diagramLabel = document.createElement('h2');
+        diagramLabel.className = 'timecube-diagram-label';
+        diagramLabel.textContent = 'THE CUBE:';
+        diagramLabel.style.color = '#ffff00';
+        diagramSection.appendChild(diagramLabel);
+
+        var diagram = document.createElement('pre');
+        diagram.className = 'cube-diagram';
+        diagram.textContent =
+            '       +-------+\n' +
+            '      /|      /|\n' +
+            '     / |     / |\n' +
+            '    +-------+  |\n' +
+            '    |  +- - |--+\n' +
+            '    | /     | /\n' +
+            '    |/      |/\n' +
+            '    +-------+\n' +
+            '  4 CORNERS = 4 DAYS';
+        diagramSection.appendChild(diagram);
+
+        container.appendChild(diagramSection);
+
+        // ========================================
+        // 4. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'timecube-footer';
+        footer.textContent = 'Cubic Awareness Online \u00A9 1997. You have been educated stupid.';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.key-phrase', reward: { clicks: 4 } },
+        { selector: '.cube-diagram', reward: { clicks: 20 } }
+    ]
+});
+
+// --- Under Construction Forever — A grid of endless construction signs ---
+
+SiteRegistry.register({
+    id: 'under-construction-forever',
+    url: 'http://www.under-construction-forever.org',
+    title: 'Under Construction',
+    zone: 2,
+    icon: '\uD83D\uDEA7',
+    requirements: { minModem: 1, dataCost: 25, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-2 under-construction-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Closure counter for total clicks across all signs
+        var totalClicks = 0;
+        var bonusAwarded = false;
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'uc-header';
+
+        var title = document.createElement('h1');
+        title.className = 'uc-title';
+        title.textContent = '\uD83D\uDEA7 UNDER CONSTRUCTION \uD83D\uDEA7';
+        header.appendChild(title);
+
+        var subtitle = document.createElement('p');
+        subtitle.className = 'uc-subtitle';
+        subtitle.textContent = 'Please pardon our dust. This page will be ready soon.';
+        header.appendChild(subtitle);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Click counter display
+        // ========================================
+        var counterDiv = document.createElement('div');
+        counterDiv.className = 'uc-counter';
+
+        var counterLabel = document.createElement('span');
+        counterLabel.textContent = 'Construction progress: ';
+        counterDiv.appendChild(counterLabel);
+
+        var counterValue = document.createElement('span');
+        counterValue.className = 'uc-counter-value';
+        counterValue.textContent = '0%';
+        counterDiv.appendChild(counterValue);
+
+        container.appendChild(counterDiv);
+
+        // ========================================
+        // 3. Message area (for the 100-click completion message)
+        // ========================================
+        var messageArea = document.createElement('div');
+        messageArea.className = 'uc-message-area';
+        messageArea.style.display = 'none';
+        container.appendChild(messageArea);
+
+        // ========================================
+        // 4. Grid of construction signs (5x4 = 20)
+        // ========================================
+        var grid = document.createElement('div');
+        grid.className = 'uc-grid';
+
+        // Helper to create a construction sign element
+        function createSign() {
+            var sign = document.createElement('div');
+            sign.className = 'construction-sign';
+
+            var signText = document.createElement('span');
+            signText.className = 'construction-sign-text';
+            signText.textContent = '\uD83D\uDEA7';
+            sign.appendChild(signText);
+
+            // Each sign click: fade out, reveal new sign beneath, increment counter
+            sign.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (bonusAwarded) { return; }
+
+                totalClicks++;
+                var progress = Math.min(Math.floor((totalClicks / 100) * 100), 100);
+                counterValue.textContent = progress + '%';
+
+                // Fade out effect: toggle class
+                sign.classList.add('construction-sign-removed');
+
+                // After fade, replace with a new sign
+                setTimeout(function () {
+                    sign.classList.remove('construction-sign-removed');
+                }, 400);
+
+                // Check for 100 click milestone
+                if (totalClicks >= 100 && !bonusAwarded) {
+                    bonusAwarded = true;
+                    browser.handleReward({ clicks: 500 });
+
+                    // Show completion message
+                    messageArea.style.display = 'block';
+                    var msg = document.createElement('p');
+                    msg.className = 'uc-completion-msg';
+                    msg.textContent = 'Thank you for your patience. Construction will resume shortly.';
+                    messageArea.appendChild(msg);
+
+                    // Reset all signs and show a single different one
+                    while (grid.firstChild) {
+                        grid.removeChild(grid.firstChild);
+                    }
+                    var finalSign = document.createElement('div');
+                    finalSign.className = 'construction-sign construction-sign-final';
+                    var finalText = document.createElement('span');
+                    finalText.className = 'construction-sign-text';
+                    finalText.textContent = '\uD83C\uDFD7\uFE0F';
+                    finalSign.appendChild(finalText);
+                    grid.appendChild(finalSign);
+                }
+            });
+
+            return sign;
+        }
+
+        // Create the 5x4 grid (20 signs)
+        for (var i = 0; i < 20; i++) {
+            grid.appendChild(createSign());
+        }
+
+        container.appendChild(grid);
+
+        // ========================================
+        // 5. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'uc-footer';
+        footer.textContent = 'Est. 1996 | Last updated: never | ETA: soon\u2122';
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.construction-sign', reward: { clicks: 1 } }
+    ]
+});
+
+// --- Ethel's Internet Corner — Warm, cozy, accidentally profound ---
+
+SiteRegistry.register({
+    id: 'grandma-dot-com',
+    url: 'http://www.grandma-dot-com.net',
+    title: "Ethel's Internet Corner",
+    zone: 2,
+    icon: '\uD83C\uDF38',
+    requirements: { minModem: 1, dataCost: 20, reputationCost: 0 },
+
+    render: function (container, browser) {
+        container.className = 'zone-2 grandma-page';
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Visitor counter
+        var visitorNum = 42 + Math.floor(Math.random() * 50);
+
+        // ========================================
+        // 1. Header
+        // ========================================
+        var header = document.createElement('div');
+        header.className = 'grandma-header';
+
+        var logo = document.createElement('h1');
+        logo.className = 'grandma-logo';
+        logo.textContent = "\uD83C\uDF38 Ethel's Internet Corner \uD83C\uDF38";
+        header.appendChild(logo);
+
+        var welcome = document.createElement('p');
+        welcome.className = 'grandma-welcome';
+        welcome.textContent = 'Welcome to my little spot on the World Wide Web!';
+        header.appendChild(welcome);
+
+        container.appendChild(header);
+
+        // ========================================
+        // 2. Garden photo (CSS flowers)
+        // ========================================
+        var gardenSection = document.createElement('div');
+        gardenSection.className = 'grandma-garden';
+
+        var gardenTitle = document.createElement('h2');
+        gardenTitle.className = 'grandma-section-title';
+        gardenTitle.textContent = '\uD83C\uDF3B My Garden';
+        gardenSection.appendChild(gardenTitle);
+
+        var gardenPlot = document.createElement('div');
+        gardenPlot.className = 'grandma-garden-plot';
+
+        // Create CSS flowers with colored circles and green stems
+        var flowerColors = ['#ff6b8a', '#ffb347', '#ff69b4', '#dda0dd', '#ff4444', '#ff8c00'];
+        flowerColors.forEach(function (color) {
+            var flower = document.createElement('div');
+            flower.className = 'garden-flower';
+
+            var stem = document.createElement('div');
+            stem.className = 'flower-stem';
+            flower.appendChild(stem);
+
+            var bloom = document.createElement('div');
+            bloom.className = 'flower-bloom';
+            bloom.style.backgroundColor = color;
+            flower.appendChild(bloom);
+
+            var center = document.createElement('div');
+            center.className = 'flower-center';
+            flower.appendChild(center);
+
+            gardenPlot.appendChild(flower);
+        });
+
+        gardenSection.appendChild(gardenPlot);
+        container.appendChild(gardenSection);
+
+        // ========================================
+        // 3. Blog posts
+        // ========================================
+        var blogSection = document.createElement('div');
+        blogSection.className = 'grandma-blog';
+
+        var blogTitle = document.createElement('h2');
+        blogTitle.className = 'grandma-section-title';
+        blogTitle.textContent = "\uD83D\uDCDD Ethel's Diary";
+        blogSection.appendChild(blogTitle);
+
+        var blogPosts = [
+            {
+                date: 'Tuesday, March 14',
+                text: "Watered the garden today. Watched the sunflowers track the light. Thought about how we all just follow what's brightest. Then I had toast."
+            },
+            {
+                date: 'Wednesday, March 15',
+                text: "Harold next door got a new router. Life moves fast. I remember when the fastest thing was a telegram. Now Harold watches videos of cats while eating breakfast. Progress."
+            },
+            {
+                date: 'Thursday, March 16',
+                text: "Tried to email my grandson. The email bounced. Some things you send out just come back to you. Made soup."
+            },
+            {
+                date: 'Friday, March 17',
+                text: "The internet is a funny thing. Millions of people, all typing at once, and still somehow everyone feels alone. Anyway, here's my casserole recipe."
+            },
+            {
+                date: 'Saturday, March 18',
+                text: "A nice young person signed my guestbook today. Said they'd 'been surfing.' I hope they don't get wet. \uD83D\uDE0A"
+            }
+        ];
+
+        blogPosts.forEach(function (post) {
+            var postDiv = document.createElement('div');
+            postDiv.className = 'blog-post';
+
+            var postDate = document.createElement('h3');
+            postDate.className = 'blog-post-date';
+            postDate.textContent = post.date;
+            postDiv.appendChild(postDate);
+
+            var postText = document.createElement('p');
+            postText.className = 'blog-post-text';
+            postText.textContent = post.text;
+            postDiv.appendChild(postText);
+
+            blogSection.appendChild(postDiv);
+        });
+
+        container.appendChild(blogSection);
+
+        // ========================================
+        // 4. Email Ethel button
+        // ========================================
+        var emailSection = document.createElement('div');
+        emailSection.className = 'grandma-email-section';
+
+        var emailBtn = document.createElement('button');
+        emailBtn.className = 'email-ethel';
+        emailBtn.textContent = '\uD83D\uDCE7 Send Ethel an Email';
+        emailSection.appendChild(emailBtn);
+
+        container.appendChild(emailSection);
+
+        // ========================================
+        // 5. Photo Album link
+        // ========================================
+        var albumSection = document.createElement('div');
+        albumSection.className = 'grandma-album-section';
+
+        var albumLink = document.createElement('a');
+        albumLink.className = 'photo-album-link';
+        albumLink.href = '#';
+        albumLink.textContent = "\uD83D\uDCF7 View Ethel's Photo Album";
+        albumSection.appendChild(albumLink);
+
+        container.appendChild(albumSection);
+
+        // ========================================
+        // 6. Recipe Corner
+        // ========================================
+        var recipeSection = document.createElement('div');
+        recipeSection.className = 'recipe-section grandma-recipe';
+
+        var recipeTitle = document.createElement('h2');
+        recipeTitle.className = 'grandma-section-title';
+        recipeTitle.textContent = "\uD83C\uDF73 Recipe Corner: Ethel's Famous Casserole";
+        recipeSection.appendChild(recipeTitle);
+
+        var ingredients = [
+            '1 slice of bread (any variety)',
+            '1 toaster (preheated to "toast" setting)',
+            '1 pat of butter (optional, but recommended)',
+            'A pinch of love',
+            'Serve on finest china'
+        ];
+
+        var ingredientsList = document.createElement('ol');
+        ingredientsList.className = 'grandma-recipe-list';
+        ingredients.forEach(function (ingredient) {
+            var li = document.createElement('li');
+            li.textContent = ingredient;
+            ingredientsList.appendChild(li);
+        });
+
+        recipeSection.appendChild(ingredientsList);
+
+        var recipeNote = document.createElement('p');
+        recipeNote.className = 'grandma-recipe-note';
+        recipeNote.textContent = 'Serves 1. Pairs well with a cup of tea and quiet reflection.';
+        recipeSection.appendChild(recipeNote);
+
+        container.appendChild(recipeSection);
+
+        // ========================================
+        // 7. Visitor counter
+        // ========================================
+        var counterDiv = document.createElement('div');
+        counterDiv.className = 'grandma-counter';
+
+        var counterText = document.createElement('span');
+        counterText.textContent = "You are Ethel's visitor #";
+        counterDiv.appendChild(counterText);
+
+        var counterNum = document.createElement('span');
+        counterNum.className = 'grandma-counter-num';
+        counterNum.textContent = String(visitorNum);
+        counterDiv.appendChild(counterNum);
+
+        container.appendChild(counterDiv);
+
+        // ========================================
+        // 8. Footer
+        // ========================================
+        var footer = document.createElement('div');
+        footer.className = 'grandma-footer';
+
+        var footerText = document.createElement('p');
+        footerText.textContent = "Made with love by Ethel. My grandson helped me with the 'HTML.'";
+        footer.appendChild(footerText);
+
+        var footerText2 = document.createElement('p');
+        footerText2.textContent = 'Best viewed with a warm cup of tea.';
+        footer.appendChild(footerText2);
+
+        container.appendChild(footer);
+    },
+
+    clickTargets: [
+        { selector: '.blog-post', reward: { clicks: 5 } },
+        { selector: '.garden-flower', reward: { clicks: 3 } },
+        { selector: '.email-ethel', reward: { reputation: 20 } },
+        { selector: '.photo-album-link', reward: { clicks: 3 } },
+        { selector: '.recipe-section', reward: { clicks: 5 } }
+    ]
+});

@@ -1996,3 +1996,868 @@
 .megadeals-footer p {
     margin: 2px 0;
 }
+
+/* ============================================================
+   THE VOID — Almost entirely black, hidden cryptic poetry
+   ============================================================ */
+
+.the-void-page {
+    background: #000 !important;
+    color: #111;
+    padding: 0;
+    min-height: 400px;
+}
+
+.void-title {
+    text-align: center;
+    padding: 20px 0 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #222;
+    letter-spacing: 8px;
+}
+
+/* Grid of invisible click zones arranged in two columns */
+.void-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    padding: 10px 20px;
+    min-height: 300px;
+}
+
+.void-zone {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid #0a0a0a;
+    transition: border-color 0.3s;
+    padding: 12px;
+}
+
+.void-zone:hover {
+    border-color: #1a1a1a;
+}
+
+/* Hidden phrase inside each zone — invisible until revealed */
+.void-phrase {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: transparent;
+    transition: color 2s ease-in;
+    text-align: center;
+    line-height: 1.6;
+}
+
+/* When a zone is clicked, the text fades in */
+.void-zone.void-revealed .void-phrase {
+    color: #555;
+}
+
+.void-zone.void-revealed {
+    border-color: #1a1a1a;
+    cursor: default;
+}
+
+/* Completion message — appears after all 10 phrases revealed */
+.void-completion {
+    text-align: center;
+    padding: 30px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #666;
+    animation: void-fade-in 3s ease-in forwards;
+    letter-spacing: 2px;
+}
+
+@keyframes void-fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.void-footer {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #111;
+}
+
+/* ============================================================
+   INFINITE GUESTBOOK — Dark green-on-dark matrix-ish aesthetic
+   ============================================================ */
+
+.infinite-guestbook-page {
+    background: #0d0d0d !important;
+    color: #33cc33;
+    padding: 0;
+    font-family: 'Courier New', monospace;
+}
+
+.guestbook-header {
+    text-align: center;
+    padding: 16px 8px 8px;
+    border-bottom: 1px solid #1a3a1a;
+    background: #0a1a0a;
+}
+
+.guestbook-logo {
+    font-family: 'Courier New', monospace !important;
+    font-size: 28px;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    margin: 0 0 4px 0;
+    letter-spacing: 3px;
+}
+
+.guestbook-subtitle {
+    font-size: 12px;
+    color: #338833;
+    margin: 0 0 8px 0;
+    font-style: italic;
+}
+
+/* Sign section */
+.guestbook-sign-section {
+    text-align: center;
+    padding: 12px;
+    background: #0a1a0a;
+    border-bottom: 1px solid #1a3a1a;
+}
+
+.sign-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 24px;
+    background: #003300;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    transition: background 0.2s;
+}
+
+.sign-btn:hover {
+    background: #004400;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.sign-btn:active {
+    background: #005500;
+}
+
+/* Entries list */
+.guestbook-entries {
+    padding: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.infinite-guestbook-page .guestbook-entry {
+    border-bottom: 1px solid #1a2a1a;
+    padding: 10px 12px;
+    margin: 0;
+    cursor: pointer;
+    transition: background 0.1s;
+    background: transparent;
+}
+
+.infinite-guestbook-page .guestbook-entry:hover {
+    background: #0a1a0a;
+}
+
+.guestbook-entry-text {
+    font-size: 13px;
+    color: #33cc33;
+    margin: 0 0 4px 0;
+    line-height: 1.4;
+}
+
+.guestbook-entry-author {
+    font-size: 11px;
+    color: #228822;
+    margin: 0;
+    text-align: right;
+}
+
+/* Newly signed entries get a brief glow */
+.guestbook-entry-new {
+    animation: guestbook-glow 1s ease-out;
+}
+
+@keyframes guestbook-glow {
+    0% { background: #003300; }
+    100% { background: transparent; }
+}
+
+.guestbook-footer {
+    text-align: center;
+    padding: 12px;
+    border-top: 1px solid #1a3a1a;
+    background: #0a1a0a;
+    font-size: 11px;
+    color: #226622;
+}
+
+/* ============================================================
+   ASK THE ORB — Dark purple/black with glowing orb
+   ============================================================ */
+
+.ask-the-orb-page {
+    background: #0a0010 !important;
+    color: #bbaadd;
+    padding: 0;
+    text-align: center;
+}
+
+.orb-header {
+    padding: 20px 8px 10px;
+}
+
+.orb-title {
+    font-family: 'Georgia', serif !important;
+    font-size: 28px;
+    color: #cc99ff;
+    text-shadow: 0 0 15px rgba(150, 100, 255, 0.5);
+    margin: 0 0 4px 0;
+    letter-spacing: 4px;
+}
+
+.orb-subtitle {
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    color: #8866aa;
+    margin: 0;
+    font-style: italic;
+}
+
+/* The Orb container and the orb itself */
+.orb-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.the-orb {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 40% 40%,
+        #e0b0ff,
+        #9933ff 40%,
+        #4400aa 70%,
+        #1a0033
+    );
+    box-shadow:
+        0 0 20px rgba(150, 50, 255, 0.6),
+        0 0 40px rgba(150, 50, 255, 0.3),
+        0 0 60px rgba(150, 50, 255, 0.1),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    animation: orb-pulse 3s ease-in-out infinite;
+}
+
+@keyframes orb-pulse {
+    0% { box-shadow: 0 0 20px rgba(150, 50, 255, 0.6), 0 0 40px rgba(150, 50, 255, 0.3), 0 0 60px rgba(150, 50, 255, 0.1); }
+    50% { box-shadow: 0 0 30px rgba(150, 50, 255, 0.8), 0 0 60px rgba(150, 50, 255, 0.5), 0 0 90px rgba(150, 50, 255, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(150, 50, 255, 0.6), 0 0 40px rgba(150, 50, 255, 0.3), 0 0 60px rgba(150, 50, 255, 0.1); }
+}
+
+.the-orb:hover {
+    animation: orb-pulse 1.5s ease-in-out infinite;
+}
+
+/* Input section */
+.orb-input-section {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.orb-question-input {
+    width: 60%;
+    max-width: 350px;
+    padding: 8px 12px;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    background: #1a0033;
+    color: #cc99ff;
+    border: 1px solid #4400aa;
+    outline: none;
+}
+
+.orb-question-input::placeholder {
+    color: #553377;
+}
+
+.orb-question-input:focus {
+    border-color: #9933ff;
+    box-shadow: 0 0 8px rgba(150, 50, 255, 0.3);
+}
+
+.consult-btn {
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    padding: 8px 20px;
+    background: #2a0055;
+    color: #cc99ff;
+    border: 1px solid #6633aa;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.consult-btn:hover {
+    background: #3a0077;
+    box-shadow: 0 0 10px rgba(150, 50, 255, 0.3);
+}
+
+.consult-btn:active {
+    background: #4a0099;
+}
+
+/* Response area */
+.orb-response-area {
+    padding: 20px;
+    min-height: 40px;
+}
+
+.orb-response {
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    color: #cc99ff;
+    text-shadow: 0 0 10px rgba(200, 150, 255, 0.4);
+    font-style: italic;
+    margin: 0;
+    animation: orb-response-appear 1s ease-in;
+    cursor: pointer;
+}
+
+@keyframes orb-response-appear {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.orb-footer {
+    padding: 16px 8px;
+    font-family: 'Georgia', serif;
+    font-size: 11px;
+    color: #3a2255;
+    border-top: 1px solid #1a0033;
+}
+
+/* ============================================================
+   TIME CUBE — Chaotic multi-colored text on dark background
+   ============================================================ */
+
+.timecube-page {
+    background: #111 !important;
+    color: #ccc;
+    padding: 0;
+}
+
+.timecube-header {
+    text-align: center;
+    padding: 16px 8px;
+    background: #000;
+    border-bottom: 4px solid #ff0000;
+}
+
+.timecube-logo {
+    font-family: Impact, 'Arial Black', sans-serif !important;
+    font-size: 42px;
+    color: #ff0000;
+    text-shadow:
+        2px 2px 0 #ffff00,
+        4px 4px 0 #00ff00;
+    margin: 0;
+    letter-spacing: 6px;
+    animation: timecube-shake 0.5s infinite;
+}
+
+@keyframes timecube-shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(1px, -1px); }
+    50% { transform: translate(-1px, 1px); }
+    75% { transform: translate(1px, 1px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Content area with wall of text */
+.timecube-content {
+    padding: 16px;
+}
+
+.timecube-para {
+    margin: 12px 0;
+    line-height: 1.6;
+    font-family: 'Times New Roman', serif;
+    cursor: default;
+}
+
+/* Key phrases are clickable */
+.key-phrase {
+    cursor: pointer;
+    padding: 4px 0;
+    transition: text-shadow 0.2s;
+}
+
+.key-phrase:hover {
+    text-shadow: 0 0 10px currentColor;
+}
+
+/* ASCII cube diagram */
+.timecube-diagram-section {
+    text-align: center;
+    padding: 20px;
+    border-top: 2px dashed #ffff00;
+    border-bottom: 2px dashed #ffff00;
+    margin: 16px;
+}
+
+.timecube-diagram-label {
+    font-family: Impact, 'Arial Black', sans-serif !important;
+    font-size: 22px;
+    margin: 0 0 10px 0;
+}
+
+.cube-diagram {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #00ff00;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.4);
+    text-align: center;
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid #333;
+    background: #000;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+.cube-diagram:hover {
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    border-color: #00ff00;
+}
+
+.timecube-footer {
+    text-align: center;
+    padding: 12px 8px;
+    background: #000;
+    border-top: 2px solid #ff0000;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #666;
+}
+
+/* ============================================================
+   UNDER CONSTRUCTION FOREVER — Yellow/black warning stripes
+   ============================================================ */
+
+.under-construction-page {
+    background: #1a1a00 !important;
+    color: #ffcc00;
+    padding: 0;
+}
+
+.uc-header {
+    text-align: center;
+    padding: 16px 8px;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffcc00,
+        #ffcc00 15px,
+        #333 15px,
+        #333 30px
+    );
+    border-bottom: 4px solid #ff9900;
+}
+
+.uc-title {
+    font-family: Impact, 'Arial Black', sans-serif !important;
+    font-size: 32px;
+    color: #000;
+    text-shadow: 1px 1px 0 #ffcc00;
+    margin: 0 0 4px 0;
+    background: rgba(255, 204, 0, 0.8);
+    display: inline-block;
+    padding: 4px 16px;
+}
+
+.uc-subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: #000;
+    margin: 0;
+    background: rgba(255, 204, 0, 0.8);
+    display: inline-block;
+    padding: 2px 12px;
+}
+
+/* Click counter display */
+.uc-counter {
+    text-align: center;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #ffcc00;
+    background: #1a1a00;
+    border-bottom: 1px solid #333300;
+}
+
+.uc-counter-value {
+    color: #ff9900;
+    font-weight: bold;
+}
+
+/* Completion message area */
+.uc-message-area {
+    text-align: center;
+    padding: 20px;
+}
+
+.uc-completion-msg {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    color: #ffcc00;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    animation: void-fade-in 2s ease-in forwards;
+    margin: 0;
+}
+
+/* Grid of construction signs (5 columns, 4 rows) */
+.uc-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 12px;
+}
+
+.construction-sign {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffcc00,
+        #ffcc00 8px,
+        #222 8px,
+        #222 16px
+    );
+    border: 2px solid #ff9900;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+    animation: uc-scroll-sign 2s linear infinite;
+}
+
+@keyframes uc-scroll-sign {
+    0% { background-position: 0 0; }
+    100% { background-position: 22px 0; }
+}
+
+.construction-sign:hover {
+    transform: scale(1.05);
+    border-color: #ffff00;
+}
+
+.construction-sign-text {
+    font-size: 28px;
+    filter: drop-shadow(0 0 4px rgba(255, 204, 0, 0.5));
+}
+
+/* Faded-out state after clicking */
+.construction-sign-removed {
+    opacity: 0.3;
+    transform: scale(0.9);
+}
+
+/* The final special sign after 100 clicks */
+.construction-sign-final {
+    grid-column: 1 / -1;
+    aspect-ratio: auto;
+    padding: 30px;
+    background: linear-gradient(
+        45deg,
+        #ffcc00,
+        #ff9900,
+        #ffcc00
+    );
+    animation: none;
+    border: 4px solid #ffff00;
+}
+
+.construction-sign-final .construction-sign-text {
+    font-size: 48px;
+}
+
+.uc-footer {
+    text-align: center;
+    padding: 12px 8px;
+    background: #0d0d00;
+    border-top: 2px solid #333300;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #666600;
+}
+
+/* ============================================================
+   ETHEL'S INTERNET CORNER — Warm, floral, pastel
+   A beacon of light in the weird web.
+   ============================================================ */
+
+.grandma-page {
+    background: #fff5f0 !important;
+    color: #4a3728;
+    padding: 0;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+}
+
+.grandma-header {
+    text-align: center;
+    padding: 16px 8px 12px;
+    background: linear-gradient(to bottom, #ffe0ec, #ffd6e0);
+    border-bottom: 3px solid #ffb0c8;
+}
+
+.grandma-logo {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive !important;
+    font-size: 28px;
+    color: #cc3366;
+    text-shadow: 1px 1px 0 #ffccdd;
+    margin: 0 0 4px 0;
+    letter-spacing: 1px;
+}
+
+.grandma-welcome {
+    font-size: 16px;
+    color: #996677;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Section titles for Ethel's page */
+.grandma-section-title {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive !important;
+    font-size: 20px;
+    color: #cc3366;
+    margin: 0 0 10px 0;
+    padding-bottom: 4px;
+    border-bottom: 2px dashed #ffb0c8;
+}
+
+/* Garden section */
+.grandma-garden {
+    padding: 12px;
+    margin: 8px;
+    background: #f0fff0;
+    border: 2px solid #99cc99;
+    border-radius: 8px;
+}
+
+.grandma-garden-plot {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
+    background: linear-gradient(to top, #8B4513 0%, #8B4513 15%, #90EE90 15%, #90EE90 100%);
+    border-radius: 6px;
+    min-height: 100px;
+    align-items: flex-end;
+}
+
+/* CSS flowers with stems and blooms */
+.garden-flower {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.garden-flower:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.flower-stem {
+    width: 4px;
+    height: 40px;
+    background: #228B22;
+    border-radius: 2px;
+}
+
+.flower-bloom {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-bottom: -2px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+    order: -1;
+}
+
+.flower-center {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #FFD700;
+    margin-top: -18px;
+    margin-bottom: 6px;
+    order: -1;
+    z-index: 1;
+}
+
+/* Blog posts */
+.grandma-blog {
+    padding: 12px;
+    margin: 8px;
+    background: #fff;
+    border: 2px solid #ddbba0;
+    border-radius: 8px;
+}
+
+.blog-post {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #fffaf0;
+    border: 1px solid #eeddc8;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.blog-post:hover {
+    background: #fff0e0;
+}
+
+.blog-post-date {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #cc6633;
+    margin: 0 0 6px 0;
+    font-weight: bold;
+}
+
+.blog-post-text {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #554433;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Email button */
+.grandma-email-section {
+    text-align: center;
+    padding: 12px;
+    margin: 8px;
+}
+
+.email-ethel {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 24px;
+    background: linear-gradient(to bottom, #ffccdd, #ff99bb);
+    color: #993355;
+    border: 3px outset #ffaacc;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.1s;
+}
+
+.email-ethel:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to bottom, #ffddee, #ffaacc);
+}
+
+.email-ethel:active {
+    border-style: inset;
+}
+
+/* Photo album link */
+.grandma-album-section {
+    text-align: center;
+    padding: 8px;
+    margin: 4px 8px;
+}
+
+.photo-album-link {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 16px;
+    color: #cc3366 !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.photo-album-link:hover {
+    color: #ff3377 !important;
+}
+
+/* Recipe section */
+.grandma-recipe {
+    padding: 12px;
+    margin: 8px;
+    background: #fffff0;
+    border: 2px solid #ddbba0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.grandma-recipe:hover {
+    background: #fff8e0;
+}
+
+.grandma-recipe-list {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #554433;
+    padding-left: 24px;
+    margin: 8px 0;
+    line-height: 1.8;
+}
+
+.grandma-recipe-note {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 13px;
+    color: #887766;
+    font-style: italic;
+    margin: 8px 0 0 0;
+}
+
+/* Visitor counter */
+.grandma-counter {
+    text-align: center;
+    padding: 10px;
+    margin: 8px;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 14px;
+    color: #996677;
+}
+
+.grandma-counter-num {
+    font-family: 'Courier New', monospace;
+    background: #ffccdd;
+    color: #cc3366;
+    padding: 2px 8px;
+    border: 1px inset #ffaacc;
+}
+
+/* Footer */
+.grandma-footer {
+    text-align: center;
+    padding: 16px 8px;
+    background: linear-gradient(to bottom, #ffd6e0, #ffe0ec);
+    border-top: 3px solid #ffb0c8;
+    font-size: 12px;
+    color: #996677;
+}
+
+.grandma-footer p {
+    margin: 4px 0;
+}
